@@ -3,6 +3,7 @@
 //
 #include <iostream>
 #include <stdexcept>
+#include <utility>
 //
 #include <X11/Xlib.h>
 #include <GL/glx.h>
@@ -16,7 +17,7 @@ namespace xdr
         XDriver();
 
         void getSettings();
-
+        std::pair<int, int> getResolution();
     };
 }
 
