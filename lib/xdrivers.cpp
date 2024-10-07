@@ -12,7 +12,7 @@ std::pair<int, int> xdr::getResolution() {
     Display* display = XOpenDisplay(NULL);
     return std::pair<int, int>(XDisplayWidth(display,0), XDisplayHeight(display,0));
 }
-
+//
 bool xdr::check_existing(const fs::path &p, fs::file_status s)
 {
     if(fs::status_known(s) ? fs::exists(s) : fs::exists(p)){
@@ -21,7 +21,7 @@ bool xdr::check_existing(const fs::path &p, fs::file_status s)
     return false;
 }
 
-int xdr::backup(){
+int xdr::make_backup(fs::path &ep){
 
     fs::path conf_path_x11 = "/etc/X11/";
     fs::path conf_path_modprobe_dir = "/etc/modprobe.d";
@@ -57,4 +57,28 @@ int xdr::backup(){
             break;
     } 
     return 0;
+}
+
+xdr::xDriver::xDriver(fs::path def_p){
+    if(!(def_p).empty()){
+        std::cout << "Default path * " << backup_path << " * changed to : " << def_p << std::endl;  
+        this->backup_path = def_p;
+    }
+    if(!check_existing(backup_path)){
+        std::cout << "Creating backup dir" << std::endl;
+        fs::create_directory(backup_path);
+    }
+    else{
+        std::cout << "Backups dir already existing on path: " << backup_path << std::endl;
+    }
+    for(const auto& entry : fs::directory_iterator(this->backup_path)){
+        this->backups_list.push_back(entry.path().string());
+    }
+
+}
+
+void xdr::xDriver::parse_backup_list(){
+    for(const auto& entry : fs::directory_iterator(this->backup_path)){
+        this->backups_list.push_back(entry.path().string());
+    }
 }
