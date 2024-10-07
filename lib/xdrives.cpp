@@ -1,6 +1,5 @@
 #include <X11/Xlib.h>
 #include <X11/extensions/Xrandr.h>
-#include <X11/extensions/xf86vmode.h>
 #include <iostream>
 #include <stdlib.h>
 #include <cstdarg>
@@ -8,6 +7,9 @@
 #include <fstream>
 #include <memory>
 #include <cstdio>
+#include <vector>
+#include <utility>
+#include <algorithm>
 
 std::string exec(const char* cmd) {
     std::shared_ptr<FILE> pipe(popen(cmd, "r"), pclose);
@@ -60,35 +62,36 @@ std::string exec(const char* cmd) {
 //         }
 //     }
 // }
+using std::vector;
+using std::pair;
+vector<pair<int,int>> sizes_l = {};
 
+bool compare_pair(pair<int, int> first, pair<int, int> second) {
+    if (first.second == second.second) {
+        return first.first > second.first;
+    }else {
+        return first.second > second.second;
+    }
+}
 
 int main(int argc, char const *argv[])
 {
     Display* display = XOpenDisplay(":0");
     Screen* screen = XScreenOfDisplay(display, 0);
-    // XRRScreenResources *screen = XRRGetScreenResources(display, DefaultRootWindow(display));
-    // for (size_t i = 0; i < screen->ncrtc; i++)
-    // {
-    //     XRRCrtcInfo *crtc_info = XRRGetCrtcInfo(display, screen, screen->crtcs[i]);  
-    //     std::cout << i << '\t' << crtc_info->width << 'x' << crtc_info-> height << '\n';
-    //     /* code */
-    // }
-    int modeCount;
-    XF86VidModeModeInfo** modes;
-    int sizes;
-    if (XF86VidModeGetAllModeLines(display, 0, &modeCount, &modes))
-    {
-        for(int i = 0; i < modeCount; i ++)
-        {
-            //std::cout << i << '\t' << modes[i]->hdisplay << 'x' <<  modes[i]->vdisplay << '\t' << modes[i]->vtotal << '\n';
-        }
-        XFree(modes);
-    }
+    int sizes = 0;
     XRRScreenSize* xrsizes = XRRSizes(display, 0, &sizes);
     for (size_t i = 0; i < sizes; i++)
     {
-        //std::cout << xrsizes[i].width << 'x' << xrsizes[i].height << '\n';
+        pair size = pair(xrsizes[i].width, xrsizes[i].height);
+        sizes_l.push_back(size);
     }
+    std::sort(sizes_l.begin(), sizes_l.end(), compare_pair);
+    for (size_t i = 0; i < sizes_l.size(); i++)
+    {
+        std::cout << i << '\t' << sizes_l[i].first << 'x' << sizes_l[i].second << '\n';
+        
+    }
+    
     auto root = RootWindow(display, 0);
     XRRSetScreenSize(display, root, 1600, 900, DisplayWidthMM(display, 0),DisplayHeightMM(display, 0));
     XSync(display, 0);
