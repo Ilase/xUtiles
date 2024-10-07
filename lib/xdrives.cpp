@@ -75,15 +75,24 @@ int main(int argc, char const *argv[])
     // }
     int modeCount;
     XF86VidModeModeInfo** modes;
-
+    int sizes;
     if (XF86VidModeGetAllModeLines(display, 0, &modeCount, &modes))
     {
         for(int i = 0; i < modeCount; i ++)
         {
-            std::cout << i << '\t' << modes[i]->hdisplay << 'x' <<  modes[i]->vdisplay << '\n';
+            //std::cout << i << '\t' << modes[i]->hdisplay << 'x' <<  modes[i]->vdisplay << '\t' << modes[i]->vtotal << '\n';
         }
         XFree(modes);
     }
+    XRRScreenSize* xrsizes = XRRSizes(display, 0, &sizes);
+    for (size_t i = 0; i < sizes; i++)
+    {
+        //std::cout << xrsizes[i].width << 'x' << xrsizes[i].height << '\n';
+    }
+    auto root = RootWindow(display, 0);
+    XRRSetScreenSize(display, root, 1600, 900, DisplayWidthMM(display, 0),DisplayHeightMM(display, 0));
+    XSync(display, 0);
+    //XRRSetScreenSize(display, NULL, 1000, 1000,0, 0);
     //std::cout << exec("xrandr");
     return 0;
 }
