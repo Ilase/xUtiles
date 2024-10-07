@@ -3,7 +3,7 @@
 
 int main(int argc, char const *argv[])
 {
-    xdr::xDriver(); 
-
+    xdr::xDriver app(); 
+    
     return 0;
 }
