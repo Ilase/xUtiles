@@ -38,6 +38,7 @@
                 xDriver(fs::path def_p = fs::path{});
                 //
                 void parse_backup_list();
+                int make_backup();
                 //
                 //friend int repair_backup();
                 //friend int make_backup();
@@ -46,7 +47,7 @@
         std::pair<int, int> getResolution();
         bool check_existing(const fs::path& p, fs::file_status s = fs::file_status{});
         int repair_backup(fs::path &p);
-        int make_backup(fs::path &ep);
+        int make_backup(fs::path &ep, fs::path &x11_path, fs::path &mod_path);
     }
     #endif // XDRIVERS_HPP
 #endif // XDR
