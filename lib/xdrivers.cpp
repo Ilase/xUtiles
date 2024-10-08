@@ -7,7 +7,7 @@ void xdr::xdr_handler(const std::exception &e, const std::string &add_info)
         std::cerr << "Additional info: " << add_info << std::endl;
     }
 }
-xdr::xDriver::xDriver()
+xdr::xDisplay::xDisplay()
 {
     this->display = XOpenDisplay(":0");
     this->screenCount = ScreenCount(display);
@@ -31,17 +31,17 @@ xdr::xDriver::xDriver()
 
 }
 
-xdr::xDriver::~xDriver()
+xdr::xDisplay::~xDisplay()
 {
     XCloseDisplay(display);
 }
 
-void xdr::xDriver::ChangeResolution(XRRScreenSize *screenSize)
+void xdr::xDisplay::ChangeResolution(XRRScreenSize *screenSize)
 {
     XRRSetScreenSize(display, root, screenSize->width, screenSize->height, screenSize->mwidth, screenSize->mheight);
     SyncChanges();
 }
-void xdr::xDriver::SyncChanges()
+void xdr::xDisplay::SyncChanges()
 {
     XSync(display, False);
 }

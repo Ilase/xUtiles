@@ -31,7 +31,7 @@
         /*
         @brief Main app class whos make operations woth backups
         */
-       class xDriver
+       class xDisplay
         {
         private:
         public:
@@ -42,8 +42,8 @@
             XRRScreenConfiguration* screenConfig;
             XRRScreenResources* screenResources;
             std::vector<std::vector<XRRScreenSize>> screenSizes;
-            xDriver();
-            ~xDriver();
+            xDisplay();
+            ~xDisplay();
             void ChangeResolution(XRRScreenSize* screenSize);
             void SyncChanges();
         };
