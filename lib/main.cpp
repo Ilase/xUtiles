@@ -3,10 +3,11 @@
 
 int main(int argc, char const *argv[])
 {   
-    if(argc < 2){
-        std::cerr << "Usage " << argv[0] << " <option>" << std::endl;
-        return 1;
-    }
+    int opt;
+    bool display_opt;
+    bool backup_opt;
+        const char *_backup_folder_path = nullptr;
+    while(true);s
     //
     xdr::xDriver app = xdr::xDriver();
     //
