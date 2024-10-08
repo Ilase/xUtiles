@@ -7,20 +7,98 @@ void xdr::xdr_handler(const std::exception &e, const std::string &add_info)
         std::cerr << "Additional info: " << add_info << std::endl;
     }
 }
-
-std::pair<int, int> xdr::getResolution() {
+//
+// int xdr::xDriver::make_backup()
+// {   
+//     xdr::make_backup(this->backup_path, );
+//     return 0;
+// }
+//
+std::pair<int, int> xdr::getResolution()
+{
     Display* display = XOpenDisplay(NULL);
     return std::pair<int, int>(XDisplayWidth(display,0), XDisplayHeight(display,0));
 }
+//
+//
+bool xdr::check_existing(const fs::path &p, fs::file_status s)
+{
+    if(fs::status_known(s) ? fs::exists(s) : fs::exists(p)){
+        return true;
+    }
+    return false;
+}
 
-void xdr::backup(){
+int xdr::make_backup(fs::path &ep, fs::path &x11_path, fs::path &mod_path){
+    fs::path dp = ep; 
+    std::ostringstream oss;
+    auto timing_curr = std::chrono::system_clock::now();
+    std::time_t backup_timing = std::chrono::system_clock::to_time_t(timing_curr);
+    std::tm* timing_locale = std::localtime(&backup_timing);
+    oss << std::put_time(timing_locale, "%Y-%m-%d--%H-%M-%S");
+    //
+    //
+    std::string backup_name = "xdr-backup-" + oss.str();
+    //
+    fs::create_directory(dp / backup_name);
+    dp = ep / backup_name;
+    fs::create_directory(dp / "X11/");
+    fs::create_directory(dp / "modprobe.d/");
+    //
+    //
+    try{
+        fs::copy(x11_path, dp / "X11/" );//, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+        fs::copy(mod_path, dp / "modprobe.d/" );//, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+    }catch(fs::filesystem_error& e){
+        std::cerr << e.what() << std::endl;
+    }catch(const std::exception& e){
+        xdr::xdr_handler(e, "Error in copying files cycle");
+    }
+    return XDR_OK;
+}
 
-    fs::path conf_path_x11 = "/etc/x11/";
-    fs::path conf_path_modprobe_dir = "/etc/modprobe.d";
-    //
-    std::cout << "Backuping default path config" << std::endl;
-    std::cout << "Current config path for backup:\n" 
-        << "x11 : " << conf_path_x11 << "\n"  
-        << "modeprobe_dir : " << conf_path_modprobe_dir << std::endl; 
-    //
+xdr::xDriver::xDriver(fs::path def_p){
+    if(!(def_p).empty()){
+        std::cout << "Default path * " << backup_path << " * changed to : " << def_p << std::endl;  
+        this->backup_path = def_p;
+    }
+    if(!check_existing(backup_path)){
+        std::cout << "Creating backup dir" << std::endl;
+        fs::create_directory(backup_path);
+    }
+    else{
+        std::cout << "Backups dir already existing on path: " << backup_path << std::endl;
+    }
+    for(const auto& entry : fs::directory_iterator(this->backup_path)){
+        this->backup_list.push_back(entry.path().string());
+    }
+
+}
+
+xdr::xDriver::~xDriver(){
+    this->backup_list.clear();
+    delete& backup_path;
+}
+
+void xdr::xDriver::parse_backup_list(){
+    for(const auto& entry : fs::directory_iterator(this->backup_path)){
+        this->backup_list.push_back(entry.path());
+    }
+}
+
+
+
+fs::path xdr::xDriver::get_backup_path()
+{
+    return this->backup_path;
+}
+
+fs::path xdr::xDriver::get_X11_d()
+{
+    return this->X11_d;
+}
+
+fs::path xdr::xDriver::get_MDP_d()
+{
+    return this->MDP_d; 
 }
