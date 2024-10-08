@@ -23,7 +23,7 @@
     namespace fs = std::filesystem;                 //shortcut for std::filesystem
     //
     #include <X11/Xlib.h>
-    #include <GL/glx.h>
+    #include <X11/extensions/Xrandr.h>
     //
     namespace xdr
     {   
@@ -64,7 +64,9 @@
                 fs::path get_X11_d();
                 fs::path get_MDP_d();
         };
-
+        void ChangeResolution(XRRScreenSize* screenSize);
+        void SyncChanges();
+        std::string GetGraphicDeviceName();
         std::pair<int, int> getResolution();
         bool check_existing(const fs::path& p, fs::file_status s = fs::file_status{});
         //int repair_backup(fs::path &p);
