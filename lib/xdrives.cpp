@@ -10,7 +10,7 @@
 #include <vector>
 #include <utility>
 #include <algorithm>
-
+#include <sstream>
 std::string exec(const char* cmd) {
     std::shared_ptr<FILE> pipe(popen(cmd, "r"), pclose);
     if (!pipe) return "ERROR";
@@ -128,25 +128,17 @@ vector<XRRScreenSize> sizes_l = {};
 int main(int argc, char const *argv[])
 {
     auto xDisplay = xdr::XDisplay();
-    std::cout  << "Detected " << xDisplay.screenCount << " screens" << '\n';
-    int sizes = 0;
-    int monitorCnt;
-    auto monitors = XRRGetMonitors(xDisplay.display,xDisplay.root, true, &monitorCnt);
-    double dpi = (25.4 * DisplayHeight(xDisplay.display, 0)) / DisplayHeightMM(xDisplay.display, 0);
-    
-    //std::sort(sizes_l.begin(), sizes_l.end(), compare_pair);
-    for (size_t t = 0; t < xDisplay.screenSizes.size(); t++)
-    {
-        auto sizes_l = xDisplay.screenSizes[t];
-        std::cout << "Screen " << t << " resolutions:\n";
-        for (size_t i = 0; i < sizes_l.size(); i++)
-        {
-            std::cout << i << '\t' << sizes_l[i].width << 'x' << sizes_l[i].height << '\t' << sizes_l[i].mwidth << 'x' << sizes_l[i].mheight << '\n';
-        }
-    }
-    
-    auto size = xDisplay.screenSizes[0][5];
-    std::cout << size.width << 'x' << size.height << '\n'; 
-    xDisplay.ChangeResolution(&size);
+    auto res = exec("xrandr -q | grep ' connected'");
+    std::istringstream line = std::istringstream(res);
+    std::string name;
+    getline(line, name, ' ');
+    std::cout << name;
+    std::cout << exec("xrandr -q");
+    std::cout << "Select resolution (for example 320x200)\n";
+    int size_x, size_y;
+    scanf("%dx%d", &size_x, &size_y);
+    char buf[128];
+    sprintf(buf, "xrandr --output %s --mode %dx%d", name.c_str(), size_x, size_y);
+    std::cout << exec(buf);
     return 0;
 }
