@@ -16,6 +16,9 @@
     #include <filesystem>                           //lib for working with filesystem
     #include <string_view>                          //view strings in fs iteration 
     #include <vector>                               // paths container 
+    #include <chrono>                               //
+    #include <ctime>                                //
+    #include <iomanip>
     //----------------------------------------------//----------------------------------
     namespace fs = std::filesystem;                 //shortcut for std::filesystem
     //
@@ -30,16 +33,20 @@
         */
         class xDriver {
             private:
-                fs::path backup_path = "/mnt/xdr-backups";
+                fs::path backup_path = "/mnt/xdr-backups/";
                 fs::path X11_d = "/etc/X11/";
                 fs::path MDP_d = "/etc/modprobe.d/";
-                std::vector<fs::path> backups_list;
+                std::vector<fs::path> backup_list;
             public:
                 xDriver(fs::path def_p = fs::path{});
+                ~xDriver();
                 //
                 void parse_backup_list();
                 int make_backup();
                 //
+                fs::path get_backup_path();
+                fs::path get_X11_d();
+                fs::path get_MDP_d();
                 //friend int repair_backup();
                 //friend int make_backup();
         };
