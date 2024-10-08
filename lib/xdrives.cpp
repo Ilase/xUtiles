@@ -81,6 +81,14 @@ namespace xdr {
     {
         XSync(display, False);
     }
+
+    
+    
+    void ChangeResolution(int width, int height, std::string &name) {
+        char buf[128];
+        sprintf(buf, "xrandr --output %s --mode %dx%d", name.c_str(), width, height);
+        exec(buf);
+    }
 }
 
 // int FindBestVideoMode(int screen, unsigned int &width, unsigned int &height)
