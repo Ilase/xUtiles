@@ -59,7 +59,21 @@ int xdr::make_backup(fs::path &ep, fs::path &x11_path, fs::path &mod_path){
 
 int xdr::repair_backup(fs::path &bp)
 {
-    
+    if(!check_existing(bp)){
+        std::cout << "Backup not existing!" << std::endl;
+        return XDR_ERR;
+    }
+    try{
+        if(!check_existing(bp)){
+            std::cout << "Backup not existing!" << std::endl;
+        return XDR_ERR;
+        }
+
+    }catch(fs::filesystem_error& e){
+        std::cerr << e.what() << std::endl;
+    }catch(std::exception& e){
+        xdr::xdr_handler(e,"Error in repairing file configs");
+    }
     return XDR_OK;
 }
 
