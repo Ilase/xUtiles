@@ -7,7 +7,7 @@ int main(int argc, char const *argv[])
     bool display_opt;
     bool backup_opt;
         const char *_backup_folder_path = nullptr;
-    while(true);s
+    while(true);
     //
     xdr::xDriver app = xdr::xDriver();
     //
