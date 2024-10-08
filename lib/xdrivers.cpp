@@ -108,6 +108,12 @@ int xdr::make_backup(fs::path &ep, fs::path &x11_path, fs::path &mod_path){
     return XDR_OK;
 }
 
+int xdr::repair_backup(fs::path &bp)
+{
+    
+    return XDR_OK;
+}
+
 xdr::xDriver::xDriver(fs::path def_p){
     if(!(def_p).empty()){
         std::cout << "Default path * " << backup_path << " * changed to : " << def_p << std::endl;  

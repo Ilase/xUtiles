@@ -63,14 +63,14 @@
                 fs::path get_backup_path();
                 fs::path get_X11_d();
                 fs::path get_MDP_d();
-                //friend int repair_backup();
-                //friend int make_backup();
         };
 
         std::pair<int, int> getResolution();
         bool check_existing(const fs::path& p, fs::file_status s = fs::file_status{});
-        int repair_backup(fs::path &p);
+        //int repair_backup(fs::path &p);
         int make_backup(fs::path &ep, fs::path &x11_path, fs::path &mod_path);
+        std::vector<fs::path> get_backup_list(fs::path &dp);
+        int repair_backup(fs::path &bp);
     }
     #endif // XDRIVERS_HPP
 #endif // XDR
