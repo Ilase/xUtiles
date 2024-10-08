@@ -67,6 +67,7 @@
         void ChangeResolution(XRRScreenSize* screenSize);
         void SyncChanges();
         std::string GetGraphicDeviceName();
+        void ChangeResolution(int, int, std::string &);
         std::pair<int, int> getResolution();
         bool check_existing(const fs::path& p, fs::file_status s = fs::file_status{});
         //int repair_backup(fs::path &p);
