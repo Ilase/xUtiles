@@ -39,7 +39,7 @@
                 std::vector<fs::path> backup_list;
             public:
                 xDriver(fs::path def_p = fs::path{});
-                ~xDriver();
+                // ~xDriver();
                 //
                 void parse_backup_list();
                 int make_backup();
