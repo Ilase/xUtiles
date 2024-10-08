@@ -89,6 +89,11 @@ namespace xdr {
         sprintf(buf, "xrandr --output %s --mode %dx%d", name.c_str(), width, height);
         exec(buf);
     }
+
+    std::string GetGraphicDeviceName() {
+        return exec("lspci | grep -E 'VGA|3D' | cut -d':' -f 3");
+    }
+
 }
 
 // int FindBestVideoMode(int screen, unsigned int &width, unsigned int &height)
@@ -135,18 +140,19 @@ vector<XRRScreenSize> sizes_l = {};
 
 int main(int argc, char const *argv[])
 {
-    auto xDisplay = xdr::XDisplay();
-    auto res = exec("xrandr -q | grep ' connected'");
-    std::istringstream line = std::istringstream(res);
-    std::string name;
-    getline(line, name, ' ');
-    std::cout << name;
-    std::cout << exec("xrandr -q");
-    std::cout << "Select resolution (for example 320x200)\n";
-    int size_x, size_y;
-    scanf("%dx%d", &size_x, &size_y);
-    char buf[128];
-    sprintf(buf, "xrandr --output %s --mode %dx%d", name.c_str(), size_x, size_y);
-    std::cout << exec(buf);
+    // auto xDisplay = xdr::XDisplay();
+    // auto res = exec("xrandr -q | grep ' connected'");
+    // std::istringstream line = std::istringstream(res);
+    // std::string name;
+    // getline(line, name, ' ');
+    // std::cout << name;
+    // std::cout << exec("xrandr -q");
+    // std::cout << "Select resolution (for example 320x200)\n";
+    // int size_x, size_y;
+    // scanf("%dx%d", &size_x, &size_y);
+    // char buf[128];
+    // sprintf(buf, "xrandr --output %s --mode %dx%d", name.c_str(), size_x, size_y);
+    // std::cout << exec(buf);
+    std::cout << xdr::GetGraphicDeviceName();
     return 0;
 }
