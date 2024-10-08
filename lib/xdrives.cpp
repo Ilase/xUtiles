@@ -25,6 +25,64 @@ std::string exec(const char* cmd) {
     return result;
 }
 
+namespace xdr {
+    class XDisplay
+    {
+    private:
+    public:
+        Display* display;
+        Window root;
+        int screenCount;
+        Screen* defaultScreen;
+        XRRScreenConfiguration* screenConfig;
+        XRRScreenResources* screenResources;
+        std::vector<std::vector<XRRScreenSize>> screenSizes;
+        XDisplay();
+        ~XDisplay();
+        void ChangeResolution(XRRScreenSize* screenSize);
+        void SyncChanges();
+    };
+    
+    XDisplay::XDisplay()
+    {
+        this->display = XOpenDisplay(":0");
+        this->screenCount = ScreenCount(display);
+        this->defaultScreen = XDefaultScreenOfDisplay(display);
+        this->root = XDefaultRootWindow(display);
+        this->screenConfig = XRRGetScreenInfo(display,root);
+        this->screenResources = XRRGetScreenResources(display, root);
+
+        for (size_t i = 0; i < screenCount; i++)
+        {
+            int sizes;
+            std::vector<XRRScreenSize> sizes_l = {};
+            XRRScreenSize* xrsizes = XRRSizes(display, i, &sizes);
+            for (size_t t = 0; t < sizes; t++)
+            {
+                sizes_l.push_back(xrsizes[t]);
+            }
+            this->screenSizes.push_back(sizes_l);
+        }
+        
+
+    }
+    
+    XDisplay::~XDisplay()
+    {
+        XCloseDisplay(display);
+    }
+    
+    void XDisplay::ChangeResolution(XRRScreenSize *screenSize)
+    {
+        XRRSetScreenSize(display, root, screenSize->width, screenSize->height, screenSize->mwidth, screenSize->mheight);
+        SyncChanges();
+    }
+    void XDisplay::SyncChanges()
+    {
+        XSync(display, False);
+    }
+}
+
 // int FindBestVideoMode(int screen, unsigned int &width, unsigned int &height)
 // {
 //     int modeCount;
@@ -66,52 +124,29 @@ using std::vector;
 using std::pair;
 vector<XRRScreenSize> sizes_l = {};
 
-bool compare_pair(pair<int, int> first, pair<int, int> second) {
-    if (first.second == second.second) {
-        return first.first > second.first;
-    }else {
-        return first.second > second.second;
-    }
-}
-
-static int screenCount;
-static Window root;
-static Display* display;
 
 int main(int argc, char const *argv[])
 {
-    display = XOpenDisplay(":0");
-    Screen* screen = XScreenOfDisplay(display, DefaultScreen(display));
-    root = RootWindow(display, DefaultScreen(display)); 
-    screenCount = ScreenCount(display);
-    std::cout  << "Detected " << screenCount << " screens" << '\n';
-    auto config = XRRGetScreenInfo(display,root);
+    auto xDisplay = xdr::XDisplay();
+    std::cout  << "Detected " << xDisplay.screenCount << " screens" << '\n';
     int sizes = 0;
-    auto res = XRRGetScreenResources(display, root);
     int monitorCnt;
-    auto monitors = XRRGetMonitors(display, root, true, &monitorCnt);
-    double dpi = (25.4 * DisplayHeight(display, 0)) / DisplayHeightMM(display, 0);
-    XRRScreenSize* xrsizes = XRRSizes(display, 0, &sizes);
-    for (size_t i = 0; i < sizes; i++)
-    {
-        sizes_l.push_back(xrsizes[i]);i
-    }
-    //std::sort(sizes_l.begin(), sizes_l.end(), compare_pair);
-    for (size_t i = 0; i < sizes_l.size(); i++)
-    {
-        std::cout << i << '\t' << sizes_l[i].width << 'x' << sizes_l[i].height << '\t' << sizes_l[i].mwidth << 'x' << sizes_l[i].mheight << '\n';
-        
-    }
-    auto size = sizes_l[5];
-    std::cout << size.width << 'x' << size.height << '\n'; 
+    auto monitors = XRRGetMonitors(xDisplay.display,xDisplay.root, true, &monitorCnt);
+    double dpi = (25.4 * DisplayHeight(xDisplay.display, 0)) / DisplayHeightMM(xDisplay.display, 0);
     
-    XRRSetScreenConfig(display, config, root, 5, 
-
-    //XRRSetScreenSize(display, root, size.width, size.height, size.mwidth, size.mheight);
-    //XRRSetOutputPrimary(display, root, monitors[0].outputs[0]); 
-    XSync(display, 0);
-    //XRRSetScreenSize(display, NULL, 1000, 1000,0, 0);
-    //std::cout << exec("xrandr");
-    XCloseDisplay(display);
+    //std::sort(sizes_l.begin(), sizes_l.end(), compare_pair);
+    for (size_t t = 0; t < xDisplay.screenSizes.size(); t++)
+    {
+        auto sizes_l = xDisplay.screenSizes[t];
+        std::cout << "Screen " << t << " resolutions:\n";
+        for (size_t i = 0; i < sizes_l.size(); i++)
+        {
+            std::cout << i << '\t' << sizes_l[i].width << 'x' << sizes_l[i].height << '\t' << sizes_l[i].mwidth << 'x' << sizes_l[i].mheight << '\n';
+        }
+    }
+    
+    auto size = xDisplay.screenSizes[0][5];
+    std::cout << size.width << 'x' << size.height << '\n'; 
+    xDisplay.ChangeResolution(&size);
     return 0;
 }
