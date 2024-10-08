@@ -26,7 +26,7 @@ std::string exec(const char* cmd) {
 }
 
 namespace xdr {
-    class XDisplay
+    class xDriver
     {
     private:
     public:
@@ -37,13 +37,13 @@ namespace xdr {
         XRRScreenConfiguration* screenConfig;
         XRRScreenResources* screenResources;
         std::vector<std::vector<XRRScreenSize>> screenSizes;
-        XDisplay();
-        ~XDisplay();
+        xDriver();
+        ~xDriver();
         void ChangeResolution(XRRScreenSize* screenSize);
         void SyncChanges();
     };
     
-    XDisplay::XDisplay()
+    xDriver::xDriver()
     {
         this->display = XOpenDisplay(":0");
         this->screenCount = ScreenCount(display);
@@ -67,17 +67,17 @@ namespace xdr {
 
     }
     
-    XDisplay::~XDisplay()
+    xDriver::~xDriver()
     {
         XCloseDisplay(display);
     }
     
-    void XDisplay::ChangeResolution(XRRScreenSize *screenSize)
+    void xDriver::ChangeResolution(XRRScreenSize *screenSize)
     {
         XRRSetScreenSize(display, root, screenSize->width, screenSize->height, screenSize->mwidth, screenSize->mheight);
         SyncChanges();
     }
-    void XDisplay::SyncChanges()
+    void xDriver::SyncChanges()
     {
         XSync(display, False);
     }

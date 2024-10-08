@@ -31,6 +31,22 @@
         /*
         @brief Main app class whos make operations woth backups
         */
+       class xDriver
+        {
+        private:
+        public:
+            Display* display;
+            Window root;
+            int screenCount;
+            Screen* defaultScreen;
+            XRRScreenConfiguration* screenConfig;
+            XRRScreenResources* screenResources;
+            std::vector<std::vector<XRRScreenSize>> screenSizes;
+            xDriver();
+            ~xDriver();
+            void ChangeResolution(XRRScreenSize* screenSize);
+            void SyncChanges();
+        };
         class xDriver {
             private:
                 fs::path backup_path = "/mnt/xdr-backups/";
