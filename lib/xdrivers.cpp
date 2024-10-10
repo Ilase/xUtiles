@@ -116,7 +116,9 @@ int xdr::make_backup(fs::path &ep, fs::path &x11_path, fs::path &mod_path){
         fs::copy(mod_path, dp / "modprobe.d/" );//, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
     }catch(fs::filesystem_error& e){
         std::cerr << e.what() << std::endl;
+        return XDR_ERR;
     }catch(const std::exception& e){
+        return XDR_ERR;
         xdr::xdr_handler(e, "Error in copying files cycle");
     }
     return XDR_OK;
@@ -146,10 +148,10 @@ xdr::xDriver::xDriver(fs::path def_p){
 
 }
 
-xdr::xDriver::~xDriver(){
-    this->backup_list.clear();
-    delete& backup_path;
-}
+// xdr::xDriver::~xDriver(){
+//     this->backup_list.clear();
+//     delete& backup_path;
+// }
 
 void xdr::xDriver::parse_backup_list(){
     for(const auto& entry : fs::directory_iterator(this->backup_path)){
@@ -157,7 +159,12 @@ void xdr::xDriver::parse_backup_list(){
     }
 }
 
-
+int xdr::xDriver::make_backup()
+{
+    if (xdr::make_backup(this->backup_path,this->X11_d, this->MDP_d) == XDR_ERR)
+        return XDR_ERR;
+    return XDR_OK;
+}
 
 fs::path xdr::xDriver::get_backup_path()
 {
