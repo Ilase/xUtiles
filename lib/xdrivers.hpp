@@ -22,8 +22,15 @@
 #include <iomanip>         //
 #include <map>             // for argiments in main() 
 #include <functional>      // for arguments in main()
+#include <any>             // for any type argument in comand_map
+#include <variant>         // 
 //----------------------------------------------//----------------------------------
 namespace fs = std::filesystem; // shortcut for std::filesystem
+// const std::variant function_pool = std::variant<
+//     std::function<void()>,
+//     std::function<void(xdr::xDriver&)>,
+//     std::function<fs::path(xdr::xDriver&)>
+// >;
 //
 #include <X11/Xlib.h>
 // #include <X11/extensions/Xrandr.h>
@@ -64,7 +71,7 @@ namespace xdr
 
     public:
         xDriver(fs::path def_p = fs::path{});
-        ~xDriver();
+        //~xDriver();
         //
         void parse_backup_list();
         int make_backup();
