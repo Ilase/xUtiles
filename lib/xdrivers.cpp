@@ -7,6 +7,71 @@ void xdr::xdr_handler(const std::exception &e, const std::string &add_info)
         std::cerr << "Additional info: " << add_info << std::endl;
     }
 }
+
+std::string exec(const char* cmd) {
+    std::shared_ptr<FILE> pipe(popen(cmd, "r"), pclose);
+    if (!pipe) return "ERROR";
+    char buffer[128];
+    std::string result = "";
+    while (!feof(pipe.get()))
+    {
+        if (fgets(buffer, 128, pipe.get()) != NULL){
+            result += buffer;
+        }
+    }
+    return result;
+}
+xdr::xDisplay::xDisplay()
+{
+    this->display = XOpenDisplay(":0");
+    this->screenCount = ScreenCount(display);
+    this->defaultScreen = XDefaultScreenOfDisplay(display);
+    this->root = XDefaultRootWindow(display);
+    this->screenConfig = XRRGetScreenInfo(display,root);
+    this->screenResources = XRRGetScreenResources(display, root);
+
+    for (size_t i = 0; i < screenCount; i++)
+    {
+        int sizes;
+        std::vector<XRRScreenSize> sizes_l = {};
+        XRRScreenSize* xrsizes = XRRSizes(display, i, &sizes);
+        for (size_t t = 0; t < sizes; t++)
+        {
+            sizes_l.push_back(xrsizes[t]);
+        }
+        this->screenSizes.push_back(sizes_l);
+    }
+    
+
+}
+
+xdr::xDisplay::~xDisplay()
+{
+    XCloseDisplay(display);
+}
+
+void xdr::xDisplay::ChangeResolution(XRRScreenSize *screenSize)
+{
+    XRRSetScreenSize(display, root, screenSize->width, screenSize->height, screenSize->mwidth, screenSize->mheight);
+    SyncChanges();
+}
+void xdr::xDisplay::SyncChanges()
+{
+    XSync(display, False);
+}
+
+
+
+void xdr::ChangeResolution(int width, int height, std::string &name) {
+    char buf[128];
+    sprintf(buf, "xrandr --output %s --mode %dx%d", name.c_str(), width, height);
+    exec(buf);
+}
+
+std::string xdr::GetGraphicDeviceName() {
+    return exec("lspci | grep -E 'VGA|3D' | cut -d':' -f 3");
+}
+
 //
 // int xdr::xDriver::make_backup()
 // {   

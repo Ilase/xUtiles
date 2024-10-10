@@ -1,0 +1,3 @@
+#!/bin/sh
+
+g++ lib/xdrives.cpp -lX11 -lXrandr -L/usr/lib/X11 -o main && ./main
