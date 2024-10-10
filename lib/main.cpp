@@ -23,7 +23,8 @@ int main(int argc, char const *argv[])
         std::variant<
             std::function<void()>, 
             std::function<fs::path(xdr::xBackup&)>, 
-            std::function<void(xdr::xBackup&)>
+            std::function<void(xdr::xBackup&)>,
+            std::function<void(xdr::xBackup&, const std::string&)>
         >
     > 
     /*
@@ -67,20 +68,34 @@ int main(int argc, char const *argv[])
         {
             "--backup-list",
             [](xdr::xBackup& _a) -> void {
-                std::cout << XDR_PREF << "List of backups in folder: " << _a.get_backup_path() << std::endl;
+                std::cout << XDR_PREF << "List of backups in directory: " << _a.get_backup_path() << std::endl;
+            }
+        },
+        {
+            "--repair-backup",
+            [](xdr::xBackup& _a, const std::string&) -> void {
+                std::cout << XDR_PREF << "Repairing backup from directory: " << std::endl;
             }
         }
-
     };
 
 
-    for(const auto &arg : arguments){
+    for(size_t i = 0; i < arguments.size() ; ++i){
+        const auto& arg = arguments[i];
         auto it = comand_map.find(arg);
-        if (it !=comand_map.end()){
-            std::visit([&app](auto&& func){
-                if constexpr (std::is_invocable_v<decltype(func), xdr::xBackup&>){
+        if (it !=comand_map.end()){ 
+            std::visit([&app, &arguments, i](auto&& func){
+                using func_type = std::decay_t<decltype(func)>;
+                if constexpr (std::is_invocable_v<func_type, xdr::xBackup&>){
                     func(app);   
-                } else {
+                } else if constexpr (std::is_invocable_v<func_type, xdr::xBackup&, const std::string&>){
+                    if(i + 1 < arguments.size()){
+                        func(app, arguments[i + 1]);
+                        ++i;
+                    } else {
+                        std::cerr << XDR_PREF << "Error: Missing arg" << arg << std::endl; 
+                    }
+                }else {
                     func();
                 }
             }, it->second);
