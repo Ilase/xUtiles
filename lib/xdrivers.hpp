@@ -24,6 +24,9 @@
 #include <functional>      // for arguments in main()
 #include <any>             // for any type argument in comand_map
 #include <variant>         // 
+#include <pwd.h>
+#include <unistd.h>
+#include <cstring>
 //----------------------------------------------//----------------------------------
 namespace fs = std::filesystem; // shortcut for std::filesystem
 // const std::variant function_pool = std::variant<
@@ -64,26 +67,38 @@ namespace xdr
     class xDriver
     {
     private:
-        fs::path backup_path = "/mnt/xdr-backups/";
-        fs::path X11_d = "/etc/X11/";
-        fs::path MDP_d = "/etc/modprobe.d/";
-        std::vector<fs::path> backup_list;
-
     public:
-        xDriver(fs::path def_p = fs::path{});
-        //~xDriver();
-        //
-        void parse_backup_list();
-        int make_backup();
-        //
-        fs::path get_backup_path();
-        fs::path get_X11_d();
-        fs::path get_MDP_d();
+        xDriver();
     };
     void SyncChanges();
     std::string GetGraphicDeviceName();
     void ChangeResolution(int, int, std::string &);
     std::pair<int, int> getResolution();
+
+
+    class xBackup
+    {
+    private:
+        fs::path backup_path = "/home/user";
+        fs::path X11_d = "/etc/X11/";
+        fs::path MDP_d = "/etc/modprobe.d/";
+        std::vector<fs::path> backup_list;
+        std::string username;
+
+    public:
+        xBackup(fs::path def_p = fs::path{});
+        //~xDriver();
+        //
+        void parse_backup_list();
+        int make_backup();
+        //
+        std::vector<fs::path> get_backup_list();
+        fs::path get_backup_path();
+        fs::path get_X11_d();
+        fs::path get_MDP_d();
+        std::string get_username();
+        void print_backup_list();
+    };
     bool check_existing(const fs::path &p, fs::file_status s = fs::file_status{});
     // int repair_backup(fs::path &p);
     int make_backup(fs::path &ep, fs::path &x11_path, fs::path &mod_path);

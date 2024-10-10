@@ -29,23 +29,23 @@ bool xdr::check_existing(const fs::path &p, fs::file_status s)
     return false;
 }
 
-int xdr::make_backup(fs::path &ep, fs::path &x11_path, fs::path &mod_path){
-    fs::path dp = ep; 
+int xdr::make_backup(fs::path &_bp, fs::path &x11_path, fs::path &mod_path){
+    fs::path dp = _bp; 
+    // Getting folder name
     std::ostringstream oss;
     auto timing_curr = std::chrono::system_clock::now();
     std::time_t backup_timing = std::chrono::system_clock::to_time_t(timing_curr);
     std::tm* timing_locale = std::localtime(&backup_timing);
     oss << std::put_time(timing_locale, "%Y-%m-%d--%H-%M-%S");
-    //
-    //
     std::string backup_name = "xdr-backup-" + oss.str();
     //
+    //
     fs::create_directory(dp / backup_name);
-    dp = ep / backup_name;
+    dp = _bp / backup_name;
     fs::create_directory(dp / "X11/");
     fs::create_directory(dp / "modprobe.d/");
     //
-    //
+    // Try to copy files
     try{
         fs::copy(x11_path, dp / "X11/" );//, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
         fs::copy(mod_path, dp / "modprobe.d/" );//, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
@@ -65,21 +65,25 @@ int xdr::repair_backup(fs::path &bp)
     return XDR_OK;
 }
 
-xdr::xDriver::xDriver(fs::path def_p){
+xdr::xBackup::xBackup(fs::path def_p){
+    //Get username
+    uid_t uid = getuid();
+    struct passwd *pw = getpwuid(uid);
+    this->username = pw->pw_name; 
+    //
+    this->backup_path = fs::path("/home/") / username / ".xrd-backups/";
     if(!(def_p).empty()){
-        std::cout << "Default path * " << backup_path << " * changed to : " << def_p << std::endl;  
+        std::cout << XDR_PREF << "Default path * " << backup_path << " * changed to : " << def_p << std::endl;  
         this->backup_path = def_p;
     }
     if(!check_existing(backup_path)){
-        std::cout << "Creating backup dir" << std::endl;
+        std::cout << XDR_PREF << "Creating backup dir" << std::endl;
         fs::create_directory(backup_path);
     }
     else{
-        std::cout << "Backups dir already existing on path: " << backup_path << std::endl;
+        std::cout << XDR_PREF << "Backups folder loacate in path: " << backup_path << std::endl;
     }
-    for(const auto& entry : fs::directory_iterator(this->backup_path)){
-        this->backup_list.push_back(entry.path().string());
-    }
+    parse_backup_list();
 
 }
 
@@ -88,30 +92,47 @@ xdr::xDriver::xDriver(fs::path def_p){
 //     delete& backup_path;
 // }
 
-void xdr::xDriver::parse_backup_list(){
+void xdr::xBackup::parse_backup_list(){
     for(const auto& entry : fs::directory_iterator(this->backup_path)){
         this->backup_list.push_back(entry.path());
     }
 }
 
-int xdr::xDriver::make_backup()
+int xdr::xBackup::make_backup()
 {
     if (xdr::make_backup(this->backup_path,this->X11_d, this->MDP_d) == XDR_ERR)
         return XDR_ERR;
     return XDR_OK;
 }
 
-fs::path xdr::xDriver::get_backup_path()
+std::vector<fs::path> xdr::xBackup::get_backup_list()
+{
+    return this->backup_list;
+}
+
+fs::path xdr::xBackup::get_backup_path()
 {
     return this->backup_path;
 }
 
-fs::path xdr::xDriver::get_X11_d()
+fs::path xdr::xBackup::get_X11_d()
 {
     return this->X11_d;
 }
 
-fs::path xdr::xDriver::get_MDP_d()
+fs::path xdr::xBackup::get_MDP_d()
 {
     return this->MDP_d; 
+}
+
+std::string xdr::xBackup::get_username()
+{
+    return this->username;
+}
+
+void xdr::xBackup::print_backup_list()
+{
+    for(const auto& _bpath : backup_list){
+        std::cout << XDR_PREF << _bpath << std::endl;
+    }
 }
