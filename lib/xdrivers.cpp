@@ -65,7 +65,7 @@ int xdr::repair_backup(fs::path &bp)
     return XDR_OK;
 }
 
-xdr::xDriver::xDriver(fs::path def_p){
+xdr::xBackup::xBackup(fs::path def_p){
     //Get username
     uid_t uid = getuid();
     struct passwd *pw = getpwuid(uid);
@@ -92,45 +92,45 @@ xdr::xDriver::xDriver(fs::path def_p){
 //     delete& backup_path;
 // }
 
-void xdr::xDriver::parse_backup_list(){
+void xdr::xBackup::parse_backup_list(){
     for(const auto& entry : fs::directory_iterator(this->backup_path)){
         this->backup_list.push_back(entry.path());
     }
 }
 
-int xdr::xDriver::make_backup()
+int xdr::xBackup::make_backup()
 {
     if (xdr::make_backup(this->backup_path,this->X11_d, this->MDP_d) == XDR_ERR)
         return XDR_ERR;
     return XDR_OK;
 }
 
-std::vector<fs::path> xdr::xDriver::get_backup_list()
+std::vector<fs::path> xdr::xBackup::get_backup_list()
 {
     return this->backup_list;
 }
 
-fs::path xdr::xDriver::get_backup_path()
+fs::path xdr::xBackup::get_backup_path()
 {
     return this->backup_path;
 }
 
-fs::path xdr::xDriver::get_X11_d()
+fs::path xdr::xBackup::get_X11_d()
 {
     return this->X11_d;
 }
 
-fs::path xdr::xDriver::get_MDP_d()
+fs::path xdr::xBackup::get_MDP_d()
 {
     return this->MDP_d; 
 }
 
-std::string xdr::xDriver::get_username()
+std::string xdr::xBackup::get_username()
 {
     return this->username;
 }
 
-void xdr::xDriver::print_backup_list()
+void xdr::xBackup::print_backup_list()
 {
     for(const auto& _bpath : backup_list){
         std::cout << XDR_PREF << _bpath << std::endl;

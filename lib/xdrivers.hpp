@@ -67,6 +67,18 @@ namespace xdr
     class xDriver
     {
     private:
+    public:
+        xDriver();
+    };
+    void SyncChanges();
+    std::string GetGraphicDeviceName();
+    void ChangeResolution(int, int, std::string &);
+    std::pair<int, int> getResolution();
+
+
+    class xBackup
+    {
+    private:
         fs::path backup_path = "/home/user";
         fs::path X11_d = "/etc/X11/";
         fs::path MDP_d = "/etc/modprobe.d/";
@@ -74,7 +86,7 @@ namespace xdr
         std::string username;
 
     public:
-        xDriver(fs::path def_p = fs::path{});
+        xBackup(fs::path def_p = fs::path{});
         //~xDriver();
         //
         void parse_backup_list();
@@ -87,10 +99,6 @@ namespace xdr
         std::string get_username();
         void print_backup_list();
     };
-    void SyncChanges();
-    std::string GetGraphicDeviceName();
-    void ChangeResolution(int, int, std::string &);
-    std::pair<int, int> getResolution();
     bool check_existing(const fs::path &p, fs::file_status s = fs::file_status{});
     // int repair_backup(fs::path &p);
     int make_backup(fs::path &ep, fs::path &x11_path, fs::path &mod_path);

@@ -13,7 +13,7 @@ int main(int argc, char const *argv[])
     //const char *_backup_folder_path = nullptr;
     std::vector<std::string> arguments(argv + 1, argv + argc); 
     // Call constructor of main class
-    xdr::xDriver app;
+    xdr::xBackup app;
     //
     
     //
@@ -22,8 +22,8 @@ int main(int argc, char const *argv[])
         std::string, 
         std::variant<
             std::function<void()>, 
-            std::function<fs::path(xdr::xDriver&)>, 
-            std::function<void(xdr::xDriver&)>
+            std::function<fs::path(xdr::xBackup&)>, 
+            std::function<void(xdr::xBackup&)>
         >
     > 
     /*
@@ -54,7 +54,7 @@ int main(int argc, char const *argv[])
         },
         {
             "--backup-path",
-            [](xdr::xDriver& _a) -> void {
+            [](xdr::xBackup& _a) -> void {
                 std::cout << XDR_PREF << _a.get_backup_path() << _a.get_username() << std::endl;
             }
         },
@@ -66,7 +66,7 @@ int main(int argc, char const *argv[])
         },
         {
             "--backup-list",
-            [](xdr::xDriver& _a) -> void {
+            [](xdr::xBackup& _a) -> void {
                 std::cout << XDR_PREF << "List of backups in folder: " << _a.get_backup_path() << std::endl;
             }
         }
@@ -78,7 +78,7 @@ int main(int argc, char const *argv[])
         auto it = comand_map.find(arg);
         if (it !=comand_map.end()){
             std::visit([&app](auto&& func){
-                if constexpr (std::is_invocable_v<decltype(func), xdr::xDriver&>){
+                if constexpr (std::is_invocable_v<decltype(func), xdr::xBackup&>){
                     func(app);   
                 } else {
                     func();
