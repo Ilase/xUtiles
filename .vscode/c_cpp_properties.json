@@ -4,7 +4,8 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${workspaceFolder}"
+                "${workspaceFolder}/",
+                "${workspaceFolder}/lib/"
             ],
             "defines": [],
             "cStandard": "c17",
@@ -13,6 +14,5 @@
             "configurationProvider": "ms-vscode.cmake-tools"
         }
     ],
-    "version": 4,
-    "enableConfigurationSquiggles": true
+    "version": 4
 }
