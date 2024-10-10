@@ -24,6 +24,9 @@
 #include <functional>      // for arguments in main()
 #include <any>             // for any type argument in comand_map
 #include <variant>         // 
+#include <pwd.h>
+#include <unistd.h>
+#include <cstring>
 //----------------------------------------------//----------------------------------
 namespace fs = std::filesystem; // shortcut for std::filesystem
 // const std::variant function_pool = std::variant<
@@ -64,10 +67,11 @@ namespace xdr
     class xDriver
     {
     private:
-        fs::path backup_path = "/mnt/xdr-backups/";
+        fs::path backup_path = "/home/user";
         fs::path X11_d = "/etc/X11/";
         fs::path MDP_d = "/etc/modprobe.d/";
         std::vector<fs::path> backup_list;
+        std::string username;
 
     public:
         xDriver(fs::path def_p = fs::path{});
@@ -76,9 +80,12 @@ namespace xdr
         void parse_backup_list();
         int make_backup();
         //
+        std::vector<fs::path> get_backup_list();
         fs::path get_backup_path();
         fs::path get_X11_d();
         fs::path get_MDP_d();
+        std::string get_username();
+        void print_backup_list();
     };
     void SyncChanges();
     std::string GetGraphicDeviceName();

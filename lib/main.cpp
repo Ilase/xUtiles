@@ -55,13 +55,19 @@ int main(int argc, char const *argv[])
         {
             "--backup-path",
             [](xdr::xDriver& _a) -> void {
-                std::cout << XDR_PREF << _a.get_backup_path() << std::endl;
+                std::cout << XDR_PREF << _a.get_backup_path() << _a.get_username() << std::endl;
             }
         },
         {
             "--set-backup-path", 
             []() -> void {
 
+            }
+        },
+        {
+            "--backup-list",
+            [](xdr::xDriver& _a) -> void {
+                std::cout << XDR_PREF << "List of backups in folder: " << _a.get_backup_path() << std::endl;
             }
         }
 
