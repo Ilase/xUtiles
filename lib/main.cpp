@@ -73,8 +73,8 @@ int main(int argc, char const *argv[])
         },
         {
             "--repair-backup",
-            [](xdr::xBackup& _a, const std::string&) -> void {
-                std::cout << XDR_PREF << "Repairing backup from directory: " << std::endl;
+            [](xdr::xBackup& _a, const std::string& dir) -> void {
+                std::cout << XDR_PREF << "Repairing backup from directory: " << dir << std::endl;
             }
         }
     };
@@ -93,7 +93,7 @@ int main(int argc, char const *argv[])
                         func(app, arguments[i + 1]);
                         ++i;
                     } else {
-                        std::cerr << XDR_PREF << "Error: Missing path arg." << arguments[i] << std::endl; 
+                        std::cerr << XDR_PREF << "Error: Missing path arg: " << arguments[i] << std::endl; 
                     }
                 }else {
                     func();
