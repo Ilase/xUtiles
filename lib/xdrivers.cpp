@@ -58,9 +58,24 @@ int xdr::make_backup(fs::path &_bp, fs::path &x11_path, fs::path &mod_path){
     }
     return XDR_OK;
 }
-
+/// @brief 
+/// @param bp Path to bacup folder  
+/// @return xdr_stat OK 
 int xdr::repair_backup(fs::path &bp)
 {
+    fs::path x11_p = "/etc/X11/", mdp_p = "/etc/modprobe.d";
+    if(!xdr::check_existing(bp) && !fs::exists(x11_p) && fs::exists(mdp_p)){
+        std::cerr << XDR_PREF << "Backup path not valid or target directory not existing! "<< std::endl;
+        return XDR_ERR;
+    }
+    try{
+        copy(bp / "modprobe.d", mdp_p, fs::copy_options::update_existing);
+        copy(bp / "modprobe.d", mdp_p, fs::copy_options::update_existing);
+    }catch(fs::filesystem_error &fse){
+        std::cerr << XDR_PREF << fse.what() << std::endl;        
+    }catch(std::exception &e){
+        xdr::xdr_handler(e, "Error occured while repairing backup.");
+    }
     
     return XDR_OK;
 }
