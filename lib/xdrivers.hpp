@@ -10,23 +10,25 @@
 #if !defined(XDRIVERS_HPP) //
 #define XDRIVERS_HPP       //
 //----------------------------------------------//----------------------------------
-#include <iostream>        // basic input/output stream
-#include <stdexcept>       // exception class for handler
-#include <utility>         // std containers
-#include <algorithm>       // std functions
-#include <filesystem>      // lib for working with filesystem
-#include <string_view>     // view strings in fs iteration
-#include <vector>          // paths container
-#include <chrono>          //
-#include <ctime>           //
-#include <iomanip>         //
-#include <map>             // for argiments in main() 
-#include <functional>      // for arguments in main()
-#include <any>             // for any type argument in comand_map
-#include <variant>         // 
-#include <pwd.h>
-#include <unistd.h>
-#include <cstring>
+#include <iostream>         // basic input/output stream
+#include <stdexcept>        // exception class for handler
+#include <utility>          // std containers
+#include <algorithm>        // std functions
+#include <filesystem>       // lib for working with filesystem
+#include <string_view>      // view strings in fs iteration
+#include <vector>           // paths container
+#include <chrono>           //
+#include <ctime>            //
+#include <iomanip>          //
+#include <map>              // for argiments in main() 
+#include <functional>       // for arguments in main()
+#include <any>              // for any type argument in comand_map
+#include <variant>          // 
+#include <pwd.h>            //
+#include <unistd.h>         //
+#include <cstring>          //
+#include <fstream>          // config reade/write includes
+#include <sstream>          //
 //----------------------------------------------//----------------------------------
 namespace fs = std::filesystem; // shortcut for std::filesystem
 // const std::variant function_pool = std::variant<
@@ -89,7 +91,7 @@ namespace xdr
         xBackup(fs::path def_p = fs::path{});
         //~xDriver();
         //
-        void parse_backup_list();
+        void parse_backup_list() noexcept;
         int make_backup();
         //
         std::vector<fs::path> get_backup_list();
@@ -98,12 +100,17 @@ namespace xdr
         fs::path get_MDP_d();
         std::string get_username();
         void print_backup_list();
+        void create_config();
+        void load_config();
     };
     bool check_existing(const fs::path &p, fs::file_status s = fs::file_status{});
     // int repair_backup(fs::path &p);
     int make_backup(fs::path &ep, fs::path &x11_path, fs::path &mod_path);
     std::vector<fs::path> get_backup_list(fs::path &dp);
     int repair_backup(fs::path &bp);
+
+    std::string trimer(const std::string& str);
+    std::string get_username();
 }
 #endif // XDRIVERS_HPP
 #endif // XDR

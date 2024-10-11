@@ -80,6 +80,13 @@ int xdr::repair_backup(fs::path &bp)
     return XDR_OK;
 }
 
+std::string xdr::get_username()
+{
+    uid_t uid = getuid();
+    struct passwd *pw = getpwuid(uid);
+    return pw->pw_name; 
+}
+
 xdr::xBackup::xBackup(fs::path def_p){
     //Get username
     uid_t uid = getuid();
