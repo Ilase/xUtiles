@@ -92,7 +92,8 @@ xdr::xBackup::xBackup(fs::path def_p){
 //     delete& backup_path;
 // }
 
-void xdr::xBackup::parse_backup_list(){
+void xdr::xBackup::parse_backup_list() noexcept {
+    this->backup_list.clear();
     for(const auto& entry : fs::directory_iterator(this->backup_path)){
         this->backup_list.push_back(entry.path());
     }
