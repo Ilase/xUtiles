@@ -84,7 +84,7 @@ int main(int argc, char const *argv[])
         const auto& arg = arguments[i];
         auto it = comand_map.find(arg);
         if (it !=comand_map.end()){ 
-            std::visit([&app, &arguments, i](auto&& func){
+            std::visit([&app, &arguments, &i](auto&& func){
                 using func_type = std::decay_t<decltype(func)>;
                 if constexpr (std::is_invocable_v<func_type, xdr::xBackup&>){
                     func(app);   
@@ -93,7 +93,7 @@ int main(int argc, char const *argv[])
                         func(app, arguments[i + 1]);
                         ++i;
                     } else {
-                        std::cerr << XDR_PREF << "Error: Missing arg" << arg << std::endl; 
+                        std::cerr << XDR_PREF << "Error: Missing path arg." << arguments[i] << std::endl; 
                     }
                 }else {
                     func();

@@ -81,7 +81,7 @@ xdr::xBackup::xBackup(fs::path def_p){
         fs::create_directory(backup_path);
     }
     else{
-        std::cout << XDR_PREF << "Backups folder loacate in path: " << backup_path << std::endl;
+        //std::cout << XDR_PREF << "Backups folder loacate in path: " << backup_path << std::endl;
     }
     parse_backup_list();
 
@@ -102,6 +102,7 @@ int xdr::xBackup::make_backup()
 {
     if (xdr::make_backup(this->backup_path,this->X11_d, this->MDP_d) == XDR_ERR)
         return XDR_ERR;
+    parse_backup_list();
     return XDR_OK;
 }
 
