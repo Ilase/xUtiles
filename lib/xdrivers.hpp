@@ -41,7 +41,7 @@ namespace fs = std::filesystem; // shortcut for std::filesystem
 // #include <X11/extensions/Xrandr.h>
 //
 namespace xdr
-{
+{   
     void xdr_handler(const std::exception &e, const std::string &add_info);
     #ifdef _XRANDR_H
 
@@ -102,6 +102,13 @@ namespace xdr
         void print_backup_list();
         void create_config();
         void load_config();
+        /// @brief Functionf for saving data in conf binary file
+        void save_conf();
+        /// @brief Function to manage paths 
+        void save_path(std::ofstream& output_file, const fs::path& path);
+        /// @brief Func for loading from paths files
+        fs::path load_path(std::ifstream& input_file) const;
+
     };
     bool check_existing(const fs::path &p, fs::file_status s = fs::file_status{});
     // int repair_backup(fs::path &p);

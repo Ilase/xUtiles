@@ -79,7 +79,7 @@ int main(int argc, char const *argv[])
         }
     };
 
-
+    //this thing make argv more easy but idont know how it works
     for(size_t i = 0; i < arguments.size() ; ++i){
         const auto& arg = arguments[i];
         auto it = comand_map.find(arg);
@@ -103,7 +103,7 @@ int main(int argc, char const *argv[])
             std::cout << XDR_PREF << "Unknown argument: " << arg << std::endl; 
         }
     } 
-
+    
 
     return XDR_OK;
 }
