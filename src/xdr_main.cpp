@@ -84,7 +84,7 @@ int main(int argc, char const *argv[])
     // Call constructor of main class
     xdr::xBackup app;
     //
-    // linc to public field!!!
+    // link to public field!!!
     //
 
     
