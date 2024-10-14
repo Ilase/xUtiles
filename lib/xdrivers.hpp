@@ -23,12 +23,14 @@
 #include <map>              // for argiments in main() 
 #include <functional>       // for arguments in main()
 #include <any>              // for any type argument in comand_map
-#include <variant>          // 
+#include <variant>          // for selectcting lambda functions
 #include <pwd.h>            //
 #include <unistd.h>         //
 #include <cstring>          //
 #include <fstream>          // config reade/write includes
 #include <sstream>          //
+#include <X11/Xlib.h>       //
+#include <X11/extensions/Xrandr.h>
 //----------------------------------------------//----------------------------------
 namespace fs = std::filesystem; // shortcut for std::filesystem
 // const std::variant function_pool = std::variant<
@@ -37,13 +39,25 @@ namespace fs = std::filesystem; // shortcut for std::filesystem
 //     std::function<fs::path(xdr::xDriver&)>
 // >;
 //
-#include <X11/Xlib.h>
+
 // #include <X11/extensions/Xrandr.h>
+//
+
+
+
+
 //
 namespace xdr
 {   
     void xdr_handler(const std::exception &e, const std::string &add_info);
+    /// @brief Start point of programm! 
+
+
     #ifdef _XRANDR_H
+    
+
+
+
 
     class xDisplay
     {
@@ -77,7 +91,6 @@ namespace xdr
     void ChangeResolution(int, int, std::string &);
     std::pair<int, int> getResolution();
 
-
     class xBackup
     {
     private:
@@ -101,13 +114,14 @@ namespace xdr
         std::string get_username();
         void print_backup_list();
         void create_config();
-        void load_config();
-        /// @brief Functionf for saving data in conf binary file
-        void save_conf();
         /// @brief Function to manage paths 
         void save_path(std::ofstream& output_file, const fs::path& path);
         /// @brief Func for loading from paths files
         fs::path load_path(std::ifstream& input_file) const;
+        void load_config();
+        /// @brief Functionf for saving data in conf binary file
+        void save_conf();
+
 
     };
     bool check_existing(const fs::path &p, fs::file_status s = fs::file_status{});
@@ -118,6 +132,17 @@ namespace xdr
 
     std::string trimer(const std::string& str);
     std::string get_username();
-}
+
+
+    class xUtiles{
+    public:
+        xdr::xDriver xDriver;
+        xdr::xBackup xBackup;
+    ///
+    int app(int argc, char *argv[]);
+
+    };
+
+} //xdr namespace
 #endif // XDRIVERS_HPP
 #endif // XDR

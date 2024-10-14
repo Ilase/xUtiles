@@ -24,11 +24,12 @@ std::pair<int, int> xdr::getResolution()
 //
 bool xdr::check_existing(const fs::path &p, fs::file_status s)
 {
-    if (fs::status_known(s) ? fs::exists(s) : fs::exists(p))
-    {
-        return true;
-    }
-    return false;
+    // if (fs::status_known(s) ? fs::exists(s) : fs::exists(p))
+    // {
+    //     return true;
+    // }
+    // return false;
+    return fs::status_known(s) ? fs::exists(s) : fs::exists(p);
 }
 
 int xdr::make_backup(fs::path &_bp, fs::path &x11_path, fs::path &mod_path)
@@ -240,18 +241,24 @@ void xdr::xBackup::save_conf()
     }
 }
 
-void save_path(std::ofstream& output_file, const fs::path& path){
+void xdr::xBackup::save_path(std::ofstream& output_file, const fs::path& path){
     std::string path_str = path.string();
     size_t path_size= path_str.size();
     output_file.write(reinterpret_cast<const char*>(path_size), sizeof(path_size));
     output_file.write(path_str.c_str(), path_size);
 }
 
-fs::path xdr::xBackup::load_path(std::ifstream& input_file) const
+
+fs::path xdr::xBackup::load_path(std::ifstream &input_file) const
 {
     size_t path_size;
     input_file.read(reinterpret_cast<char*>(&path_size), sizeof(path_size));
     std::string path_str(path_size, '\0');
     input_file.read(&path_str[0], path_size);
     return fs::path(path_str);
+}
+
+int xdr::xUtiles::app(int argc, char *argv[])
+{
+    return 0;
 }
