@@ -1,4 +1,4 @@
-#include "xdrivers.hpp"
+#include "xutiles-drivers.hpp"
 #define XDR_DEBUG
 
 
@@ -75,11 +75,6 @@ int main(int argc, char const *argv[])
     if(argc < 2){
         std::cerr << XDR_PREF << "No comand provided" << std::endl;
     }
-    // int opt;
-    // bool display_opt;
-    // bool backup_opt;
-    //const char *_backup_folder_path = nullptr
-    /// lsit of input arguments 
     std::vector<std::string> arguments(argv + 1, argv + argc); 
     // Call constructor of main class
     xdr::xBackup app;

@@ -134,14 +134,7 @@ namespace xdr
     std::string get_username();
 
 
-    class xUtiles{
-    public:
-        xdr::xDriver xDriver;
-        xdr::xBackup xBackup;
-    ///
-    int app(int argc, char *argv[]);
-
-    };
+ 
 
 } //xdr namespace
 #endif // XDRIVERS_HPP
