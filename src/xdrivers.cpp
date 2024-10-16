@@ -15,10 +15,166 @@ void xdr::xdr_handler(const std::exception &e, const std::string &add_info)
 //     return 0;
 // }
 //
+std::string exec(const char* cmd) {
+    std::shared_ptr<FILE> pipe(popen(cmd, "r"), pclose);
+    if (!pipe) return "ERROR";
+    char buffer[128];
+    std::string result = "";
+    while (!feof(pipe.get()))
+    {
+        if (fgets(buffer, 128, pipe.get()) != NULL){
+            result += buffer;
+        }
+    }
+    return result;
+}
+xdr::xDisplay::xDisplay()
+{
+    auto res = exec("xrandr -q | grep ' connected'");
+    std::istringstream line = std::istringstream(res);
+    std::string name;
+    getline(line, name, ' ');
+    this->screenName = name;
+    this->display = XOpenDisplay(":0");
+    this->screenCount = ScreenCount(display);
+    this->selectedScreen = this->defaultScreen = XDefaultScreenOfDisplay(display);
+    this->selectedScreenId = XScreenNumberOfScreen(selectedScreen);
+    this->root = XDefaultRootWindow(display);
+    this->screenConfig = XRRGetScreenInfo(display,root);
+    this->screenResources = XRRGetScreenResources(display, root);
+    selectedScreenSize = getCurrentResolution(selectedScreen);
+    for (size_t i = 0; i < screenCount; i++)
+    {
+        int sizes;
+        std::vector<XRRScreenSize> sizes_l = {};
+        XRRScreenSize* xrsizes = XRRSizes(display, i, &sizes);
+        for (size_t t = 0; t < sizes; t++)
+        {
+            auto size = xrsizes[t];
+            if((i == selectedScreenId) && (size.width == selectedScreenSize.width) && (size.height == selectedScreenSize.height)) {
+                selectedScreenSizeId = t;
+            }
+            sizes_l.push_back(size);
+        }
+        this->screenSizes.push_back(sizes_l);
+    }
+    getSelectedRates();
+
+}
+
+xdr::xDisplay::~xDisplay()
+{
+    XRRFreeScreenResources(screenResources);
+    XRRFreeScreenConfigInfo(screenConfig);
+    XCloseDisplay(display);
+}
+
+XRRScreenSize xdr::xDisplay::getCurrentResolution(Screen *screen){
+    return XRRScreenSize {
+        WidthOfScreen(screen),
+        HeightOfScreen(screen),
+        WidthMMOfScreen(screen),
+        HeightMMOfScreen(screen),
+    };
+}
+
+void xdr::xDisplay::ChangeResolution(int i)
+{
+    XRRSetScreenConfig(display, screenConfig, root, i, 1 | 0, CurrentTime);
+
+}
+
+void xdr::xDisplay::ChangeCurrentResolutionRates(int sizeInd, short rate, Rotation rotation) {
+    XRRSetScreenConfigAndRate(
+                display,
+                screenConfig,
+                root,
+                sizeInd,
+                rotation,
+                rate,
+                CurrentTime
+                );
+}
+
+void xdr::xDisplay::getSelectedRates() {
+    screenRates.clear();
+    int nrates;
+    short *rates = XRRRates(display, selectedScreenId, selectedScreenSizeId, &nrates);
+    for (int i = 0; i < nrates; ++i) {
+        screenRates.push_back(rates[i]);
+    }
+}
+
+void xdr::xDisplay::changeScreen(int screenID) {
+    this->selectedScreen = XScreenOfDisplay(display, screenID);
+    this->selectedScreenId = XScreenNumberOfScreen(selectedScreen);
+    this->root = XDefaultRootWindow(display);
+    this->screenConfig = XRRGetScreenInfo(display,root);
+    this->screenResources = XRRGetScreenResources(display, root);
+    selectedScreenSize = getCurrentResolution(selectedScreen);
+    int sizes;
+    auto xrsizes = screenSizes[selectedScreenId];
+    for (size_t t = 0; t < sizes; t++)
+    {
+        auto size = xrsizes[t];
+        if((size.width == selectedScreenSize.width) && (size.height == selectedScreenSize.height)) {
+            selectedScreenSizeId = t;
+        }
+    }
+}
+
+void xdr::xDisplay::SyncChanges()
+{
+    XSync(display, False);
+}
+
+
+
+void xdr::ChangeResolution(int width, int height, std::string &name) {
+    char buf[128];
+    sprintf(buf, "xrandr --output %s --mode %dx%d", name.c_str(), width, height);
+    exec(buf);
+}
+
+std::string xdr::GetGraphicDeviceName() {
+    return exec("lspci | grep -E 'VGA|3D' | cut -d':' -f 3");
+}
+
+//
+// int xdr::xDriver::make_backup()
+// {
+//     xdr::make_backup(this->backup_path, );
+//     return 0;
+// }
+//
+
+xdr::xDriver::xDriver() {
+    std::string output = exec("python3 ./parser/main.py");
+    std::string line;
+    auto stream = std::istringstream(output);
+    while (getline(stream, line)) {
+        this->versions.push_back(line);
+    }
+}
+
+std::string xdr::xDriver::getLinkToVersion(std::string& version) {
+    return std::string("https://us.download.nvidia.com/XFree86/Linux-x86_64/") + version + std::string("/NVIDIA-Linux-x86_64-") + version + std::string(".run");
+}
+
+void xdr::xDriver::downloadVersion(std::string& version) {
+    std::string link = getLinkToVersion(version);
+    //system("echo 1");
+    system((std::string("wget ") + link).c_str());
+}
+
+std::vector<std::string>& xdr::xDriver::getVersions() {
+    return this->versions;
+}
+
 std::pair<int, int> xdr::getResolution()
 {
-    Display *display = XOpenDisplay(NULL);
-    return std::pair<int, int>(XDisplayWidth(display, 0), XDisplayHeight(display, 0));
+    Display* display = XOpenDisplay(NULL);
+    return std::pair<int, int>(XDisplayWidth(display,0), XDisplayHeight(display,0));
 }
 //
 //
