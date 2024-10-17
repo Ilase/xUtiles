@@ -149,7 +149,7 @@ std::string xdr::GetGraphicDeviceName() {
 //
 
 xdr::xDriver::xDriver() {
-    std::string output = exec("python3 ./parser/main.py");
+    std::string output = exec("./parser/parser");
     std::string line;
     auto stream = std::istringstream(output);
     while (getline(stream, line)) {
