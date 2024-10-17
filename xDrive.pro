@@ -8,7 +8,7 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = xDrive
+TARGET = xUtils
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
@@ -22,20 +22,18 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-CONFIG += c++17
+CONFIG +=   c++17\
+            depend_includepath
 QMAKE_CXXFLAGS += -std=c++17 -lstdc++fs -lX11 -lXrandr -L/usr/bin/X11
-SOURCES += \
-        main.cpp \
-        mainwindow.cpp \
-    xdrivers.cpp
+SOURCES +=  src/main.cpp \
+            src/mainwindow.cpp \
+            src/xdrivers.cpp
+INCLUDEPATH += ./include
 
-HEADERS += \
-        mainwindow.h \
-    xdrivers.hpp \
-    xdrivers.hpp
+HEADERS +=  ./include/mainwindow.h \
+            ./include/xdrivers.hpp
 
-FORMS += \
-    mainwindow.ui
+FORMS += ui/mainwindow.ui
 
 LIBS += -lstdc++fs -L/usr/bin/X11 -lX11 -lXrandr
 
