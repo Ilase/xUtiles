@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QDialog>
 #include <QStringListModel>
+#include "xdownload.h"
 #include "xdrivers.hpp"
 #include "ui_mainwindow.h"
 #include <iostream>
@@ -39,12 +40,15 @@ private slots:
 
     void on_ListResolution_activated(int index);
 
+    void on_ProgressBar_valueChanged(int value);
+
 private:
     Ui::Dialog *ui;
     xdr::xDisplay display;
     xdr::xBackup backup;
     xdr::xDriver driver;
     std::vector<QLabel> backupsName;
+    xDownload download;
     void updateRates();
 };
 

@@ -161,9 +161,14 @@ std::string xdr::xDriver::getLinkToVersion(std::string& version) {
     return std::string("https://us.download.nvidia.com/XFree86/Linux-x86_64/") + version + std::string("/NVIDIA-Linux-x86_64-") + version + std::string(".run");
 }
 
+std::string xdr::xDriver::getVersionFileName(std::string &version) {
+    return std::string("NVIDIA-Linux-x86_64-") + version + std::string(".run");
+}
+
 void xdr::xDriver::downloadVersion(std::string& version) {
     std::string link = getLinkToVersion(version);
     //system("echo 1");
+
     system((std::string("wget ") + link).c_str());
 }
 

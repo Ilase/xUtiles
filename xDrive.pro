@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -27,11 +27,13 @@ CONFIG +=   c++17\
 QMAKE_CXXFLAGS += -std=c++17 -lstdc++fs -lX11 -lXrandr -L/usr/bin/X11
 SOURCES +=  src/main.cpp \
             src/mainwindow.cpp \
-            src/xdrivers.cpp
+            src/xdrivers.cpp \
+            src/xdownload.cpp
 INCLUDEPATH += ./include
 
 HEADERS +=  ./include/mainwindow.h \
-            ./include/xdrivers.hpp
+            ./include/xdrivers.hpp \
+    include/xdownload.h
 
 FORMS += ui/mainwindow.ui
 

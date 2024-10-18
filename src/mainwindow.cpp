@@ -5,7 +5,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Dialog),
     display(xdr::xDisplay()),
-    driver(xdr::xDriver())
+    driver(xdr::xDriver()),
+    download(xDownload())
 {
     this->backup = xdr::xBackup();
     ui->setupUi(this);
@@ -98,7 +99,15 @@ void MainWindow::on_Download_clicked()
 {
     QModelIndex index = ui->listDrivers->currentIndex();
     std::string version = index.data(Qt::DisplayRole).toString().toStdString();
-    driver.downloadVersion(version);
+    QString filepath = QString((std::string("/tmp/") + driver.getVersionFileName(version)).c_str());
+    if (QFile(filepath).exists()) {
+        std::cout << "Installing Drivers \n";
+        download.installFile(filepath);
+    }
+    download.download(QUrl(driver.getLinkToVersion(version).c_str()), QString("/tmp/"));
+    connect(&download, &xDownload::percentDownloaded, ui->ProgressBar, &QProgressBar::setValue);
+    connect(&download, SIGNAL(downloaded(QString)), &download, SLOT(installFile(QString)));
+    //driver.downloadVersion(version);
 }
 
 void MainWindow::on_SetButton_clicked()
@@ -133,4 +142,9 @@ void MainWindow::on_ListResolution_activated(int index)
     display.selectedScreenSize = display.screenSizes[display.selectedScreenId][index];
     display.getSelectedRates();
     updateRates();
+}
+
+void MainWindow::on_ProgressBar_valueChanged(int value)
+{
+
 }
