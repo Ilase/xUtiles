@@ -149,7 +149,7 @@ std::string xdr::GetGraphicDeviceName() {
 //
 
 xdr::xDriver::xDriver() {
-    std::string output = exec("./parser/parser");
+    std::string output = exec("/opt/xUtils/parser");
     std::string line;
     auto stream = std::istringstream(output);
     while (getline(stream, line)) {
