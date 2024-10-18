@@ -6,10 +6,10 @@
 //--------------------------------------------------//------------------------------
 #define XDR_ERR 11         // status codes
 #define XDR_OK 10          //
-                           //--------------------------------------------------//------------------------------
+//-------------------------//-----------------------//------------------------------
 #if !defined(XDRIVERS_HPP) //
 #define XDRIVERS_HPP       //
-//----------------------------------------------//----------------------------------
+//--------------------------------------------------//------------------------------
 #include <iostream>         // basic input/output stream
 #include <stdexcept>        // exception class for handler
 #include <utility>          // std containers
@@ -49,7 +49,6 @@ namespace fs = std::filesystem; // shortcut for std::filesystem
 //
 namespace xdr
 {   
-    void xdr_handler(const std::exception &e, const std::string &add_info);
     /// @brief Start point of programm! 
 
 

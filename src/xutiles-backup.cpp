@@ -1,106 +1,4 @@
-#include "xutiles-drivers.hpp"
-
-void xdr::xdr_handler(const std::exception &e, const std::string &add_info)
-{
-    std::cerr << "Error: " << e.what() << std::endl;
-    if (!add_info.empty())
-    {
-        std::cerr << "Additional info: " << add_info << std::endl;
-    }
-}
-//
-// int xdr::xDriver::make_backup()
-// {
-//     xdr::make_backup(this->backup_path, );
-//     return 0;
-// }
-//
-std::pair<int, int> xdr::getResolution()
-{
-    Display *display = XOpenDisplay(NULL);
-    return std::pair<int, int>(XDisplayWidth(display, 0), XDisplayHeight(display, 0));
-}
-//
-//
-bool xdr::check_existing(const fs::path &p, fs::file_status s)
-{
-    // if (fs::status_known(s) ? fs::exists(s) : fs::exists(p))
-    // {
-    //     return true;
-    // }
-    // return false;
-    return fs::status_known(s) ? fs::exists(s) : fs::exists(p);
-}
-
-int xdr::make_backup(fs::path &_bp, fs::path &x11_path, fs::path &mod_path)
-{
-    fs::path dp = _bp;
-    // Getting folder name
-    std::ostringstream oss;
-    auto timing_curr = std::chrono::system_clock::now();
-    std::time_t backup_timing = std::chrono::system_clock::to_time_t(timing_curr);
-    std::tm *timing_locale = std::localtime(&backup_timing);
-    oss << std::put_time(timing_locale, "%Y-%m-%d--%H-%M-%S");
-    std::string backup_name = "xdr-backup-" + oss.str();
-    //
-    //
-    fs::create_directory(dp / backup_name);
-    dp = _bp / backup_name;
-    fs::create_directory(dp / "X11/");
-    fs::create_directory(dp / "modprobe.d/");
-    //
-    // Try to copy files
-    try
-    {
-        fs::copy(x11_path, dp / "X11/");        //, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
-        fs::copy(mod_path, dp / "modprobe.d/"); //, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
-    }
-    catch (fs::filesystem_error &e)
-    {
-        std::cerr << e.what() << std::endl;
-        return XDR_ERR;
-    }
-    catch (const std::exception &e)
-    {
-        return XDR_ERR;
-        xdr::xdr_handler(e, "Error in copying files cycle");
-    }
-    return XDR_OK;
-}
-/// @brief Repair conf files from path folder
-/// @param bp Path to bacup folder
-/// @return xdr_stat OK
-int xdr::repair_backup(fs::path &bp)
-{
-    fs::path x11_p = "/etc/X11/", mdp_p = "/etc/modprobe.d";
-    if (!xdr::check_existing(bp) && !fs::exists(x11_p) && fs::exists(mdp_p))
-    {
-        std::cerr << XDR_PREF << "Backup path not valid or target directory not existing! " << std::endl;
-        return XDR_ERR;
-    }
-    try
-    {
-        copy(bp / "modprobe.d", mdp_p, fs::copy_options::update_existing);
-        copy(bp / "modprobe.d", mdp_p, fs::copy_options::update_existing);
-    }
-    catch (fs::filesystem_error &fse)
-    {
-        std::cerr << XDR_PREF << fse.what() << std::endl;
-    }
-    catch (std::exception &e)
-    {
-        xdr::xdr_handler(e, "Error occured while repairing backup.");
-    }
-
-    return XDR_OK;
-}
-
-std::string xdr::get_username()
-{
-    uid_t uid = getuid();
-    struct passwd *pw = getpwuid(uid);
-    return pw->pw_name;
-}
+#include "xutiles-backup.hpp"
 
 xdr::xBackup::xBackup(fs::path def_p)
 {
@@ -148,6 +46,7 @@ int xdr::xBackup::make_backup()
     parse_backup_list();
     return XDR_OK;
 }
+// Getters/Setters
 
 std::vector<fs::path> xdr::xBackup::get_backup_list()
 {
@@ -256,5 +155,88 @@ fs::path xdr::xBackup::load_path(std::ifstream &input_file) const
     std::string path_str(path_size, '\0');
     input_file.read(&path_str[0], path_size);
     return fs::path(path_str);
+}
+
+
+std::string xdr::get_username()
+{
+    uid_t uid = getuid();
+    struct passwd *pw = getpwuid(uid);
+    return pw->pw_name;
+}
+
+bool xdr::check_existing(const fs::path &p, fs::file_status s)
+{
+    // if (fs::status_known(s) ? fs::exists(s) : fs::exists(p))
+    // {
+    //     return true;
+    // }
+    // return false;
+    return fs::status_known(s) ? fs::exists(s) : fs::exists(p);
+}
+
+int xdr::make_backup(fs::path &_bp, fs::path &x11_path, fs::path &mod_path)
+{
+    fs::path dp = _bp;
+    // Getting folder name
+    std::ostringstream oss;
+    auto timing_curr = std::chrono::system_clock::now();
+    std::time_t backup_timing = std::chrono::system_clock::to_time_t(timing_curr);
+    std::tm *timing_locale = std::localtime(&backup_timing);
+    oss << std::put_time(timing_locale, "%Y-%m-%d--%H-%M-%S");
+    std::string backup_name = "xdr-backup-" + oss.str();
+    //
+    //
+    fs::create_directory(dp / backup_name);
+    dp = _bp / backup_name;
+    fs::create_directory(dp / "X11/");
+    fs::create_directory(dp / "modprobe.d/");
+    //
+    // Try to copy files
+    try
+    {
+        fs::copy(x11_path, dp / "X11/");        //, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+        fs::copy(mod_path, dp / "modprobe.d/"); //, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+    }
+    catch (fs::filesystem_error &e)
+    {
+        std::cerr << e.what() << std::endl;
+        return XDR_ERR;
+    }
+    catch (const std::exception &e)
+    {
+        return XDR_ERR;
+        xdr::xdr_handler(e, "Error in copying files cycle");
+    }
+    return XDR_OK;
+}
+
+
+/// @brief Repair conf files from path folder
+/// @param bp Path to bacup folder
+/// @return xdr_stat OK
+int xdr::repair_backup(fs::path &bp)
+{
+    fs::path x11_p = "/etc/X11/", mdp_p = "/etc/modprobe.d";
+    if (!xdr::check_existing(bp) && !fs::exists(x11_p) && fs::exists(mdp_p))
+    {
+        std::cerr << XDR_PREF << "Backup path not valid or target directory not existing! " << std::endl;
+        return XDR_ERR;
+    }
+    try
+    {
+        copy(bp / "modprobe.d", mdp_p, fs::copy_options::update_existing);
+        copy(bp / "modprobe.d", mdp_p, fs::copy_options::update_existing);
+    }
+    catch (fs::filesystem_error &fse)
+    {
+        std::cerr << XDR_PREF << fse.what() << std::endl;
+    }
+    catch (std::exception &e)
+    {
+        xdr::xdr_handler(e, "Error occured while repairing backup.");
+    }
+
+    return XDR_OK;
 }
 
