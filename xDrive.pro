@@ -25,13 +25,22 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG +=   c++17\
             depend_includepath
 QMAKE_CXXFLAGS += -std=c++17 -lstdc++fs -lX11 -lXrandr -L/usr/bin/X11
-SOURCES +=  src/main.cpp \
-            src/mainwindow.cpp \
-            src/xdrivers.cpp
-INCLUDEPATH += ./include
 
-HEADERS +=  ./include/mainwindow.h \
-            ./include/xdrivers.hpp
+
+
+SOURCES =  $$files(src/lib/*.cpp) \
+             $$files(src/qt/*.cpp) \
+
+
+#SOURCES +=  src/main.cpp \
+#            src/mainwindow.cpp \
+#            src/xdrivers.cpp
+INCLUDEPATH += ./include/lib \
+               ./include/qt
+
+HEADERS +=  $$files(include/lib/*) \
+            $$files(include/qt/*)
+
 
 FORMS += ui/mainwindow.ui
 

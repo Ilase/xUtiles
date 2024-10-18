@@ -4,7 +4,9 @@
 #include <QMainWindow>
 #include <QDialog>
 #include <QStringListModel>
-#include "xdrivers.hpp"
+#include "xutiles-backup.hpp"
+#include "xutiles-drivers.hpp"
+#include "xutiles-display.hpp"
 #include "ui_mainwindow.h"
 #include <iostream>
 #include <vector>

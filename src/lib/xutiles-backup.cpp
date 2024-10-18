@@ -206,7 +206,6 @@ int xdr::make_backup(fs::path &_bp, fs::path &x11_path, fs::path &mod_path)
     catch (const std::exception &e)
     {
         return XDR_ERR;
-        xdr::xdr_handler(e, "Error in copying files cycle");
     }
     return XDR_OK;
 }
@@ -234,7 +233,7 @@ int xdr::repair_backup(fs::path &bp)
     }
     catch (std::exception &e)
     {
-        xdr::xdr_handler(e, "Error occured while repairing backup.");
+
     }
 
     return XDR_OK;

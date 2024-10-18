@@ -1,5 +1,5 @@
-#ifndef _XUTILES_INCLUDE_HPP
-#define _XUTILES_INCLUDE_HPP
+#ifndef XUTILES_INCLUDE_HPP
+#define XUTILES_INCLUDE_HPP
 
 #define XDR_PREF "[XDR] "
 
@@ -26,8 +26,22 @@
 #include <cstring>          //
 #include <fstream>          // config reade/write includes
 #include <sstream>          //
-#include <X11/Xlib.h>       //
-#include <X11/extensions/Xrandr.h>
+extern "C" {
+    #include <X11/Xlib.h>
+    #include <X11/extensions/Xrandr.h>
+    #undef Bool
+    #undef CursorShape
+    #undef Expose
+    #undef KeyPress
+    #undef KeyRelease
+    #undef FocusIn
+    #undef FocusOut
+    #undef FontChange
+    #undef None
+    #undef Status
+    #undef Unsorted
+
+}
 //--------------------------------------------------//
 namespace fs = std::filesystem;                     // shortcut for std::filesystem
 //--------------------------------------------------//
@@ -35,14 +49,7 @@ namespace fs = std::filesystem;                     // shortcut for std::filesys
 
 namespace xdr{
 
-    void xdr_handler(const std::exception &e, const std::string &add_info)
-    {
-        std::cerr << "Error: " << e.what() << std::endl;
-        if (!add_info.empty())
-        {
-            std::cerr << "Additional info: " << add_info << std::endl;
-        }
-    }
+
 
 };
 

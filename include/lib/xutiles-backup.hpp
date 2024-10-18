@@ -1,4 +1,5 @@
 #ifndef _XUTILES_BACKUP_HPP
+#define _XUTILES_BACKUP_HPP
 #include "xutiles-include.hpp"
 
 namespace xdr {

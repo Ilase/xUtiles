@@ -5,6 +5,20 @@ xdr::xUtiles::xUtiles(int _argc, char *_argv[]) : argc(_argc)
     this->args = std::vector<std::string>(_argv + 1, _argv + _argc);
 }
 
+std::string exec(const char* cmd) {
+    std::shared_ptr<FILE> pipe(popen(cmd, "r"), pclose);
+    if (!pipe) return "ERROR";
+    char buffer[128];
+    std::string result = "";
+    while (!feof(pipe.get()))
+    {
+        if (fgets(buffer, 128, pipe.get()) != NULL){
+            result += buffer;
+        }
+    }
+    return result;
+}
+
 int xdr::xUtiles::app()
 {
     if(argc < 2){

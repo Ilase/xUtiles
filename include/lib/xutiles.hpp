@@ -2,6 +2,7 @@
 #define XUTILES_HPP
 #include "xutiles-drivers.hpp" 
 #include "xutiles-include.hpp"
+#include "xutiles-backup.hpp"
 
 const std::map<
     std::string, 
@@ -68,4 +69,7 @@ namespace xdr{
         int app();
     };
 }
+
+std::string exec(const char*);
+
 #endif
