@@ -7,6 +7,7 @@
 #include "xutiles-backup.hpp"
 #include "xutiles-drivers.hpp"
 #include "xutiles-display.hpp"
+#include "xutiles-download.hpp"
 #include "ui_mainwindow.h"
 #include <iostream>
 #include <vector>
@@ -47,6 +48,8 @@ private:
     xdr::xBackup backup;
     xdr::xDriver driver;
     std::vector<QLabel> backupsName;
+
+    xdr::xDownload download;
     void updateRates();
 };
 

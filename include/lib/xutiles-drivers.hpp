@@ -18,6 +18,7 @@ namespace xdr
         std::vector<std::string>& getVersions();
         std::string getLinkToVersion(std::string&);
         void downloadVersion(std::string&);
+        std::string getVersionFileName(std::string&);
     };
 
 } //xdr namespace

@@ -23,5 +23,8 @@ std::vector<std::string>& xdr::xDriver::getVersions() {
     return this->versions;
 }
 
+std::string xdr::xDriver::getVersionFileName(std::string &version) {
+    return std::string("NVIDIA-Linux-x86_64-") + version + std::string(".run");
+}
 //
 //

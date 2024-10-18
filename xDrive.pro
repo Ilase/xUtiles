@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -30,7 +30,6 @@ QMAKE_CXXFLAGS += -std=c++17 -lstdc++fs -lX11 -lXrandr -L/usr/bin/X11
 
 SOURCES =  $$files(src/lib/*.cpp) \
              $$files(src/qt/*.cpp) \
-
 
 #SOURCES +=  src/main.cpp \
 #            src/mainwindow.cpp \
