@@ -14,6 +14,8 @@ set +e
 # /usr/lib/X11/xorg.conf.<hostname>
 # /usr/lib/X11/xorg.conf
 # -----------------------------------
+# Important shortcut??
+# /etc/init.d/gdm stop || /etc/init.d/gdm3 stop || /etc/init.d/kdm stop || /etc/init.d/xdm stop || /etc/init.d/lightdm stop
 
 function main(){
     echo "Xorg conf builder!";
