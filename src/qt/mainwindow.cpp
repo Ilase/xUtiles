@@ -27,6 +27,8 @@ MainWindow::MainWindow(QWidget *parent) :
     }
     QStringListModel* model = new QStringListModel(list);
     ui->backupList->setModel(model);
+
+    //INFO
     ui->infoGpu->setText(QString(xdr::GetGraphicDeviceName().c_str()));
     ui->infoScreen->setText(QString(display.screenName.c_str()));
     XRRScreenSize size = display.getCurrentResolution(display.defaultScreen);
@@ -45,7 +47,11 @@ MainWindow::MainWindow(QWidget *parent) :
     if (output.contains(memReg)) {
         ui->infoMemory->setText(memReg.cap(1));
     }
+
+    //RATES
     updateRates();
+
+    //DRIVERS
     auto drivers = driver.getVersions();
     QStringList driversList;
     for (const auto& var: drivers) {
@@ -57,6 +63,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->driverGPU->setText(ui->driverGPU->text() + '\t' + driver.graphicCardName);
     ui->driverCurrent->setText(ui->driverCurrent->text() + '\t' + driver.driverName);
     ui->driverVersion->setText(ui->driverVersion->text() + '\t' + driver.driverVersion);
+
+    //SCREEN INFO
+    int gcd = std::gcd(display.selectedScreenSize.width, display.selectedScreenSize.height);
+    char text[8];
+    sprintf(text, "%d:%d", display.selectedScreenSize.width / gcd, display.selectedScreenSize.height / gcd);
+    ui->displayFormat->setText(ui->displayFormat->text() + text);
+    ui->displayName->setText(ui->displayName->text() + display.screenName.c_str());
 }
 
 void MainWindow::updateRates() {

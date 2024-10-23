@@ -174,7 +174,7 @@
     </font>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>2</number>
    </property>
    <widget class="QWidget" name="pageInformation">
     <widget class="QLabel" name="label_13">
@@ -1002,7 +1002,7 @@
      </property>
      <layout class="QVBoxLayout" name="infoScreen_3">
       <item>
-       <widget class="QLabel" name="label_22">
+       <widget class="QLabel" name="displayFormat">
         <property name="font">
          <font>
           <pointsize>14</pointsize>
@@ -1014,7 +1014,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="label_20">
+       <widget class="QLabel" name="displayName">
         <property name="font">
          <font>
           <pointsize>14</pointsize>
@@ -1026,7 +1026,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="infoRate">
+       <widget class="QLabel" name="displayRate">
         <property name="font">
          <font>
           <pointsize>14</pointsize>
@@ -1038,7 +1038,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="label_21">
+       <widget class="QLabel" name="displayResolution">
         <property name="font">
          <font>
           <pointsize>14</pointsize>
