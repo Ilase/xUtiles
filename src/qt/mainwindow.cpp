@@ -37,8 +37,12 @@ MainWindow::MainWindow(QWidget *parent) :
     for (const auto& var: drivers) {
         driversList.push_back(QString(var.c_str()));
     }
+    driversList.push_back(QString("470.256.02"));
     QStringListModel* driversModel = new QStringListModel(driversList);
     ui->listDrivers->setModel(driversModel);
+    ui->driverGPU->setText(ui->driverGPU->text() + '\t' + driver.graphicCardName);
+    ui->driverCurrent->setText(ui->driverCurrent->text() + '\t' + driver.driverName);
+    ui->driverVersion->setText(ui->driverVersion->text() + '\t' + driver.driverVersion);
 }
 
 void MainWindow::updateRates() {
@@ -100,13 +104,11 @@ void MainWindow::on_Download_clicked()
     std::string version = index.data(Qt::DisplayRole).toString().toStdString();
     QString filepath = QString((std::string("/tmp/") + driver.getVersionFileName(version)).c_str());
     if (QFile(filepath).exists()) {
-        std::cout << "Installing Drivers \n";
-        download.installFile(filepath);
+        return;
+    }else {
+        download.download(QUrl(driver.getLinkToVersion(version).c_str()), QString("/tmp/"));
+        connect(&download, SIGNAL(percentDownloaded(int)), ui->ProgressBar, SLOT(setValue(int)));
     }
-    download.download(QUrl(driver.getLinkToVersion(version).c_str()), QString("/tmp/"));
-    connect(&download, SIGNAL(percentDownloaded(int)), ui->ProgressBar, SLOT(setValue(int)));
-    connect(&download, SIGNAL(downloaded(QString)), &download, SLOT(installFile(QString)));
-    //driver.downloadVersion(version);
 }
 
 void MainWindow::on_SetButton_clicked()
@@ -141,4 +143,16 @@ void MainWindow::on_ListResolution_activated(int index)
     display.selectedScreenSize = display.screenSizes[display.selectedScreenId][index];
     display.getSelectedRates();
     updateRates();
+}
+
+void MainWindow::on_Install_clicked()
+{
+    QModelIndex index = ui->listDrivers->currentIndex();
+    std::string version = index.data(Qt::DisplayRole).toString().toStdString();
+    QString filepath = QString((std::string("/tmp/") + driver.getVersionFileName(version)).c_str());
+    if (QFile(filepath).exists()) {
+        download.installFile(filepath);
+    }else {
+        return;
+    }
 }

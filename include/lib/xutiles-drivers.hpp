@@ -5,6 +5,7 @@
 #include <iostream>         // basic input/output stream
 #include <string>
 #include <vector>
+#include <QRegExp>
 //
 namespace xdr
 {   
@@ -14,6 +15,9 @@ namespace xdr
     private:
         std::vector<std::string> versions;
     public:
+        QString graphicCardName;
+        QString driverName;
+        QString driverVersion;
         xDriver();
         std::vector<std::string>& getVersions();
         std::string getLinkToVersion(std::string&);

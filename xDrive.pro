@@ -38,10 +38,11 @@ INCLUDEPATH += ./include/lib \
                ./include/qt
 
 HEADERS +=  $$files(include/lib/*) \
-            $$files(include/qt/*)
+            $$files(include/qt/*) \
 
 
-FORMS += ui/mainwindow.ui
+FORMS +=    ui/mainwindow.ui \
+            ui/monitorbutton.ui
 
 LIBS += -lstdc++fs -L/usr/bin/X11 -lX11 -lXrandr
 

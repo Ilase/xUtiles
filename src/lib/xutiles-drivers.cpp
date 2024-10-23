@@ -1,9 +1,24 @@
 #include "xutiles-drivers.hpp"
 #include "xutiles.hpp"
 xdr::xDriver::xDriver() {
-    std::string output = exec("/opt/xUtils/parser");
+    QRegExp versionPatern("v: (\\d+(?:\\.\\d+)+)");
+    QString graphicDeviceOutput = exec("inxi -G").c_str();
+    if (graphicDeviceOutput.contains(versionPatern)){
+        //QStringList captured = versionPatern.capturedTexts();
+        this->driverVersion = versionPatern.cap(1);
+    }
+    QRegExp devicePatern(R"(Device-\d+: (\w+(?: [\w\[\]_-]+)+) \w+:)");
+    if (graphicDeviceOutput.contains(devicePatern)) {
+        this->graphicCardName = devicePatern.cap(1);
+    }
+    QRegExp driverNamePatern("driver: (\\w+)");
+    if (graphicDeviceOutput.contains(driverNamePatern)) {
+        this->driverName = driverNamePatern.cap(1);
+    }
+    //std::cout <<  driverName.toStdString() << '\t' << driverVersion.toStdString() << '\t' << graphicCardName.toStdString() << '\n';
+    std::string parserOutput = exec("/opt/xUtils/parser");
     std::string line;
-    auto stream = std::istringstream(output);
+    auto stream = std::istringstream(parserOutput);
     while (getline(stream, line)) {
         this->versions.push_back(line);
     }
@@ -15,7 +30,6 @@ std::string xdr::xDriver::getLinkToVersion(std::string& version) {
 
 void xdr::xDriver::downloadVersion(std::string& version) {
     std::string link = getLinkToVersion(version);
-    //system("echo 1");
     system((std::string("wget ") + link).c_str());
 }
 

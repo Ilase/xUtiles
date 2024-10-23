@@ -38,6 +38,7 @@ void xdr::xDownload::fileDownloaded()
 
 QByteArray xdr::xDownload::downloadedData() const
 {
+
     return m_DownloadedData;
 }
 
@@ -56,9 +57,15 @@ void xdr::xDownload::onDownloadReady() {
  }
 
  void xdr::xDownload::installFile(QString filepath) {
+    std::cout << filepath.toStdString();
+    system((std::string("chmod +x ") + filepath.toStdString()).c_str());
     auto proc = QProcess();
-    proc.start(filepath, QStringList() << "--help");
-    proc.waitForFinished(-1);
+    QStringList args = QStringList({"--silent", "-Z", "-X", "--no-x-check", "--no-kernel-module-source"});
+    //proc.start(QString("sudo ") + filepath, args);
+    proc.startDetached("systemd-run", QStringList() << "-r" << "bash" << "/opt/xUtils/install_driver" << filepath);
+    //proc.startDetached("systemd-run -R sudo -A -b bash /opt/xUtils/install_driver " + filepath);
+    //proc.start("sudo -A bash /opt/xUtils/install_driver " + filepath + "&");
+    proc.waitForFinished();
     QString output = QString(proc.readAllStandardOutput());
     std::cout << output.toStdString();
     output = QString(proc.readAllStandardError());

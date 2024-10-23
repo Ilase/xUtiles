@@ -1,0 +1,4 @@
+service lightmd stop
+modprobe  -r nouveau
+$1 --silent --no-x-check -X -Z --no-kernel-module-source
+reboot
