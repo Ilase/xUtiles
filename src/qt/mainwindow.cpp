@@ -32,9 +32,19 @@ MainWindow::MainWindow(QWidget *parent) :
     XRRScreenSize size = display.getCurrentResolution(display.defaultScreen);
     std::string resolution = std::to_string(size.width) + 'x' + std::to_string(size.height);
     ui->infoResolution->setText(QString(resolution.c_str()));
-    std::string output = exec("inxi");
-    QRegExp cpuReg(R"(CPU: (\w+(?: [\w\[\]_-]+)+) \w+:)");
-    QRegExp storageReg(R"(Storage: (\w+(?: [\w\[\]_-]+)+) \w+:)");
+    QString output = xdr::exec("inxi").c_str();
+    QRegExp cpuReg(R"(CPU: (\w+(?: [\w\[\]()_-]+)+) \w+:)");
+    QRegExp storageReg(R"(Storage: ((?:[\w\[\]%()._-]+ )+)\w+:)");
+    QRegExp memReg(R"(Mem: ((?:[\w\[\]%()\/._-]+ )+)\w+:)");
+    if (output.contains(cpuReg)) {
+        ui->infoProccesor->setText(cpuReg.cap(1));
+    }
+    if (output.contains(storageReg)) {
+        ui->infoStorage->setText(storageReg.cap(1));
+    }
+    if (output.contains(memReg)) {
+        ui->infoMemory->setText(memReg.cap(1));
+    }
     updateRates();
     auto drivers = driver.getVersions();
     QStringList driversList;

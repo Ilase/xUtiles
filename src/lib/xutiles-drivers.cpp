@@ -2,7 +2,7 @@
 #include "xutiles.hpp"
 xdr::xDriver::xDriver() {
     QRegExp versionPatern("v: (\\d+(?:\\.\\d+)+)");
-    QString graphicDeviceOutput = exec("inxi -G").c_str();
+    QString graphicDeviceOutput = xdr::exec("inxi -G").c_str();
     if (graphicDeviceOutput.contains(versionPatern)){
         //QStringList captured = versionPatern.capturedTexts();
         this->driverVersion = versionPatern.cap(1);
@@ -18,7 +18,7 @@ xdr::xDriver::xDriver() {
         this->driverName = driverNamePatern.cap(1);
     }
     //std::cout <<  driverName.toStdString() << '\t' << driverVersion.toStdString() << '\t' << graphicCardName.toStdString() << '\n';
-    std::string parserOutput = exec("/opt/xUtils/parser");
+    std::string parserOutput = xdr::exec("/opt/xUtils/parser");
     std::string line;
     auto stream = std::istringstream(parserOutput);
     while (getline(stream, line)) {

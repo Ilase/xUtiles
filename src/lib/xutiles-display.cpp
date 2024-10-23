@@ -3,7 +3,7 @@
 
 xdr::xDisplay::xDisplay()
 {
-    auto res = exec("xrandr -q | grep ' connected'");
+    auto res = xdr::exec("xrandr -q | grep ' connected'");
     std::istringstream line = std::istringstream(res);
     std::string name;
     getline(line, name, ' ');
@@ -101,6 +101,6 @@ void xdr::xDisplay::SyncChanges()
     XSync(display, False);
 }
 std::string xdr::GetGraphicDeviceName() {
-    return exec("lspci | grep -E 'VGA|3D' | cut -d':' -f 3");
+    return xdr::exec("lspci | grep -E 'VGA|3D' | cut -d':' -f 3");
 }
 

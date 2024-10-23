@@ -61,6 +61,8 @@ const std::map<
 };
 
 namespace xdr{
+    std::string exec(const char*);
+
     class xUtiles{
         int argc;
         std::vector<std::string> args; 
@@ -70,6 +72,6 @@ namespace xdr{
     };
 }
 
-std::string exec(const char*);
+
 
 #endif
