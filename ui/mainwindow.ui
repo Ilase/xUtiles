@@ -1026,18 +1026,6 @@
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="displayRate">
-        <property name="font">
-         <font>
-          <pointsize>14</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Частота обновления:</string>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QLabel" name="displayResolution">
         <property name="font">
          <font>

@@ -70,6 +70,9 @@ MainWindow::MainWindow(QWidget *parent) :
     sprintf(text, "%d:%d", display.selectedScreenSize.width / gcd, display.selectedScreenSize.height / gcd);
     ui->displayFormat->setText(ui->displayFormat->text() + text);
     ui->displayName->setText(ui->displayName->text() + display.screenName.c_str());
+    char res[32];
+    sprintf(res, "%dx%d", display.selectedScreenSize.width, display.selectedScreenSize.height);
+    ui->displayResolution->setText(ui->displayResolution->text() + res);
 }
 
 void MainWindow::updateRates() {
