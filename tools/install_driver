@@ -1,4 +1,13 @@
+if [!-f $1] then
+    exit 1
+fi
+
 service lightmd stop
 modprobe  -r nouveau
 $1 --silent --no-x-check -X -Z --no-kernel-module-source
-reboot
+if [$? -eq 0] then
+    reboot
+else
+    modprobe  -i nouveau
+    exit 1
+fi

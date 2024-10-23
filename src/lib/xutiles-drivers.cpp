@@ -8,6 +8,8 @@ xdr::xDriver::xDriver() {
         this->driverVersion = versionPatern.cap(1);
     }
     QRegExp devicePatern(R"(Device-\d+: (\w+(?: [\w\[\]_-]+)+) \w+:)");
+
+
     if (graphicDeviceOutput.contains(devicePatern)) {
         this->graphicCardName = devicePatern.cap(1);
     }

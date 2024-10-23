@@ -9,7 +9,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     this->backup = xdr::xBackup();
     ui->setupUi(this);
-
+    ui->downloadFinished->hide();
+    ui->ProgressBar->hide();
     ui->ListResolution->clear();
     for (size_t i = 0; i < display.screenSizes[0].size(); ++i) {
         auto size = display.screenSizes[0][i];
@@ -106,8 +107,11 @@ void MainWindow::on_Download_clicked()
     if (QFile(filepath).exists()) {
         return;
     }else {
+        ui->downloadFinished->hide();
         download.download(QUrl(driver.getLinkToVersion(version).c_str()), QString("/tmp/"));
+        ui->ProgressBar->show();
         connect(&download, SIGNAL(percentDownloaded(int)), ui->ProgressBar, SLOT(setValue(int)));
+        connect(&download, SIGNAL(downloaded(QString)), ui->downloadFinished, SLOT(show()));
     }
 }
 

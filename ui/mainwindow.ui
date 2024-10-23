@@ -440,7 +440,7 @@
       </font>
      </property>
      <property name="text">
-      <string>Поиск дров</string>
+      <string>Поиск драйверов</string>
      </property>
     </widget>
     <widget class="QPushButton" name="Download">
@@ -462,6 +462,9 @@
      </property>
     </widget>
     <widget class="QProgressBar" name="ProgressBar">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>50</x>
@@ -571,6 +574,28 @@
      </property>
      <property name="text">
       <string>Установить</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="downloadFinished">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>360</x>
+       <y>610</y>
+       <width>231</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Noto Sans</family>
+       <pointsize>14</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Загрузка завершенна </string>
      </property>
     </widget>
    </widget>
