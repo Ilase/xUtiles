@@ -174,7 +174,7 @@
     </font>
    </property>
    <property name="currentIndex">
-    <number>3</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="pageInformation">
     <widget class="QLabel" name="label_13">
@@ -350,6 +350,18 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_3">
       <item>
+       <widget class="QLabel" name="infoProccesor">
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QLabel" name="infoGpu">
         <property name="font">
          <font>
@@ -362,31 +374,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="infoMemory">
-        <property name="font">
-         <font>
-          <pointsize>12</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="infoResolution">
-        <property name="font">
-         <font>
-          <pointsize>12</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="infoProccesor">
+       <widget class="QLabel" name="infoStorage">
         <property name="font">
          <font>
           <pointsize>12</pointsize>
@@ -410,7 +398,19 @@
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="infoStorage">
+       <widget class="QLabel" name="infoResolution">
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="infoMemory">
         <property name="font">
          <font>
           <pointsize>12</pointsize>

@@ -32,6 +32,9 @@ MainWindow::MainWindow(QWidget *parent) :
     XRRScreenSize size = display.getCurrentResolution(display.defaultScreen);
     std::string resolution = std::to_string(size.width) + 'x' + std::to_string(size.height);
     ui->infoResolution->setText(QString(resolution.c_str()));
+    std::string output = exec("inxi");
+    QRegExp cpuReg(R"(CPU: (\w+(?: [\w\[\]_-]+)+) \w+:)");
+    QRegExp storageReg(R"(Storage: (\w+(?: [\w\[\]_-]+)+) \w+:)");
     updateRates();
     auto drivers = driver.getVersions();
     QStringList driversList;
