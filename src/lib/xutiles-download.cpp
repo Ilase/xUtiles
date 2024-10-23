@@ -52,7 +52,7 @@ void xdr::xDownload::onDownloadReady() {
  void xdr::xDownload::getDownloadData(qint64 read, qint64 total)
  {
 
-     percent = ((double)read / (double)total) * 100;
+     percent = floor(((double)read / (double)total) * 100);
      emit percentDownloaded(percent);
  }
 

@@ -44,6 +44,8 @@ private slots:
 
     void on_Install_clicked();
 
+    void on_BackupButton_clicked();
+
 private:
     Ui::Dialog *ui;
     xdr::xDisplay display;

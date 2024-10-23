@@ -174,7 +174,7 @@
     </font>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>3</number>
    </property>
    <widget class="QWidget" name="pageInformation">
     <widget class="QLabel" name="label_13">

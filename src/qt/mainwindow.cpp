@@ -160,3 +160,11 @@ void MainWindow::on_Install_clicked()
         return;
     }
 }
+
+void MainWindow::on_BackupButton_clicked()
+{
+    QModelIndex index = ui->backupList->currentIndex();
+    std::string version = index.data(Qt::DisplayRole).toString().toStdString();
+    auto path = fs::u8path(version);
+    xdr::repair_backup(path);
+}
