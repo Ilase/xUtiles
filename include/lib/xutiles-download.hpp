@@ -1,6 +1,7 @@
 #ifndef XDOWNLOAD_H
 #define XDOWNLOAD_H
 
+#include <xutiles-include.hpp>
 #include <QObject>
 #include <QByteArray>
 #include <QtNetwork/QNetworkAccessManager>

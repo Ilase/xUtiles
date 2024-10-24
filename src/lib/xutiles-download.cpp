@@ -33,6 +33,8 @@ void xdr::xDownload::fileDownloaded()
     m_DownloadedData = reply->readAll();
     reply->deleteLater();
     QFileInfo info = QFileInfo(*_file);
+    _file->rename(DOWNLOAD_PATH + info.fileName());
+    info = QFileInfo(*_file);
     emit downloaded(info.absoluteFilePath());
 }
 

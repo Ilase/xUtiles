@@ -76,7 +76,13 @@
      </font>
     </property>
     <property name="text">
-     <string>Legion XDriver</string>
+     <string>xUtils</string>
+    </property>
+    <property name="textFormat">
+     <enum>Qt::PlainText</enum>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
    <widget class="QPushButton" name="Backup">
@@ -139,7 +145,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Информация о системе</string>
+     <string>Информация</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_28">
@@ -174,7 +180,7 @@
     </font>
    </property>
    <property name="currentIndex">
-    <number>2</number>
+    <number>1</number>
    </property>
    <widget class="QWidget" name="pageInformation">
     <widget class="QLabel" name="label_13">
@@ -425,24 +431,6 @@
     </widget>
    </widget>
    <widget class="QWidget" name="pageDrivers">
-    <widget class="QPushButton" name="SearchDrivers">
-     <property name="geometry">
-      <rect>
-       <x>150</x>
-       <y>130</y>
-       <width>200</width>
-       <height>40</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>14</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>Поиск драйверов</string>
-     </property>
-    </widget>
     <widget class="QPushButton" name="Download">
      <property name="geometry">
       <rect>
@@ -497,7 +485,10 @@
       </font>
      </property>
      <property name="text">
-      <string>Nvdia Драйвера</string>
+      <string>Драйвера</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
      </property>
     </widget>
     <widget class="QListView" name="listDrivers">

@@ -7,6 +7,9 @@
 #define XDR_ERR 11                                  // status codes
 #define XDR_OK 10                                   //
 //--------------------------------------------------//
+
+#define DOWNLOAD_PATH "/opt/xUtiles/drivers/"
+
 #include <iostream>         // basic input/output stream
 #include <stdexcept>        // exception class for handler
 #include <utility>          // std containers

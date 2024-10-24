@@ -167,7 +167,7 @@ std::string xdr::get_username()
 
 int xdr::make_download_folder()
 {
-    fs::path download_path = "/opt/xUtiles/drivers/";
+    fs::path download_path = DOWNLOAD_PATH;
     try{
     fs::create_directories(download_path);
     }catch(std::exception &e){
