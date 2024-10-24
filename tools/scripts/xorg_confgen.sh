@@ -19,11 +19,12 @@ set +e
 
 function main(){
     echo "Xorg conf builder!";
-    cd /etc/X11/
+    cd /root/
     systemctl stop lightdm
     Xorg -configure
     systemctl enable --now lightdm
+    cp /root/xorg.conf.new /etc/X11/xorg.conf
 }
 
 
-main &
+main 
