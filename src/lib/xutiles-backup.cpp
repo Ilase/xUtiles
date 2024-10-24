@@ -165,6 +165,18 @@ std::string xdr::get_username()
     return pw->pw_name;
 }
 
+int xdr::make_download_folder()
+{
+    fs::path download_path = "/opt/xUtiles/tmp/";
+    try{
+    fs::create_directories(download_path);
+    }catch(std::exception &e){
+        std::cerr << XDR_PREF << "Error:" << e.what() << std::endl;
+        return XDR_ERR;   
+    }
+    return XDR_OK;
+}
+
 bool xdr::check_existing(const fs::path &p, fs::file_status s)
 {
     // if (fs::status_known(s) ? fs::exists(s) : fs::exists(p))

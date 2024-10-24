@@ -45,7 +45,7 @@ class xBackup
 
     std::string trimer(const std::string& str);
     std::string get_username();
-
+    int make_download_folder();
 };
 
 #endif
