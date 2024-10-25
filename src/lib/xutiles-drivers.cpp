@@ -39,8 +39,13 @@ std::vector<std::string>& xdr::xDriver::getVersions() {
     return this->versions;
 }
 
-std::string xdr::xDriver::getVersionFileName(std::string &version) {
+std::string xdr::xDriver::getVersionFileName(const std::string &version) {
     return std::string("NVIDIA-Linux-x86_64-") + version + std::string(".run");
 }
+
+std::string xdr::driverFolderName()  {
+    return "/home/" + std::string(xdr::get_username().c_str()) + "/.cache/xdrivers/";
+}
+
 //
 //

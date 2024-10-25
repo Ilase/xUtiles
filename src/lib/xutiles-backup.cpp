@@ -167,7 +167,7 @@ std::string xdr::get_username()
 
 int xdr::make_download_folder()
 {
-    fs::path download_path = DOWNLOAD_PATH;
+    fs::path download_path = xdr::driverFolderName();
     try{
     fs::create_directories(download_path);
     }catch(std::exception &e){
@@ -238,6 +238,7 @@ int xdr::repair_backup(fs::path &bp)
     {
         copy(bp / "modprobe.d", mdp_p, fs::copy_options::update_existing);
         copy(bp / "modprobe.d", mdp_p, fs::copy_options::update_existing);
+        std::cout << XDR_PREF << "Backup " << bp.string() << " restored sucsessfuly\n";
     }
     catch (fs::filesystem_error &fse)
     {
@@ -245,7 +246,7 @@ int xdr::repair_backup(fs::path &bp)
     }
     catch (std::exception &e)
     {
-
+        std::cerr << XDR_PREF << e.what() << '\n';
     }
 
     return XDR_OK;

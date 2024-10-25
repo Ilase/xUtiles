@@ -1,14 +1,16 @@
 //-------------------------//-----------------------//------------------------------
-#if !defined(XDRIVERS_HPP) //
+#ifndef XDRIVERS_HPP //
 #define XDRIVERS_HPP       //
 //--------------------------------------------------//------------------------------
 #include <iostream>         // basic input/output stream
 #include <string>
 #include <vector>
 #include <QRegExp>
+#include "xutiles-include.hpp"
 //
 namespace xdr
 {   
+
 
     class xDriver
     {
@@ -22,7 +24,7 @@ namespace xdr
         std::vector<std::string>& getVersions();
         std::string getLinkToVersion(std::string&);
         void downloadVersion(std::string&);
-        std::string getVersionFileName(std::string&);
+        std::string getVersionFileName(const std::string&);
     };
 
 } //xdr namespace

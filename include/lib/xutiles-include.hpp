@@ -52,7 +52,10 @@ namespace fs = std::filesystem;                     // shortcut for std::filesys
 
 namespace xdr{
 
+    std::string get_username();
 
+    std::string driverFolderName();
+    int make_download_folder();
 
 };
 

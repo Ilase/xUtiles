@@ -2,6 +2,7 @@
 #define XDOWNLOAD_H
 
 #include <xutiles-include.hpp>
+#include <xutiles.hpp>
 #include <QObject>
 #include <QByteArray>
 #include <QtNetwork/QNetworkAccessManager>

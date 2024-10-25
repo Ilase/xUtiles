@@ -33,7 +33,11 @@ void xdr::xDownload::fileDownloaded()
     m_DownloadedData = reply->readAll();
     reply->deleteLater();
     QFileInfo info = QFileInfo(*_file);
-    _file->rename(DOWNLOAD_PATH + info.fileName());
+    QString path = xdr::driverFolderName().c_str() + info.fileName();
+    xdr::make_download_folder();
+    if (!_file->rename(path)) {
+        std::cout << "Failed to move  file \n";
+    }
     info = QFileInfo(*_file);
     emit downloaded(info.absoluteFilePath());
 }

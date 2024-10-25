@@ -18,7 +18,7 @@ std::string xdr::exec(const char* cmd) {
     }
     return result;
 }
-
+/*
 int xdr::xUtiles::app()
 {
     if(argc < 2){
@@ -61,3 +61,5 @@ int xdr::xUtiles::app()
 
     return XDR_OK;
 }
+*/
+

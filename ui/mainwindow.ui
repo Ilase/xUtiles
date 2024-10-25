@@ -180,7 +180,7 @@
     </font>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="pageInformation">
     <widget class="QLabel" name="label_13">
@@ -797,6 +797,9 @@
       </property>
      </widget>
      <widget class="QPushButton" name="dependsScreen">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>30</x>
@@ -875,6 +878,9 @@
       </item>
      </widget>
      <widget class="QPushButton" name="setCancelButton">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>150</x>

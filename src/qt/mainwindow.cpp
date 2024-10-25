@@ -55,9 +55,16 @@ MainWindow::MainWindow(QWidget *parent) :
     auto drivers = driver.getVersions();
     QStringList driversList;
     for (const auto& var: drivers) {
-        driversList.push_back(QString(var.c_str()));
+        QString filepath = QString((xdr::driverFolderName() + driver.getVersionFileName(var)).c_str());
+        if (QFile(filepath).exists()) {
+            driversList.push_back(QString((var + "*").c_str()));
+        }else {
+            driversList.push_back(QString(var.c_str()));
+        }
     }
-    driversList.push_back(QString("470.256.02"));
+    if (driversList.size() == 0) {
+        driversList.push_back(QString("470.256.02"));
+    }
     QStringListModel* driversModel = new QStringListModel(driversList);
     ui->listDrivers->setModel(driversModel);
     ui->driverGPU->setText(ui->driverGPU->text() + '\t' + driver.graphicCardName);
@@ -132,7 +139,7 @@ void MainWindow::on_Download_clicked()
 {
     QModelIndex index = ui->listDrivers->currentIndex();
     std::string version = index.data(Qt::DisplayRole).toString().toStdString();
-    QString filepath = QString((std::string("/tmp/") + driver.getVersionFileName(version)).c_str());
+    QString filepath = QString((xdr::driverFolderName() + driver.getVersionFileName(version)).c_str());
     if (QFile(filepath).exists()) {
         return;
     }else {

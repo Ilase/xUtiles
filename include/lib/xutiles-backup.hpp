@@ -1,5 +1,6 @@
 #ifndef _XUTILES_BACKUP_HPP
 #define _XUTILES_BACKUP_HPP
+#include "xutiles.hpp"
 #include "xutiles-include.hpp"
 
 namespace xdr {
@@ -44,8 +45,6 @@ class xBackup
     int repair_backup(fs::path &bp);
 
     std::string trimer(const std::string& str);
-    std::string get_username();
-    int make_download_folder();
 };
 
 #endif
