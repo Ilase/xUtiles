@@ -2,12 +2,11 @@
 
 namespace xdr{
     class xConfigurator{
-
+        std::vector<std::vector<std::string>> conf;
+        fs::path conf_path = "/etc/X11/xorg.conf";
         public:
-        xConfigurator(fs::path xp);
-        int section_read();
-        int section_write();
-        int main_read();
-        int main_write();
+        xConfigurator(fs::path);
+        int read_file();
+        void show_conf();
     };
 }
