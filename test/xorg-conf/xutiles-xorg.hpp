@@ -56,17 +56,18 @@ namespace xdr{
 
 
     class xConfigurator{
-            std::vector<std::pair<int,std::vector<std::string>>> conf;
+            std::vector<std::vector<std::string>> conf;
             fs::path conf_path = "/etc/X11/xorg.conf";
         public:
             xConfigurator(fs::path);
-            int read_file();
+            int read_conf();
             void show_conf();
             void show_conf(std::vector<std::vector<std::string>>);
-            std::vector<std::pair<int,std::vector<std::string>>> 
+            std::vector<std::vector<std::string>> 
                 find_option(_options);
             void change_param(std::string, std::string, _options, _sections);
             int save_conf();
-            
+            int insert_line(size_t, std::vector<std::string>);    
+            int delete_line(int);
     };
 }

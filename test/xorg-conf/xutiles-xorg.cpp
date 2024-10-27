@@ -53,7 +53,7 @@ xdr::xConfigurator::xConfigurator(fs::path xorgcp)
     }
 }
 
-int xdr::xConfigurator::read_file()
+int xdr::xConfigurator::read_conf()
 {
     std::ifstream input(this->conf_path);
     if(!input.is_open()){
@@ -70,7 +70,7 @@ int xdr::xConfigurator::read_file()
         while(iss >> word){
             line_words.push_back(word);   
         }
-        this->conf.push_back({line_num, line_words});
+        this->conf.push_back(line_words);
     }
 
     return 0;
@@ -79,15 +79,16 @@ int xdr::xConfigurator::read_file()
 void xdr::xConfigurator::show_conf()
 {
     
-    for(const auto& pair : this->conf){
+    for(size_t l = 0; l < this->conf.size(); ++l){
         // for(const auto& word : line.second()){
         //     std::cout << word << " ";
         // }
         
         
-        for(size_t i = 0; i < pair.second.size(); ++i){
-            std::cout << pair.first << " : " << pair.second[i] << " ";
+        for(size_t w = 0; w < this->conf[l].size(); ++w){
+            std::cout << this->conf[l][w] << " ";
         }
+
         std::cout << "\n";
     }
 }
@@ -102,15 +103,15 @@ void xdr::xConfigurator::show_conf(std::vector<std::vector<std::string>> _ivec)
     }    
 }
 
-std::vector<std::pair<int,std::vector<std::string>>> 
+std::vector<std::vector<std::string>>
     xdr::xConfigurator::find_option(_options opt)
 {
-    std::vector<std::pair<int,std::vector<std::string>>> result;
+    std::vector<std::vector<std::string>> result;
     std::string opt_str = xdr::options(opt);
-    for(const auto& pair : this->conf){
-        for(const auto& word : pair.second){
+    for(const auto& line : this->conf){
+        for(const auto& word : line){
             if(word == opt_str){
-                result.push_back(pair); 
+                result.push_back(line); 
             }
         }
         // if(!result.empty()){
@@ -135,7 +136,7 @@ int xdr::xConfigurator::save_conf()
         std::cerr << XDR_PREF << "Unable open output path/";
     } else {
         for(const auto& line : this->conf){
-            for(size_t word = 0; word < line.second.size(); ++word){
+            for(const auto& word : line){
                 output << word << " ";
             }
             output << "\n";
@@ -143,5 +144,19 @@ int xdr::xConfigurator::save_conf()
     }
 
 
+    return 0;
+}
+
+int xdr::xConfigurator::insert_line(size_t pos, std::vector<std::string> line)
+{   
+    auto it = this->conf.begin();
+    std::advance(it, pos);
+    this->conf.insert(it, line);
+    return 0;
+}
+
+int xdr::xConfigurator::delete_line(int pos)
+{
+    this->conf.erase(this->conf.begin() + pos);
     return 0;
 }

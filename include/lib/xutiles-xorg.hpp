@@ -6,7 +6,7 @@ namespace xdr{
         fs::path conf_path = "/etc/X11/xorg.conf";
         public:
         xConfigurator(fs::path);
-        int read_file();
+        int read_conf();
         void show_conf();
     };
 }
