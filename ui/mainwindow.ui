@@ -180,7 +180,7 @@
     </font>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>3</number>
    </property>
    <widget class="QWidget" name="pageInformation">
     <widget class="QLabel" name="label_13">
@@ -870,7 +870,7 @@
      </widget>
      <widget class="QPushButton" name="dependsScreen">
       <property name="enabled">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
       <property name="geometry">
        <rect>
@@ -1041,6 +1041,25 @@
       </property>
       <property name="text">
        <string>Ориентация</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="checkBoxTearing">
+      <property name="geometry">
+       <rect>
+        <x>240</x>
+        <y>200</y>
+        <width>91</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Noto Sans</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Tearing</string>
       </property>
      </widget>
     </widget>

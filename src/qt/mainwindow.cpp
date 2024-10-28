@@ -150,6 +150,7 @@ void MainWindow::on_SetButton_clicked()
     short rate = display.screenRates[ui->listHZ->currentIndex()];
     Rotation rotation = 1 << (ui->listOrientation->currentIndex());
     display.ChangeCurrentResolutionRates(i, rate, rotation);
+    xdr::change_tearing(ui->checkBoxTearing->isChecked(), display.screenName);
 }
 
 void MainWindow::on_Information_clicked()

@@ -5,7 +5,7 @@ xdr::xConfig::xConfig()
     this->devices = get_monitor_names();
 }
 
-int xdr::xConfig::change_tearing(bool opt, std::string monitor_name)
+int xdr::change_tearing(bool opt, std::string monitor_name)
 {
     std::string wha = opt ? "on" : "off";
     const char* comand = ("xrandr --output " + monitor_name + " --set TearFree " + wha).c_str();

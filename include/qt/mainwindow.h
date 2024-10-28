@@ -8,6 +8,7 @@
 #include "xutiles-drivers.hpp"
 #include "xutiles-display.hpp"
 #include "xutiles-download.hpp"
+#include "xutiles-xconfig.hpp"
 #include "xutiles.hpp"
 #include "ui_mainwindow.h"
 #include <iostream>
