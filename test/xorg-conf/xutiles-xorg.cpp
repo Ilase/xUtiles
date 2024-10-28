@@ -42,6 +42,11 @@ std::string xdr::sections(_sections s) {
     }
 }
 
+int xdr::reload_config()
+{
+    
+    return 0;
+}
 
 xdr::xConfigurator::xConfigurator(fs::path xorgcp)
 {
@@ -62,13 +67,23 @@ int xdr::xConfigurator::read_conf()
     }
     int line_num;
     std::string line;
+    bool is_device;
     while(std::getline(input,line)){
         line_num++;
         std::istringstream iss(line);
         std::vector<std::string> line_words;
         std::string word;
         while(iss >> word){
-            line_words.push_back(word);   
+            line_words.push_back(word);
+            if (word == "\"Device\""){
+                this->device_pos.push_back(line_num);
+                is_device = true;
+
+            }
+            if(word == "EndSection" && is_device){
+                this->device_pos.push_back(line_num);
+                is_device = false;
+            }
         }
         this->conf.push_back(line_words);
     }
@@ -159,4 +174,43 @@ int xdr::xConfigurator::delete_line(int pos)
 {
     this->conf.erase(this->conf.begin() + pos);
     return 0;
+}
+
+int xdr::xConfigurator::change_tearing(size_t device, bool state)
+{
+    std::vector<std::vector<std::string>> conf_buff;
+    auto it = this->conf.begin();
+    std::advance(it, device + 1 );
+    
+    for(const auto it : this->conf){
+        
+        if(it[0] != "EndSection"){
+            conf_buff.push_back(it);
+        }
+    }
+    it = conf_buff.end();
+    std::advance(it, conf_buff.end() - 1);
+    
+    
+    {
+        if(state){
+            conf_buff.insert(conf_buff.end() - 1 ,generate_option(_options::Option, {"\"TearFree\"", "\"true\""}));
+        } else {
+            conf_buff.insert(conf_buff.end() - 1 ,generate_option(_options::Option, {"\"TearFree\"", "\"true\""}));
+        }
+    }
+    return 0;
+}
+
+std::vector<std::string> xdr::xConfigurator::generate_option(_options opt, std::vector<std::string> params)
+{
+    std::vector<std::string> result;
+    result.push_back("Option");
+    auto it = params.begin();
+    std::advance(it, 1);
+    for(const auto& it : params){
+        result.push_back(it);
+    }
+
+    return result;
 }

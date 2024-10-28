@@ -1,6 +1,6 @@
 #!/bin/bash
 
-WIDNOW_MANAGER=gdm.service
+WIDNOW_MANAGER=lightdm.service
 XPRF="[XCONF] "
 
 (sleep 10 && $XPRF"Timer expired.") & timer_pid=$!;
