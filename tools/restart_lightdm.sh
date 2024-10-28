@@ -1,6 +1,6 @@
 #!/bin/bash
 
-WINDOW_MANAGER=gdm.service
+WINDOW_MANAGER=lightdm.service
 XPRF="[XCONF] "
 
 (sleep 10 && echo $XPRF"Timer expired.") &
