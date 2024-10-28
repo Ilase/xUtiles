@@ -7,6 +7,7 @@ XPRF="[XCONF] "
 timer_pid=$!
 
 while kill -0 $timer_pid 2>/dev/null; do
+    systemctl restart lightdm.service
     if systemctl is-active --quiet $WINDOW_MANAGER; then
         echo $XPRF"Service started correctly!"
         kill $timer_pid
