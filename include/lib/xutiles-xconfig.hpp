@@ -14,4 +14,5 @@ namespace xdr{
         std::vector<std::string> get_monitor_names();
     };
     int change_tearing(bool, std::string);
+    int apply_changes();
 };
