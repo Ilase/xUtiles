@@ -47,6 +47,8 @@ private slots:
 
     void on_BackupButton_clicked();
 
+    void on_additionalDriverSettings_clicked();
+
 private:
     Ui::Dialog *ui;
     xdr::xDisplay display;

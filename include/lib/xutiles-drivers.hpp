@@ -5,7 +5,7 @@
 #include <iostream>         // basic input/output stream
 #include <string>
 #include <vector>
-#include <QRegExp>
+#include <QRegularExpression>
 #include "xutiles-include.hpp"
 //
 namespace xdr
@@ -17,9 +17,9 @@ namespace xdr
     private:
         std::vector<std::string> versions;
     public:
-        QString graphicCardName;
-        QString driverName;
-        QString driverVersion;
+        std::vector<QString> graphicCardNames;
+        std::vector<QString> driverNames;
+        std::vector<QString> driverVersions;
         xDriver();
         std::vector<std::string>& getVersions();
         std::string getLinkToVersion(std::string&);

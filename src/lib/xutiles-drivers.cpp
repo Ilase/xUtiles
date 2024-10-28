@@ -1,23 +1,19 @@
 #include "xutiles-drivers.hpp"
 #include "xutiles.hpp"
 xdr::xDriver::xDriver() {
-    QRegExp versionPatern("v: (\\d+(?:\\.\\d+)+)");
     QString graphicDeviceOutput = xdr::exec("inxi -G").c_str();
-    if (graphicDeviceOutput.contains(versionPatern)){
-        //QStringList captured = versionPatern.capturedTexts();
-        this->driverVersion = versionPatern.cap(1);
+    //QRegExp devicePatern(R"(Device-\d+: (\w+(?: [\w\[\]_-]+)+) \w+:)");
+    QRegularExpression devicePatern(R"(Device-\d+: (\w+(?: [\w\[\]_-]+)+) driver: (\w+) v: ([a-zA-Z]+|\d+(?:\.\d+)+))");
+    QRegularExpressionMatchIterator mathces = devicePatern.globalMatch(graphicDeviceOutput);
+    while (mathces.hasNext()) {
+        QRegularExpressionMatch match = mathces.next();
+        if (match.hasMatch()) {
+            this->graphicCardNames.push_back(match.captured(1));
+            this->driverNames.push_back(match.captured(2));
+            this->driverVersions.push_back(match.captured(3));
+        }
     }
-    QRegExp devicePatern(R"(Device-\d+: (\w+(?: [\w\[\]_-]+)+) \w+:)");
 
-
-    if (graphicDeviceOutput.contains(devicePatern)) {
-        this->graphicCardName = devicePatern.cap(1);
-    }
-    QRegExp driverNamePatern("driver: (\\w+)");
-    if (graphicDeviceOutput.contains(driverNamePatern)) {
-        this->driverName = driverNamePatern.cap(1);
-    }
-    //std::cout <<  driverName.toStdString() << '\t' << driverVersion.toStdString() << '\t' << graphicCardName.toStdString() << '\n';
     std::string parserOutput = xdr::exec("/opt/xUtils/parser");
     std::string line;
     auto stream = std::istringstream(parserOutput);

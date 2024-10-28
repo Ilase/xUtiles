@@ -29,7 +29,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->backupList->setModel(model);
 
     //INFO
-    ui->infoGpu->setText(QString(xdr::GetGraphicDeviceName().c_str()));
     ui->infoScreen->setText(QString(display.screenName.c_str()));
     XRRScreenSize size = display.getCurrentResolution(display.defaultScreen);
     std::string resolution = std::to_string(size.width) + 'x' + std::to_string(size.height);
@@ -48,6 +47,11 @@ MainWindow::MainWindow(QWidget *parent) :
         ui->infoMemory->setText(memReg.cap(1));
     }
 
+    //INFO GRAPHICS CARD
+    ui->infoGpu->setText(QString(xdr::GetGraphicDeviceName().c_str()));
+    for (int i = 0; i < driver.graphicCardNames.size(); ++i) {
+        ui->graphicDeviceSelect->addItem(driver.graphicCardNames[i]);
+    }
     //RATES
     updateRates();
 
@@ -67,10 +71,11 @@ MainWindow::MainWindow(QWidget *parent) :
     }
     QStringListModel* driversModel = new QStringListModel(driversList);
     ui->listDrivers->setModel(driversModel);
-    ui->driverGPU->setText(ui->driverGPU->text() + '\t' + driver.graphicCardName);
+    /*-------ВСТАВИТЬ В ФУНКИЮ ПЕРЕХОДА-------
+    ui->driverGPU->setText(ui->driverGPU->text() + '\t' + driver.graphicCardNames[0]);
     ui->driverCurrent->setText(ui->driverCurrent->text() + '\t' + driver.driverName);
     ui->driverVersion->setText(ui->driverVersion->text() + '\t' + driver.driverVersion);
-
+    ----------------------------------------*/
     //SCREEN INFO
     int gcd = std::gcd(display.selectedScreenSize.width, display.selectedScreenSize.height);
     char text[8];
@@ -203,4 +208,13 @@ void MainWindow::on_BackupButton_clicked()
     std::string version = index.data(Qt::DisplayRole).toString().toStdString();
     auto path = fs::u8path(version);
     xdr::repair_backup(path);
+}
+
+void MainWindow::on_additionalDriverSettings_clicked()
+{
+
+    ui->driverGPU->setText(ui->driverGPU->text() + '\t' + driver.graphicCardNames[0]);
+    ui->driverCurrent->setText(ui->driverCurrent->text() + '\t' + driver.driverNames[0]);
+    ui->driverVersion->setText(ui->driverVersion->text() + '\t' + driver.driverVersions[0]);
+    ui->stackedWidget->setCurrentWidget(ui->pageDrivers);
 }
