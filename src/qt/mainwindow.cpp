@@ -49,10 +49,12 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 
     //INFO GRAPHICS CARD
+
     ui->infoGpu->setText(QString(xdr::GetGraphicDeviceName().c_str()));
     for (int i = 0; i < driver.graphicCardNames.size(); ++i) {
         ui->graphicDeviceSelect->addItem(driver.graphicCardNames[i]);
     }
+
     //RATES
     updateRates();
 
@@ -150,7 +152,7 @@ void MainWindow::on_SetButton_clicked()
     short rate = display.screenRates[ui->listHZ->currentIndex()];
     Rotation rotation = 1 << (ui->listOrientation->currentIndex());
     display.ChangeCurrentResolutionRates(i, rate, rotation);
-    xdr::change_tearing(ui->checkBoxTearing->isChecked(), display.screenName);
+
 }
 
 void MainWindow::on_Information_clicked()
@@ -202,9 +204,9 @@ void MainWindow::on_BackupButton_clicked()
 void MainWindow::on_additionalDriverSettings_clicked()
 {
     int i = ui->graphicDeviceSelect->currentIndex();
-    ui->driverGPU->setText(ui->driverGPU->text() + '\t' + driver.graphicCardNames[i]);
-    ui->driverCurrent->setText(ui->driverCurrent->text() + '\t' + driver.driverNames[i]);
-    ui->driverVersion->setText(ui->driverVersion->text() + '\t' + driver.driverVersions[i]);
+    ui->currentGpu->setText(ui->currentGpu->text() + '\t' + driver.graphicCardNames[i]);
+    ui->currentDriver->setText(ui->currentDriver->text() + '\t' + driver.driverNames[i]);
+    ui->currentVersion->setText(ui->currentVersion->text() + '\t' + driver.driverVersions[i]);
     std::string name;
     if (driver.graphicCardNames[i].toStdString().find('[')) {
         QRegularExpression r(R"(\[(\w+(?: \w+)+)\])");
