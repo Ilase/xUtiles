@@ -49,6 +49,8 @@ private slots:
 
     void on_additionalDriverSettings_clicked();
 
+    void on_downloadRecomended_clicked();
+
 private:
     Ui::Dialog *ui;
     xdr::xDisplay display;

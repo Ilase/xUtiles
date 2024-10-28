@@ -18,7 +18,7 @@ xdr::xDriver::xDriver() {
     std::string line;
     auto stream = std::istringstream(parserOutput);
     while (getline(stream, line)) {
-        this->versions.push_back(line);
+        this->drivers.push_back(xdr::Driver {line, "", ""});
     }
 }
 
@@ -31,8 +31,22 @@ void xdr::xDriver::downloadVersion(std::string& version) {
     system((std::string("wget ") + link).c_str());
 }
 
-std::vector<std::string>& xdr::xDriver::getVersions() {
-    return this->versions;
+std::vector<xdr::Driver>& xdr::xDriver::getDrivers() {
+    return this->drivers;
+}
+
+std::vector<xdr::Driver>& xdr::xDriver::getDrivers(std::string name) {
+    this->drivers.clear();
+    std::string parserOutput = xdr::exec(("/opt/xUtils/parser_driver --name '" + name + "'").c_str());
+    std::string line;
+    auto stream = std::istringstream(parserOutput);
+    while (getline(stream, line)) {
+        QRegularExpression r(R"((.*),(.*),(.*))");
+        this->drivers.push_back(xdr::Driver{r.match(line.c_str()).captured(1).toStdString(),
+                                 r.match(line.c_str()).captured(2).toStdString(),
+                                 r.match(line.c_str()).captured(3).toStdString()});
+    }
+    return this->drivers;
 }
 
 std::string xdr::xDriver::getVersionFileName(const std::string &version) {

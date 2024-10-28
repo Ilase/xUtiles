@@ -27,7 +27,8 @@ MainWindow::MainWindow(QWidget *parent) :
     }
     QStringListModel* model = new QStringListModel(list);
     ui->backupList->setModel(model);
-
+    ui->backupList->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->listDrivers->setEditTriggers(QAbstractItemView::NoEditTriggers);
     //INFO
     ui->infoScreen->setText(QString(display.screenName.c_str()));
     XRRScreenSize size = display.getCurrentResolution(display.defaultScreen);
@@ -56,21 +57,7 @@ MainWindow::MainWindow(QWidget *parent) :
     updateRates();
 
     //DRIVERS
-    auto drivers = driver.getVersions();
-    QStringList driversList;
-    for (const auto& var: drivers) {
-        QString filepath = QString((xdr::driverFolderName() + driver.getVersionFileName(var)).c_str());
-        if (QFile(filepath).exists()) {
-            driversList.push_back(QString((var + "*").c_str()));
-        }else {
-            driversList.push_back(QString(var.c_str()));
-        }
-    }
-    if (driversList.size() == 0) {
-        driversList.push_back(QString("470.256.02"));
-    }
-    QStringListModel* driversModel = new QStringListModel(driversList);
-    ui->listDrivers->setModel(driversModel);
+
     /*-------ВСТАВИТЬ В ФУНКИЮ ПЕРЕХОДА-------
     ui->driverGPU->setText(ui->driverGPU->text() + '\t' + driver.graphicCardNames[0]);
     ui->driverCurrent->setText(ui->driverCurrent->text() + '\t' + driver.driverName);
@@ -133,6 +120,7 @@ void MainWindow::on_Backup_clicked()
     }
     QStringListModel* model = new QStringListModel(list);
     ui->backupList->setModel(model);
+
 }
 
 void MainWindow::on_Drivers_clicked()
@@ -212,9 +200,49 @@ void MainWindow::on_BackupButton_clicked()
 
 void MainWindow::on_additionalDriverSettings_clicked()
 {
+    int i = ui->graphicDeviceSelect->currentIndex();
+    ui->driverGPU->setText(ui->driverGPU->text() + '\t' + driver.graphicCardNames[i]);
+    ui->driverCurrent->setText(ui->driverCurrent->text() + '\t' + driver.driverNames[i]);
+    ui->driverVersion->setText(ui->driverVersion->text() + '\t' + driver.driverVersions[i]);
+    std::string name;
+    if (driver.graphicCardNames[i].toStdString().find('[')) {
+        QRegularExpression r(R"(\[(\w+(?: \w+)+)\])");
+        QRegularExpressionMatch m = r.match(driver.graphicCardNames[i]);
+        name = m.captured(1).toStdString();
+    }else {
+        name = driver.graphicCardNames[i].toStdString();
+    }
+    name = "GeForce GTX 1060 6GB";
+    auto drivers = driver.getDrivers(name);
+    QStringList driversList;
+    for (const auto& var: drivers) {
+        auto version = var.version;
+        QString filepath = QString((xdr::driverFolderName() + driver.getVersionFileName(version)).c_str());
+        if (QFile(filepath).exists()) {
+            driversList.push_back(QString((version + "*").c_str()));
+        }else {
+            driversList.push_back(QString(version.c_str()));
+        }
+    }
+    QStringListModel* driversModel = new QStringListModel(driversList);
+    ui->listDrivers->setModel(driversModel);
 
-    ui->driverGPU->setText(ui->driverGPU->text() + '\t' + driver.graphicCardNames[0]);
-    ui->driverCurrent->setText(ui->driverCurrent->text() + '\t' + driver.driverNames[0]);
-    ui->driverVersion->setText(ui->driverVersion->text() + '\t' + driver.driverVersions[0]);
-    ui->stackedWidget->setCurrentWidget(ui->pageDrivers);
+    ui->stackedWidget->setCurrentWidget(ui->pageInstallDrivers);
+}
+
+void MainWindow::on_downloadRecomended_clicked()
+{
+    int i = ui->graphicDeviceSelect->currentIndex();
+    auto devicename = driver.graphicCardNames[i];
+    if (devicename.contains("NVIDIA")) {
+        system("systemd-run apt install ");
+    }else if (devicename.contains("AMD")) {
+        system("systemd-run apt install ");
+    }else if (devicename.contains("Intel")) {
+        QDialog *di = new QDialog(this);
+        di->show();
+    }else {
+        QDialog *di = new QDialog(this);
+        di->show();
+    }
 }
