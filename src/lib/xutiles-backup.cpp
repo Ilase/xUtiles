@@ -200,14 +200,17 @@ int xdr::make_backup(fs::path &_bp, fs::path &x11_path, fs::path &mod_path)
     //
     //
     fs::create_directory(dp / backup_name);
+    //
     dp = _bp / backup_name;
+    //
     fs::create_directory(dp / "X11/");
     fs::create_directory(dp / "modprobe.d/");
     //
     // Try to copy files
     try
     {
-        fs::copy(x11_path, dp / "X11/");        //, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+        fs::copy(x11_path / "xorg.conf", dp / "X11/");        //, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+        fs::copy(x11_path / "xorg.conf.d", dp / "X11/");        //, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
         fs::copy(mod_path, dp / "modprobe.d/"); //, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
     }
     catch (fs::filesystem_error &e)
@@ -236,8 +239,8 @@ int xdr::repair_backup(fs::path &bp)
     }
     try
     {
-        copy(bp / "modprobe.d", mdp_p, fs::copy_options::update_existing);
-        copy(bp / "modprobe.d", mdp_p, fs::copy_options::update_existing);
+        copy(bp / "modprobe.d", mdp_p, fs::copy_options::overwrite_existing);
+        copy(bp / "modprobe.d", mdp_p, fs::copy_options::overwrite_existing);
         std::cout << XDR_PREF << "Backup " << bp.string() << " restored sucsessfuly\n";
     }
     catch (fs::filesystem_error &fse)
