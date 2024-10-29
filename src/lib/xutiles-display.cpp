@@ -42,6 +42,7 @@ xdr::xDisplay::~xDisplay()
     XCloseDisplay(display);
 }
 
+
 XRRScreenSize xdr::xDisplay::getCurrentResolution(Screen *screen){
     return XRRScreenSize {
         WidthOfScreen(screen),

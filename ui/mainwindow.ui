@@ -305,7 +305,7 @@ border-bottom:none; }</string>
             <string notr="true"/>
            </property>
            <property name="currentIndex">
-            <number>2</number>
+            <number>3</number>
            </property>
            <widget class="QWidget" name="pageInformation">
             <property name="styleSheet">
@@ -648,7 +648,7 @@ border-bottom:none; }</string>
              </item>
             </layout>
            </widget>
-           <widget class="QWidget" name="gpusPage">
+           <widget class="QWidget" name="pageDrivers">
             <layout class="QGridLayout" name="gridLayout_12">
              <property name="leftMargin">
               <number>0</number>
@@ -674,10 +674,10 @@ border-bottom:none; }</string>
                 <enum>QFrame::Raised</enum>
                </property>
                <layout class="QGridLayout" name="gridLayout_14">
-                <item row="1" column="0">
+                <item row="2" column="1">
                  <widget class="QComboBox" name="graphicDeviceSelect"/>
                 </item>
-                <item row="1" column="1">
+                <item row="2" column="2">
                  <spacer name="horizontalSpacer">
                   <property name="orientation">
                    <enum>Qt::Horizontal</enum>
@@ -690,21 +690,21 @@ border-bottom:none; }</string>
                   </property>
                  </spacer>
                 </item>
-                <item row="2" column="0">
+                <item row="3" column="1">
                  <widget class="QPushButton" name="downloadRecomended">
                   <property name="text">
                    <string>Установить рекомендуемый драйвер</string>
                   </property>
                  </widget>
                 </item>
-                <item row="3" column="0">
+                <item row="4" column="1">
                  <widget class="QPushButton" name="additionalDriverSettings">
                   <property name="text">
                    <string>Дополнительные настройки драйвера</string>
                   </property>
                  </widget>
                 </item>
-                <item row="4" column="0">
+                <item row="5" column="1">
                  <spacer name="verticalSpacer_6">
                   <property name="orientation">
                    <enum>Qt::Vertical</enum>
@@ -717,7 +717,7 @@ border-bottom:none; }</string>
                   </property>
                  </spacer>
                 </item>
-                <item row="0" column="0" colspan="2">
+                <item row="0" column="1" colspan="2">
                  <widget class="QFrame" name="frame_8">
                   <property name="maximumSize">
                    <size>
@@ -752,12 +752,38 @@ border-bottom:none; }</string>
                   </layout>
                  </widget>
                 </item>
+                <item row="4" column="0">
+                 <spacer name="horizontalSpacer_2">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="1" column="1">
+                 <spacer name="verticalSpacer_7">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
                </layout>
               </widget>
              </item>
             </layout>
            </widget>
-           <widget class="QWidget" name="pageDrivers">
+           <widget class="QWidget" name="pageInstallDrivers">
             <property name="styleSheet">
              <string notr="true"/>
             </property>
@@ -1191,19 +1217,62 @@ border-bottom:none; }</string>
                    <enum>QFrame::Raised</enum>
                   </property>
                   <layout class="QGridLayout" name="gridLayout_9">
-                   <property name="verticalSpacing">
-                    <number>20</number>
-                   </property>
-                   <item row="1" column="2">
-                    <widget class="QLabel" name="label_24">
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="label_3">
+                     <property name="maximumSize">
+                      <size>
+                       <width>16777215</width>
+                       <height>50</height>
+                      </size>
+                     </property>
                      <property name="font">
                       <font>
                        <pointsize>14</pointsize>
                       </font>
                      </property>
                      <property name="text">
-                      <string>HZ</string>
+                      <string>Ориентация</string>
                      </property>
+                     <property name="margin">
+                      <number>0</number>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QComboBox" name="listOrientation">
+                     <property name="minimumSize">
+                      <size>
+                       <width>180</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <family>Calibri</family>
+                       <pointsize>14</pointsize>
+                       <kerning>true</kerning>
+                      </font>
+                     </property>
+                     <item>
+                      <property name="text">
+                       <string>Альбомная</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Книжная</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Альбомная(Перевернутая)</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Книжная(Перевернутая)</string>
+                      </property>
+                     </item>
                     </widget>
                    </item>
                    <item row="1" column="1">
@@ -1247,6 +1316,36 @@ border-bottom:none; }</string>
                      </item>
                     </widget>
                    </item>
+                   <item row="1" column="2">
+                    <widget class="QLabel" name="label_24">
+                     <property name="font">
+                      <font>
+                       <pointsize>14</pointsize>
+                      </font>
+                     </property>
+                     <property name="text">
+                      <string>HZ</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="0">
+                    <widget class="QLabel" name="label_2">
+                     <property name="maximumSize">
+                      <size>
+                       <width>16777215</width>
+                       <height>50</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <pointsize>14</pointsize>
+                      </font>
+                     </property>
+                     <property name="text">
+                      <string>Разрешение</string>
+                     </property>
+                    </widget>
+                   </item>
                    <item row="3" column="0">
                     <widget class="QComboBox" name="ListResolution">
                      <property name="minimumSize">
@@ -1272,80 +1371,7 @@ border-bottom:none; }</string>
                      </item>
                     </widget>
                    </item>
-                   <item row="2" column="0">
-                    <widget class="QLabel" name="label_2">
-                     <property name="maximumSize">
-                      <size>
-                       <width>16777215</width>
-                       <height>50</height>
-                      </size>
-                     </property>
-                     <property name="font">
-                      <font>
-                       <pointsize>14</pointsize>
-                      </font>
-                     </property>
-                     <property name="text">
-                      <string>Разрешение</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="1" column="0">
-                    <widget class="QComboBox" name="listOrientation">
-                     <property name="minimumSize">
-                      <size>
-                       <width>180</width>
-                       <height>40</height>
-                      </size>
-                     </property>
-                     <property name="font">
-                      <font>
-                       <family>Calibri</family>
-                       <pointsize>14</pointsize>
-                       <kerning>true</kerning>
-                      </font>
-                     </property>
-                     <item>
-                      <property name="text">
-                       <string>Альбомная</string>
-                      </property>
-                     </item>
-                     <item>
-                      <property name="text">
-                       <string>Книжная</string>
-                      </property>
-                     </item>
-                     <item>
-                      <property name="text">
-                       <string>Альбомная(Перевернутая)</string>
-                      </property>
-                     </item>
-                     <item>
-                      <property name="text">
-                       <string>Книжная(Перевернутая)</string>
-                      </property>
-                     </item>
-                    </widget>
-                   </item>
-                   <item row="0" column="0" colspan="2">
-                    <widget class="QLabel" name="label_3">
-                     <property name="maximumSize">
-                      <size>
-                       <width>16777215</width>
-                       <height>50</height>
-                      </size>
-                     </property>
-                     <property name="font">
-                      <font>
-                       <pointsize>14</pointsize>
-                      </font>
-                     </property>
-                     <property name="text">
-                      <string>Ориентация</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="5" column="0">
+                   <item row="4" column="0">
                     <widget class="QFrame" name="setButtonsFrame">
                      <property name="maximumSize">
                       <size>
@@ -1376,21 +1402,6 @@ border-bottom:none; }</string>
                        <number>0</number>
                       </property>
                       <item>
-                       <widget class="QPushButton" name="setCancelButton">
-                        <property name="enabled">
-                         <bool>false</bool>
-                        </property>
-                        <property name="font">
-                         <font>
-                          <pointsize>12</pointsize>
-                         </font>
-                        </property>
-                        <property name="text">
-                         <string>Отменить</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
                        <widget class="QPushButton" name="dependsScreen">
                         <property name="enabled">
                          <bool>true</bool>
@@ -1402,6 +1413,21 @@ border-bottom:none; }</string>
                         </property>
                         <property name="text">
                          <string>Дополнительные настройки</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QPushButton" name="setCancelButton">
+                        <property name="enabled">
+                         <bool>false</bool>
+                        </property>
+                        <property name="font">
+                         <font>
+                          <pointsize>12</pointsize>
+                         </font>
+                        </property>
+                        <property name="text">
+                         <string>Отменить</string>
                         </property>
                        </widget>
                       </item>
@@ -1426,18 +1452,196 @@ border-bottom:none; }</string>
                      </layout>
                     </widget>
                    </item>
-                   <item row="6" column="0">
-                    <spacer name="verticalSpacer">
-                     <property name="orientation">
-                      <enum>Qt::Vertical</enum>
-                     </property>
-                     <property name="sizeHint" stdset="0">
-                      <size>
-                       <width>20</width>
-                       <height>40</height>
-                      </size>
-                     </property>
-                    </spacer>
+                   <item row="5" column="0" colspan="3">
+                    <widget class="QStackedWidget" name="settingsStack">
+                     <widget class="QWidget" name="page_3">
+                      <layout class="QGridLayout" name="gridLayout_15">
+                       <property name="leftMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="topMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="rightMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="bottomMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="spacing">
+                        <number>0</number>
+                       </property>
+                       <item row="0" column="0">
+                        <widget class="QFrame" name="settings">
+                         <property name="frameShape">
+                          <enum>QFrame::NoFrame</enum>
+                         </property>
+                         <property name="frameShadow">
+                          <enum>QFrame::Raised</enum>
+                         </property>
+                         <layout class="QVBoxLayout" name="verticalLayout_5">
+                          <property name="spacing">
+                           <number>0</number>
+                          </property>
+                          <property name="leftMargin">
+                           <number>0</number>
+                          </property>
+                          <property name="topMargin">
+                           <number>0</number>
+                          </property>
+                          <property name="rightMargin">
+                           <number>0</number>
+                          </property>
+                          <property name="bottomMargin">
+                           <number>0</number>
+                          </property>
+                          <item>
+                           <widget class="QFrame" name="frame_10">
+                            <property name="frameShape">
+                             <enum>QFrame::NoFrame</enum>
+                            </property>
+                            <property name="frameShadow">
+                             <enum>QFrame::Raised</enum>
+                            </property>
+                            <widget class="QLabel" name="label_6">
+                             <property name="geometry">
+                              <rect>
+                               <x>0</x>
+                               <y>2</y>
+                               <width>561</width>
+                               <height>21</height>
+                              </rect>
+                             </property>
+                             <property name="maximumSize">
+                              <size>
+                               <width>16777215</width>
+                               <height>40</height>
+                              </size>
+                             </property>
+                             <property name="font">
+                              <font>
+                               <pointsize>10</pointsize>
+                               <weight>75</weight>
+                               <bold>true</bold>
+                              </font>
+                             </property>
+                             <property name="text">
+                              <string>Параметры Xorg</string>
+                             </property>
+                            </widget>
+                            <widget class="QCheckBox" name="checkBoxTearing">
+                             <property name="geometry">
+                              <rect>
+                               <x>30</x>
+                               <y>30</y>
+                               <width>151</width>
+                               <height>22</height>
+                              </rect>
+                             </property>
+                             <property name="text">
+                              <string>включить тиринг</string>
+                             </property>
+                            </widget>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QFrame" name="frame_11">
+                            <property name="maximumSize">
+                             <size>
+                              <width>16777215</width>
+                              <height>60</height>
+                             </size>
+                            </property>
+                            <property name="frameShape">
+                             <enum>QFrame::NoFrame</enum>
+                            </property>
+                            <property name="frameShadow">
+                             <enum>QFrame::Raised</enum>
+                            </property>
+                            <layout class="QHBoxLayout" name="horizontalLayout_6">
+                             <property name="spacing">
+                              <number>14</number>
+                             </property>
+                             <item>
+                              <spacer name="horizontalSpacer_3">
+                               <property name="orientation">
+                                <enum>Qt::Horizontal</enum>
+                               </property>
+                               <property name="sizeHint" stdset="0">
+                                <size>
+                                 <width>40</width>
+                                 <height>20</height>
+                                </size>
+                               </property>
+                              </spacer>
+                             </item>
+                             <item>
+                              <widget class="QPushButton" name="exitButton">
+                               <property name="minimumSize">
+                                <size>
+                                 <width>90</width>
+                                 <height>0</height>
+                                </size>
+                               </property>
+                               <property name="maximumSize">
+                                <size>
+                                 <width>90</width>
+                                 <height>16777215</height>
+                                </size>
+                               </property>
+                               <property name="text">
+                                <string>Закрыть</string>
+                               </property>
+                              </widget>
+                             </item>
+                             <item>
+                              <widget class="QPushButton" name="cancel">
+                               <property name="minimumSize">
+                                <size>
+                                 <width>90</width>
+                                 <height>0</height>
+                                </size>
+                               </property>
+                               <property name="maximumSize">
+                                <size>
+                                 <width>90</width>
+                                 <height>16777215</height>
+                                </size>
+                               </property>
+                               <property name="text">
+                                <string>Отменить</string>
+                               </property>
+                              </widget>
+                             </item>
+                             <item>
+                              <widget class="QPushButton" name="apply">
+                               <property name="minimumSize">
+                                <size>
+                                 <width>90</width>
+                                 <height>0</height>
+                                </size>
+                               </property>
+                               <property name="maximumSize">
+                                <size>
+                                 <width>90</width>
+                                 <height>16777215</height>
+                                </size>
+                               </property>
+                               <property name="text">
+                                <string>Применить</string>
+                               </property>
+                              </widget>
+                             </item>
+                            </layout>
+                           </widget>
+                          </item>
+                         </layout>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                     <widget class="QWidget" name="page_4"/>
+                    </widget>
                    </item>
                   </layout>
                  </widget>

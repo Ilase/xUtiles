@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent) :
     this->backup = xdr::xBackup();
     ui->setupUi(this);
     ui->downloadFinished->hide();
+    ui->settings->setVisible(false);
     ui->ProgressBar->hide();
     ui->ListResolution->clear();
     for (size_t i = 0; i < display.screenSizes[0].size(); ++i) {
@@ -74,6 +75,8 @@ MainWindow::MainWindow(QWidget *parent) :
     char res[32];
     sprintf(res, "%dx%d", display.selectedScreenSize.width, display.selectedScreenSize.height);
     ui->displayResolution->setText(ui->displayResolution->text() + res);
+
+
 }
 
 void MainWindow::updateRates() {
@@ -248,4 +251,20 @@ void MainWindow::on_downloadRecomended_clicked()
         QDialog *di = new QDialog(this);
         di->show();
     }
+}
+
+
+void MainWindow::on_dependsScreen_clicked()
+{
+    ui->settings->setVisible(true);
+}
+
+void MainWindow::on_exitButton_clicked()
+{
+    ui->settings->setVisible(false);
+}
+
+void MainWindow::on_checkBoxTearing_clicked()
+{
+    xdr::change_tearing(ui->checkBoxTearing->isChecked(), display.screenName);
 }

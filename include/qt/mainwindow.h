@@ -25,6 +25,8 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    //xdr::xDisplay getDisplay();
+
 private slots:
     void on_Resolution_clicked();
 
@@ -51,6 +53,13 @@ private slots:
     void on_additionalDriverSettings_clicked();
 
     void on_downloadRecomended_clicked();
+
+
+    void on_dependsScreen_clicked();
+
+    void on_exitButton_clicked();
+
+    void on_checkBoxTearing_clicked();
 
 private:
     Ui::Dialog *ui;

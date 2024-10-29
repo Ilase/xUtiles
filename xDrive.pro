@@ -44,7 +44,7 @@ HEADERS +=  $$files(include/lib/*) \
 FORMS +=    ui/mainwindow.ui \
             ui/monitorbutton.ui \
             ui/confirm.ui \
-            ui/settings.ui \
+
 
 LIBS += -lstdc++fs -L/usr/bin/X11 -lX11 -lXrandr
 
