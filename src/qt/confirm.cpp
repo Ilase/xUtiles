@@ -1,14 +1,35 @@
 #include "confirm.h"
 #include "ui_confirm.h"
 
-confirm::confirm(QWidget *parent) :
-    QFrame(parent),
-    ui(new Ui::confirm)
+Confirm::Confirm(QWidget *parent) :
+    QWidget(parent),
+    ui(new Ui::Confirm)
 {
     ui->setupUi(this);
+//    QTimer timer;
+//    timer.setSingleShot(true);
+//    timer.setInterval(15000);
+
+//    timer.start()
+    applyed = false;
 }
 
-confirm::~confirm()
+Confirm::~Confirm()
 {
     delete ui;
+}
+
+
+void Confirm::on_cancelButton_clicked()
+{
+    applyed = false;
+    emit closed(applyed);
+    close();
+}
+
+void Confirm::on_applyButton_clicked()
+{
+    applyed = true;
+    emit closed(applyed);
+    close();
 }

@@ -41,6 +41,7 @@ HEADERS +=  $$files(include/lib/*) \
             $$files(include/qt/*) \
 
 
+
 FORMS +=    ui/mainwindow.ui \
             ui/monitorbutton.ui \
             ui/confirm.ui \

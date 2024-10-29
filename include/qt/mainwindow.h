@@ -13,6 +13,8 @@
 #include "ui_mainwindow.h"
 #include <iostream>
 #include <vector>
+#include <QTimer>
+#include "confirm.h"
 namespace Ui {
 class MainWindow;
 }
@@ -26,6 +28,10 @@ public:
     ~MainWindow();
 
     //xdr::xDisplay getDisplay();
+
+signals:
+    void timeoutSignal();
+
 
 private slots:
     void on_Resolution_clicked();
@@ -54,12 +60,16 @@ private slots:
 
     void on_downloadRecomended_clicked();
 
+    int on_modalWindowClosed(bool applyed);
 
     void on_dependsScreen_clicked();
 
     void on_exitButton_clicked();
 
     void on_checkBoxTearing_clicked();
+
+    void on_timeout();
+
 
 private:
     Ui::Dialog *ui;
@@ -70,6 +80,10 @@ private:
 
     xdr::xDownload download;
     void updateRates();
+    int openApplyWindow();
+    QTimer *timer;
+    Confirm *apply;
+    int previousIndex;
 };
 
 #endif // MAINWINDOW_H

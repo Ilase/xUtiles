@@ -1,22 +1,32 @@
 #ifndef CONFIRM_H
 #define CONFIRM_H
 
-#include <QFrame>
+#include <QWidget>
 
 namespace Ui {
-class confirm;
+class Confirm;
 }
 
-class confirm : public QFrame
+class Confirm : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit confirm(QWidget *parent = nullptr);
-    ~confirm();
+    explicit Confirm(QWidget *parent = nullptr);
+    ~Confirm();
+
 
 private:
-    Ui::confirm *ui;
+    Ui::Confirm *ui;
+    bool applyed;
+
+signals:
+    //void closeWindow();
+    void closed(bool applyed);
+
+private slots:
+    void on_cancelButton_clicked();
+    void on_applyButton_clicked();
 };
 
 #endif // CONFIRM_H

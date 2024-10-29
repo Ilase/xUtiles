@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "confirm.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QDialog(parent),
@@ -75,7 +76,14 @@ MainWindow::MainWindow(QWidget *parent) :
     char res[32];
     sprintf(res, "%dx%d", display.selectedScreenSize.width, display.selectedScreenSize.height);
     ui->displayResolution->setText(ui->displayResolution->text() + res);
+    connect(ui->ListResolution, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &MainWindow::on_ListResolution_activated);
 
+    //MODAL WINDOW
+    Confirm apply;;
+    timer = new QTimer(this);
+    timer->setSingleShot(true);
+    timer->setInterval(15000);
+    connect(timer, &QTimer::timeout, this, &MainWindow::on_timeout);
 
 }
 
@@ -163,6 +171,11 @@ void MainWindow::on_Information_clicked()
     ui->stackedWidget->setCurrentWidget(ui->pageInformation);
 }
 
+void openApplyWindow()
+{
+
+}
+
 void MainWindow::on_CreateBackupButton_clicked()
 {
     backup.make_backup();
@@ -178,10 +191,19 @@ void MainWindow::on_CreateBackupButton_clicked()
 
 void MainWindow::on_ListResolution_activated(int index)
 {
+    previousIndex = ui->ListResolution->currentIndex();
+    Confirm apply;
+    connect(&apply, &Confirm::closed, this, &MainWindow::on_modalWindowClosed);
+    timer->start();
+    apply.show();
     display.selectedScreenSizeId = index;
     display.selectedScreenSize = display.screenSizes[display.selectedScreenId][index];
     display.getSelectedRates();
     updateRates();
+
+    if(){
+
+    }
 }
 
 void MainWindow::on_Install_clicked()
@@ -267,4 +289,23 @@ void MainWindow::on_exitButton_clicked()
 void MainWindow::on_checkBoxTearing_clicked()
 {
     xdr::change_tearing(ui->checkBoxTearing->isChecked(), display.screenName);
+}
+
+
+int MainWindow::on_modalWindowClosed(bool applyed)
+{
+    timer->stop();
+    if (!applyed)
+    {
+        ui->ListResolution->setCurrentIndex(previousIndex);
+        return 1;
+     }
+    else {
+        return 0;
+    }
+}
+
+void MainWindow::on_timeout()
+{
+    apply->close();
 }
