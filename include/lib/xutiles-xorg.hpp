@@ -1,12 +1,12 @@
 #include "xutiles-include.hpp"
 
 namespace xdr{
-    class xConfigurator{
-        std::vector<std::vector<std::string>> conf;
-        fs::path conf_path = "/etc/X11/xorg.conf";
+    class textEditor{
+        std::vector<std::vector<std::string>> text;
+        fs::path path = "/etc/X11/xorg.conf";
         public:
-        xConfigurator(fs::path);
-        int read_conf();
-        void show_conf();
+        textEditor(fs::path);
+        int load();
+        void show();
     };
 }
