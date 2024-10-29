@@ -1,5 +1,7 @@
 {
     "C_Cpp.default.compilerPath": "/usr/bin/g++",
+    "qt.qmakePath" : "/usr/bin/qmake-qt5",
+    
     "files.associations": {
         "ostream": "cpp",
         "array": "cpp",

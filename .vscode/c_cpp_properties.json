@@ -5,7 +5,11 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/",
-                "${workspaceFolder}/lib/"
+                "${workspaceFolder}/include/lib/",
+                "${workspaceFolder}/include/qt/",
+                "/usr/include/qt5/*",
+                "/usr/include/qt5/QtCore"
+                // "/usr/include/qt5/"
             ],
             "defines": [],
             "cStandard": "c17",
