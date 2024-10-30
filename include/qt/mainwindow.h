@@ -60,7 +60,7 @@ private slots:
 
     void on_downloadRecomended_clicked();
 
-    int on_modalWindowClosed(bool applyed);
+    //int on_modalWindowClosed(bool applyed);
 
     void on_dependsScreen_clicked();
 
@@ -68,8 +68,10 @@ private slots:
 
     void on_checkBoxTearing_clicked();
 
-    void on_timeout();
+    //void on_timeout();
 
+
+    void on_ListResolution_currentIndexChanged(int index);
 
 private:
     Ui::Dialog *ui;
@@ -80,10 +82,12 @@ private:
 
     xdr::xDownload download;
     void updateRates();
-    int openApplyWindow();
+    //int openApplyWindow();
     QTimer *timer;
     Confirm *apply;
     int previousIndex;
+
+    void setNewMonitorResolution(int currentIndex);
 };
 
 #endif // MAINWINDOW_H

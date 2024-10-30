@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "confirm.h"
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
     QDialog(parent),
@@ -79,11 +80,12 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->ListResolution, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &MainWindow::on_ListResolution_activated);
 
     //MODAL WINDOW
-    Confirm apply;;
-    timer = new QTimer(this);
-    timer->setSingleShot(true);
-    timer->setInterval(15000);
-    connect(timer, &QTimer::timeout, this, &MainWindow::on_timeout);
+    previousIndex = ui->ListResolution->currentIndex();
+//    Confirm apply;;
+//    timer = new QTimer(this);
+//    timer->setSingleShot(true);
+//    timer->setInterval(15000);
+//    connect(timer, &QTimer::timeout, this, &MainWindow::on_timeout);
 
 }
 
@@ -159,10 +161,10 @@ void MainWindow::on_Download_clicked()
 
 void MainWindow::on_SetButton_clicked()
 {
-    int i = ui->ListResolution->currentIndex();
-    short rate = display.screenRates[ui->listHZ->currentIndex()];
-    Rotation rotation = 1 << (ui->listOrientation->currentIndex());
-    display.ChangeCurrentResolutionRates(i, rate, rotation);
+//    int i = ui->ListResolution->currentIndex();
+//    short rate = display.screenRates[ui->listHZ->currentIndex()];
+//    Rotation rotation = 1 << (ui->listOrientation->currentIndex());
+//    display.ChangeCurrentResolutionRates(i, rate, rotation);
 
 }
 
@@ -171,10 +173,6 @@ void MainWindow::on_Information_clicked()
     ui->stackedWidget->setCurrentWidget(ui->pageInformation);
 }
 
-void openApplyWindow()
-{
-
-}
 
 void MainWindow::on_CreateBackupButton_clicked()
 {
@@ -191,19 +189,14 @@ void MainWindow::on_CreateBackupButton_clicked()
 
 void MainWindow::on_ListResolution_activated(int index)
 {
-    previousIndex = ui->ListResolution->currentIndex();
-    Confirm apply;
-    connect(&apply, &Confirm::closed, this, &MainWindow::on_modalWindowClosed);
-    timer->start();
-    apply.show();
+
+
+//    timer->start();
+
     display.selectedScreenSizeId = index;
     display.selectedScreenSize = display.screenSizes[display.selectedScreenId][index];
     display.getSelectedRates();
     updateRates();
-
-    if(){
-
-    }
 }
 
 void MainWindow::on_Install_clicked()
@@ -291,21 +284,37 @@ void MainWindow::on_checkBoxTearing_clicked()
     xdr::change_tearing(ui->checkBoxTearing->isChecked(), display.screenName);
 }
 
-
-int MainWindow::on_modalWindowClosed(bool applyed)
+void MainWindow::setNewMonitorResolution(int currentIndex)
 {
-    timer->stop();
-    if (!applyed)
-    {
-        ui->ListResolution->setCurrentIndex(previousIndex);
-        return 1;
-     }
-    else {
-        return 0;
-    }
+    int i = ui->ListResolution->currentIndex();
+    short rate = display.screenRates[ui->listHZ->currentIndex()];
+    Rotation rotation = 1 << (ui->listOrientation->currentIndex());
+    display.ChangeCurrentResolutionRates(i, rate, rotation);
 }
 
-void MainWindow::on_timeout()
+//int MainWindow::on_modalWindowClosed(bool applyed)
+//{
+//    timer->stop();
+//    if (!applyed)
+//    {
+//        ui->ListResolution->setCurrentIndex(previousIndex);
+//        return 1;
+//     }
+//    else {
+//        return 0;
+//    }
+//}
+
+//void MainWindow::on_timeout()
+//{
+//    apply->close();
+//}
+
+void MainWindow::on_ListResolution_currentIndexChanged(int index)
 {
-    apply->close();
+    qDebug() << "Index changed";
+    setNewMonitorResolution(ui->ListResolution->currentIndex());
+    apply = new Confirm;
+    emit apply->open();
+    apply->show();
 }
