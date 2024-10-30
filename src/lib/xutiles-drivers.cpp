@@ -38,10 +38,13 @@ std::vector<xdr::Driver>& xdr::xDriver::getDrivers() {
 std::vector<xdr::Driver>& xdr::xDriver::getDrivers(std::string name) {
     this->drivers.clear();
     std::string parserOutput = xdr::exec(("/opt/xUtils/parser_driver --name '" + name + "'").c_str());
+    if (parserOutput == "404 Not Found"){
+        return this->drivers;
+    }
     std::string line;
     auto stream = std::istringstream(parserOutput);
     while (getline(stream, line)) {
-        QRegularExpression r(R"((.*),(.*),(.*))");
+        QRegularExpression r(R"((.*),(.*), (\w+ \d+, \d+|release_date))");
         this->drivers.push_back(xdr::Driver{r.match(line.c_str()).captured(1).toStdString(),
                                  r.match(line.c_str()).captured(2).toStdString(),
                                  r.match(line.c_str()).captured(3).toStdString()});

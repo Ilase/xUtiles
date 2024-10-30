@@ -47,7 +47,7 @@ MainWindow::MainWindow(QWidget *parent) :
     if (output.contains(memReg)) {
         ui->infoMemory->setText(memReg.cap(1));
     }
-
+    ui->infoCore->setText(xdr::exec("uname -r").c_str());
     //INFO GRAPHICS CARD
     ui->infoGpu->setText(QString(xdr::GetGraphicDeviceName().c_str()));
     for (int i = 0; i < driver.graphicCardNames.size(); ++i) {
@@ -150,6 +150,7 @@ void MainWindow::on_SetButton_clicked()
     short rate = display.screenRates[ui->listHZ->currentIndex()];
     Rotation rotation = 1 << (ui->listOrientation->currentIndex());
     display.ChangeCurrentResolutionRates(i, rate, rotation);
+    std::cout << display.screenName << '\n';
     xdr::change_tearing(ui->checkBoxTearing->isChecked(), display.screenName);
 }
 
@@ -205,16 +206,21 @@ void MainWindow::on_additionalDriverSettings_clicked()
     ui->driverGPU->setText(ui->driverGPU->text() + '\t' + driver.graphicCardNames[i]);
     ui->driverCurrent->setText(ui->driverCurrent->text() + '\t' + driver.driverNames[i]);
     ui->driverVersion->setText(ui->driverVersion->text() + '\t' + driver.driverVersions[i]);
-    std::string name;
-    if (driver.graphicCardNames[i].toStdString().find('[')) {
+    std::string name = driver.graphicCardNames[i].toStdString();
+    if (name.find('[') != std::string::npos) {
+        std::cout << name.find('[') << '\n';
         QRegularExpression r(R"(\[(\w+(?: \w+)+)\])");
         QRegularExpressionMatch m = r.match(driver.graphicCardNames[i]);
         name = m.captured(1).toStdString();
-    }else {
-        name = driver.graphicCardNames[i].toStdString();
     }
-    name = "GeForce GTX 1060 6GB";
+
+    //name = "GeForce GTX 1060 6GB";
     auto drivers = driver.getDrivers(name);
+    if (drivers.size() == 0) {
+        QDialog *di = new DriverDialog(this, name.c_str());
+        di->show();
+        return;
+    }
     QStringList driversList;
     for (const auto& var: drivers) {
         auto version = var.version;
@@ -240,10 +246,10 @@ void MainWindow::on_downloadRecomended_clicked()
     }else if (devicename.contains("AMD")) {
         system("systemd-run apt install ");
     }else if (devicename.contains("Intel")) {
-        QDialog *di = new QDialog(this);
+        QDialog *di = new DriverDialog(this, devicename);
         di->show();
     }else {
-        QDialog *di = new QDialog(this);
+        QDialog *di = new DriverDialog(this, devicename);
         di->show();
     }
 }

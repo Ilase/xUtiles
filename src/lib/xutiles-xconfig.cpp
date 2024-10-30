@@ -8,8 +8,8 @@ xdr::xConfig::xConfig()
 int xdr::change_tearing(bool opt, std::string monitor_name)
 {
     std::string wha = opt ? "on" : "off";
-    const char* comand = ("xrandr --output " + monitor_name + " --set TearFree " + wha).c_str();
-    system(comand);
+    std::cout << ("xrandr --output " + monitor_name + " --set TearFree " + wha).c_str() << '\n';
+    system(("xrandr --output " + monitor_name + " --set TearFree " + wha).c_str());
     return 0;
 }
 

@@ -11,6 +11,7 @@
 #include "xutiles-xconfig.hpp"
 #include "xutiles.hpp"
 #include "ui_mainwindow.h"
+#include "driverdialog.h"
 #include <iostream>
 #include <vector>
 namespace Ui {
