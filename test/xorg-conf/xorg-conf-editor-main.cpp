@@ -1,14 +1,11 @@
-#include "xorg-conf-editor.hpp"
-
+#include "xutiles-xconfig.hpp"
 
 int main(int argc, char *argv[]){
-    xce app;
-    app.read();
-    app.cat();
-    std::cout << app.search_field("Server layout") << " : " 
-        << app.search_field_pos("Section \"ServerLayout\"") << std::endl;
-    app.replace("FFas", 0);
-    app.cat();
-    app.write();
-    return 0;
+    xdr::xConfig app;
+    std::vector<std::string> mon;
+    mon = xdr::get_adapt("lspci -k | grep -A 2 -E \"(VGA|3D)\"");
+
+    for(const auto& line : mon){
+        std::cout << line << std::endl;
+    }
 }
