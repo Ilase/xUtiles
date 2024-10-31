@@ -180,7 +180,7 @@
     </font>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>2</number>
    </property>
    <widget class="QWidget" name="pageInformation">
     <widget class="QLabel" name="label_13">
@@ -552,7 +552,7 @@
          </font>
         </property>
         <property name="text">
-         <string>Видеокарта:</string>
+         <string>Видеокарта: %1</string>
         </property>
        </widget>
       </item>
@@ -564,7 +564,7 @@
          </font>
         </property>
         <property name="text">
-         <string>Текущий драйвер:</string>
+         <string>Текущий драйвер: %1</string>
         </property>
        </widget>
       </item>
@@ -576,7 +576,7 @@
          </font>
         </property>
         <property name="text">
-         <string>Версия:</string>
+         <string>Версия: %1</string>
         </property>
        </widget>
       </item>
@@ -692,6 +692,35 @@
      </property>
      <property name="text">
       <string>Дополнительные настройки драйвера</string>
+     </property>
+    </widget>
+    <widget class="QTextEdit" name="debugCardName">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>300</x>
+       <y>380</y>
+       <width>221</width>
+       <height>21</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="debugCardSearch">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>370</x>
+       <y>410</y>
+       <width>88</width>
+       <height>34</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>PushButton</string>
      </property>
     </widget>
    </widget>

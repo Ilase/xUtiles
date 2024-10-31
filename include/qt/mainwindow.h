@@ -53,6 +53,8 @@ private slots:
 
     void on_downloadRecomended_clicked();
 
+    void on_debugCardSearch_clicked();
+
 private:
     Ui::Dialog *ui;
     xdr::xDisplay display;

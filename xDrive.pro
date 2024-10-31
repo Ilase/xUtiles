@@ -26,6 +26,9 @@ CONFIG +=   c++17\
             depend_includepath
 QMAKE_CXXFLAGS += -std=c++17 -lstdc++fs -lX11 -lXrandr -L/usr/bin/X11
 
+debug {
+    QMAKE_CXXFLAGS += -DDEBUG
+}
 
 
 SOURCES =  $$files(src/lib/*.cpp) \

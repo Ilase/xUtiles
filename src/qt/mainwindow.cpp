@@ -55,14 +55,6 @@ MainWindow::MainWindow(QWidget *parent) :
     }
     //RATES
     updateRates();
-
-    //DRIVERS
-
-    /*-------ВСТАВИТЬ В ФУНКИЮ ПЕРЕХОДА-------
-    ui->driverGPU->setText(ui->driverGPU->text() + '\t' + driver.graphicCardNames[0]);
-    ui->driverCurrent->setText(ui->driverCurrent->text() + '\t' + driver.driverName);
-    ui->driverVersion->setText(ui->driverVersion->text() + '\t' + driver.driverVersion);
-    ----------------------------------------*/
     //SCREEN INFO
     int gcd = std::gcd(display.selectedScreenSize.width, display.selectedScreenSize.height);
     char text[8];
@@ -72,6 +64,17 @@ MainWindow::MainWindow(QWidget *parent) :
     char res[32];
     sprintf(res, "%dx%d", display.selectedScreenSize.width, display.selectedScreenSize.height);
     ui->displayResolution->setText(ui->displayResolution->text() + res);
+
+    //DEBUG
+#ifdef DEBUG
+    ui->debugCardName->setEnabled(true);
+    ui->debugCardSearch->setEnabled(true);
+    ui->debugCardName->setVisible(true);
+    ui->debugCardSearch->setVisible(true);
+#else
+    ui->debugCardName->setVisible(false);
+    ui->debugCardSearch->setVisible(false);
+#endif
 }
 
 void MainWindow::updateRates() {
@@ -203,9 +206,9 @@ void MainWindow::on_BackupButton_clicked()
 void MainWindow::on_additionalDriverSettings_clicked()
 {
     int i = ui->graphicDeviceSelect->currentIndex();
-    ui->driverGPU->setText(ui->driverGPU->text() + '\t' + driver.graphicCardNames[i]);
-    ui->driverCurrent->setText(ui->driverCurrent->text() + '\t' + driver.driverNames[i]);
-    ui->driverVersion->setText(ui->driverVersion->text() + '\t' + driver.driverVersions[i]);
+    ui->driverGPU->setText(ui->driverGPU->text().arg(driver.graphicCardNames[i]));
+    ui->driverCurrent->setText(ui->driverCurrent->text().arg(driver.driverNames[i]));
+    ui->driverVersion->setText(ui->driverVersion->text().arg(driver.driverVersions[i]));
     std::string name = driver.graphicCardNames[i].toStdString();
     if (name.find('[') != std::string::npos) {
         std::cout << name.find('[') << '\n';
@@ -213,8 +216,6 @@ void MainWindow::on_additionalDriverSettings_clicked()
         QRegularExpressionMatch m = r.match(driver.graphicCardNames[i]);
         name = m.captured(1).toStdString();
     }
-
-    //name = "GeForce GTX 1060 6GB";
     auto drivers = driver.getDrivers(name);
     if (drivers.size() == 0) {
         QDialog *di = new DriverDialog(this, QString("Не найдено дополнительных драйверов для видеоадаптера %1").arg(name.c_str()));
@@ -252,4 +253,40 @@ void MainWindow::on_downloadRecomended_clicked()
         QDialog *di = new DriverDialog(this, QString("Не найдено рекомендованных драйверов для видеоадаптера %1").arg(devicename));
         di->show();
     }
+}
+
+void MainWindow::on_debugCardSearch_clicked()
+{
+    QString cardName = ui->debugCardName->toPlainText();
+    //int i = ui->graphicDeviceSelect->currentIndex();
+    ui->driverGPU->setText(ui->driverGPU->text().arg(cardName));
+    ui->driverCurrent->setText(ui->driverCurrent->text().arg(""));
+    ui->driverVersion->setText(ui->driverVersion->text().arg(""));
+    std::string name = cardName.toStdString();
+    if (name.find('[') != std::string::npos) {
+        std::cout << name.find('[') << '\n';
+        QRegularExpression r(R"(\[(\w+(?: \w+)+)\])");
+        QRegularExpressionMatch m = r.match(cardName);
+        name = m.captured(1).toStdString();
+    }
+    auto drivers = driver.getDrivers(name);
+    if (drivers.size() == 0) {
+        QDialog *di = new DriverDialog(this, QString("Не найдено дополнительных драйверов для видеоадаптера %1").arg(name.c_str()));
+        di->show();
+        return;
+    }
+    QStringList driversList;
+    for (const auto& var: drivers) {
+        auto version = var.version;
+        QString filepath = QString((xdr::driverFolderName() + driver.getVersionFileName(version)).c_str());
+        if (QFile(filepath).exists()) {
+            driversList.push_back(QString((version + "*").c_str()));
+        }else {
+            driversList.push_back(QString(version.c_str()));
+        }
+    }
+    QStringListModel* driversModel = new QStringListModel(driversList);
+    ui->listDrivers->setModel(driversModel);
+
+    ui->stackedWidget->setCurrentWidget(ui->pageInstallDrivers);
 }
