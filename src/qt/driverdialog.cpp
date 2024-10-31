@@ -6,7 +6,7 @@ DriverDialog::DriverDialog(QWidget *parent, QString name) :
     ui(new Ui::DriverDialog)
 {
     ui->setupUi(this);
-    ui->label->setText(ui->label->text().arg(name));
+    ui->label->setText(name);
 }
 
 DriverDialog::~DriverDialog()

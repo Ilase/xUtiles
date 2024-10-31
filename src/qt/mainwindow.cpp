@@ -151,7 +151,7 @@ void MainWindow::on_SetButton_clicked()
     Rotation rotation = 1 << (ui->listOrientation->currentIndex());
     display.ChangeCurrentResolutionRates(i, rate, rotation);
     std::cout << display.screenName << '\n';
-    xdr::change_tearing(ui->checkBoxTearing->isChecked(), display.screenName);
+    //xdr::change_tearing(ui->checkBoxTearing->isChecked(), display.screenName);
 }
 
 void MainWindow::on_Information_clicked()
@@ -217,7 +217,7 @@ void MainWindow::on_additionalDriverSettings_clicked()
     //name = "GeForce GTX 1060 6GB";
     auto drivers = driver.getDrivers(name);
     if (drivers.size() == 0) {
-        QDialog *di = new DriverDialog(this, name.c_str());
+        QDialog *di = new DriverDialog(this, QString("Не найдено дополнительных драйверов для видеоадаптера %1").arg(name.c_str()));
         di->show();
         return;
     }
@@ -242,14 +242,14 @@ void MainWindow::on_downloadRecomended_clicked()
     int i = ui->graphicDeviceSelect->currentIndex();
     auto devicename = driver.graphicCardNames[i];
     if (devicename.contains("NVIDIA")) {
-        system("systemd-run apt install ");
+        system("systemd-run apt install nvidia-driver");
     }else if (devicename.contains("AMD")) {
-        system("systemd-run apt install ");
+        system("systemd-run apt install xserver-xorg-video-amdgpu");
     }else if (devicename.contains("Intel")) {
-        QDialog *di = new DriverDialog(this, devicename);
+        QDialog *di = new DriverDialog(this, QString("Не найдено рекомендованных драйверов для видеоадаптера %1").arg(devicename));
         di->show();
     }else {
-        QDialog *di = new DriverDialog(this, devicename);
+        QDialog *di = new DriverDialog(this, QString("Не найдено рекомендованных драйверов для видеоадаптера %1").arg(devicename));
         di->show();
     }
 }
