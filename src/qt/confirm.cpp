@@ -9,9 +9,14 @@ Confirm::Confirm(QWidget *parent) :
     timer = new QTimer;
     timer->setSingleShot(true);
     timer->setInterval(15000);
-    applyed = false;
+    notAplly = false;
     connect(timer, &QTimer::timeout, this, &Confirm::timerTimeout);
     connect(this, &Confirm::open, this, &Confirm::on_modalWindowOpen);
+    setWindowFlags(Qt::Window);
+    QRect screenGeometry = QApplication::desktop()->screenGeometry();
+    int x = (screenGeometry.width() - width()) / 2;
+    int y = (screenGeometry.height() - height()) / 2;
+    move(x, y);
 }
 
 Confirm::~Confirm()
@@ -23,8 +28,8 @@ Confirm::~Confirm()
 
 void Confirm::on_cancelButton_clicked()
 {
-    applyed = false;
-    emit closed(applyed);
+    notAplly = true;
+    emit closed(notAplly);
     timer->stop();
     close();
 
@@ -32,9 +37,9 @@ void Confirm::on_cancelButton_clicked()
 
 void Confirm::on_applyButton_clicked()
 {
-    applyed = true;
+    notAplly = false;
     //emit closed(applyed);
-    emit applySignal();
+    emit applySignal(notAplly);
     timer->stop();
     close();
 }
@@ -47,7 +52,8 @@ void Confirm::on_modalWindowOpen()
 void Confirm::timerTimeout()
 {
     timer -> stop();
-    emit cancelSignal();
+    notAplly = true;
+    emit closed(notAplly);
     close();
 }
 
@@ -56,9 +62,5 @@ void Confirm::closeEvent(QCloseEvent *event)
     Q_UNUSED(event)
     deleteLater();
 }
-//void Confirm::on_Confirm_destroyed()
-//{
-//    applyed = true;
-//}
 
 

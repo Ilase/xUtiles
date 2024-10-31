@@ -15,6 +15,15 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->settings->setVisible(false);
     ui->ProgressBar->hide();
     ui->ListResolution->clear();
+    ui->stackedWidget->setCurrentIndex(0);
+
+    buttonGroup = new QButtonGroup(this);
+    buttonGroup->addButton(ui->informationButton);
+    buttonGroup->addButton(ui->Drivers);
+    buttonGroup->addButton(ui->Resolution);
+    buttonGroup->addButton(ui->Backup);
+    buttonGroup->setExclusive(false);
+
     for (size_t i = 0; i < display.screenSizes[0].size(); ++i) {
         auto size = display.screenSizes[0][i];
         char c[32];
@@ -72,20 +81,16 @@ MainWindow::MainWindow(QWidget *parent) :
     int gcd = std::gcd(display.selectedScreenSize.width, display.selectedScreenSize.height);
     char text[8];
     sprintf(text, "%d:%d", display.selectedScreenSize.width / gcd, display.selectedScreenSize.height / gcd);
-    ui->displayFormat->setText(ui->displayFormat->text() + text);
-    ui->displayName->setText(ui->displayName->text() + display.screenName.c_str());
+    ui->displayFormat->setText(ui->displayFormat->text() +" "+ text);
+    ui->displayName->setText(ui->displayName->text() + " " + display.screenName.c_str());
     char res[32];
     sprintf(res, "%dx%d", display.selectedScreenSize.width, display.selectedScreenSize.height);
-    ui->displayResolution->setText(ui->displayResolution->text() + res);
+    ui->displayResolution->setText(ui->displayResolution->text() + " " + res);
     connect(ui->ListResolution, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &MainWindow::on_ListResolution_activated);
 
     //MODAL WINDOW
     previousIndex = ui->ListResolution->currentIndex();
-//    Confirm apply;;
-//    timer = new QTimer(this);
-//    timer->setSingleShot(true);
-//    timer->setInterval(15000);
-//    connect(timer, &QTimer::timeout, this, &MainWindow::on_timeout);
+    initializing = false;
 
 }
 
@@ -115,14 +120,9 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_Resolution_clicked()
 {
-    //ui->stackedWidget->setCurrentIndex(1);
     ui->stackedWidget->setCurrentWidget(ui->pageResolution);
 }
 
-void MainWindow::on_Resolution_clicked(bool _clicked)
-{
-
-}
 
 void MainWindow::on_Backup_clicked()
 {
@@ -159,16 +159,15 @@ void MainWindow::on_Download_clicked()
     }
 }
 
-void MainWindow::on_SetButton_clicked()
-{
+//void MainWindow::on_SetButton_clicked()
+//{
 //    int i = ui->ListResolution->currentIndex();
 //    short rate = display.screenRates[ui->listHZ->currentIndex()];
 //    Rotation rotation = 1 << (ui->listOrientation->currentIndex());
 //    display.ChangeCurrentResolutionRates(i, rate, rotation);
+//}
 
-}
-
-void MainWindow::on_Information_clicked()
+void MainWindow::on_informationButton_clicked()
 {
     ui->stackedWidget->setCurrentWidget(ui->pageInformation);
 }
@@ -189,10 +188,6 @@ void MainWindow::on_CreateBackupButton_clicked()
 
 void MainWindow::on_ListResolution_activated(int index)
 {
-
-
-//    timer->start();
-
     display.selectedScreenSizeId = index;
     display.selectedScreenSize = display.screenSizes[display.selectedScreenId][index];
     display.getSelectedRates();
@@ -221,34 +216,35 @@ void MainWindow::on_BackupButton_clicked()
 
 void MainWindow::on_additionalDriverSettings_clicked()
 {
-    int i = ui->graphicDeviceSelect->currentIndex();
-    ui->currentGpu->setText(ui->currentGpu->text() + '\t' + driver.graphicCardNames[i]);
-    ui->currentDriver->setText(ui->currentDriver->text() + '\t' + driver.driverNames[i]);
-    ui->currentVersion->setText(ui->currentVersion->text() + '\t' + driver.driverVersions[i]);
-    std::string name;
-    if (driver.graphicCardNames[i].toStdString().find('[')) {
-        QRegularExpression r(R"(\[(\w+(?: \w+)+)\])");
-        QRegularExpressionMatch m = r.match(driver.graphicCardNames[i]);
-        name = m.captured(1).toStdString();
-    }else {
-        name = driver.graphicCardNames[i].toStdString();
-    }
-    name = "GeForce GTX 1060 6GB";
-    auto drivers = driver.getDrivers(name);
-    QStringList driversList;
-    for (const auto& var: drivers) {
-        auto version = var.version;
-        QString filepath = QString((xdr::driverFolderName() + driver.getVersionFileName(version)).c_str());
-        if (QFile(filepath).exists()) {
-            driversList.push_back(QString((version + "*").c_str()));
-        }else {
-            driversList.push_back(QString(version.c_str()));
-        }
-    }
-    QStringListModel* driversModel = new QStringListModel(driversList);
-    ui->listDrivers->setModel(driversModel);
 
+//    int i = ui->graphicDeviceSelect->currentIndex();
+//    ui->currentGpu->setText(ui->currentGpu->text() + '\t' + driver.graphicCardNames[i]);
+//    ui->currentDriver->setText(ui->currentDriver->text() + '\t' + driver.driverNames[i]);
+//    ui->currentVersion->setText(ui->currentVersion->text() + '\t' + driver.driverVersions[i]);
+//    std::string name;
+//    if (driver.graphicCardNames[i].toStdString().find('[')) {
+//        QRegularExpression r(R"(\[(\w+(?: \w+)+)\])");
+//        QRegularExpressionMatch m = r.match(driver.graphicCardNames[i]);
+//        name = m.captured(1).toStdString();
+//    }else {
+//        name = driver.graphicCardNames[i].toStdString();
+//    }
+//   // name = "GeForce GTX 1060 6GB";
+//    auto drivers = driver.getDrivers(name);
+//    QStringList driversList;
+//    for (const auto& var: drivers) {
+//        auto version = var.version;
+//        QString filepath = QString((xdr::driverFolderName() + driver.getVersionFileName(version)).c_str());
+//        if (QFile(filepath).exists()) {
+//            driversList.push_back(QString((version + "*").c_str()));
+//        }else {
+//            driversList.push_back(QString(version.c_str()));
+//        }
+//    }
+   // QStringListModel* driversModel = new QStringListModel(driversList);
+    //ui->listDrivers->setModel(driversModel);
     ui->stackedWidget->setCurrentWidget(ui->pageInstallDrivers);
+
 }
 
 void MainWindow::on_downloadRecomended_clicked()
@@ -268,7 +264,6 @@ void MainWindow::on_downloadRecomended_clicked()
     }
 }
 
-
 void MainWindow::on_dependsScreen_clicked()
 {
     ui->settings->setVisible(true);
@@ -284,37 +279,35 @@ void MainWindow::on_checkBoxTearing_clicked()
     xdr::change_tearing(ui->checkBoxTearing->isChecked(), display.screenName);
 }
 
-void MainWindow::setNewMonitorResolution(int currentIndex)
+void MainWindow::setNewMonitorResolution(int index)
 {
-    int i = ui->ListResolution->currentIndex();
+    qDebug() << "new resolution" << ui->ListResolution->currentText();
     short rate = display.screenRates[ui->listHZ->currentIndex()];
     Rotation rotation = 1 << (ui->listOrientation->currentIndex());
-    display.ChangeCurrentResolutionRates(i, rate, rotation);
+    display.ChangeCurrentResolutionRates(index, rate, rotation);
+    //ui->pageResolution->update();
 }
-
-//int MainWindow::on_modalWindowClosed(bool applyed)
-//{
-//    timer->stop();
-//    if (!applyed)
-//    {
-//        ui->ListResolution->setCurrentIndex(previousIndex);
-//        return 1;
-//     }
-//    else {
-//        return 0;
-//    }
-//}
-
-//void MainWindow::on_timeout()
-//{
-//    apply->close();
-//}
 
 void MainWindow::on_ListResolution_currentIndexChanged(int index)
 {
-    qDebug() << "Index changed";
-    setNewMonitorResolution(ui->ListResolution->currentIndex());
-    apply = new Confirm;
-    emit apply->open();
-    apply->show();
+    setNewMonitorResolution(index);
+    if(initializing) return;
+    if(previousIndex != index)
+    {
+        apply = new Confirm;
+        emit apply->open();
+        connect(apply, &Confirm::closed, this, &MainWindow::onCancel);
+        connect(apply, &Confirm::applySignal, this, &MainWindow::previousIndexChange);
+        apply->show();
+    }
+}
+
+void MainWindow::onCancel(bool activated)
+{
+    setNewMonitorResolution(previousIndex);
+}
+
+void MainWindow::previousIndexChange()
+{
+    previousIndex = ui->ListResolution->currentIndex();
 }

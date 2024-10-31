@@ -123,6 +123,9 @@ border-bottom:none; }</string>
          <property name="text">
           <string>Параметры экрана</string>
          </property>
+         <property name="autoDefault">
+          <bool>false</bool>
+         </property>
         </widget>
         <widget class="QLabel" name="LableLegion">
          <property name="geometry">
@@ -223,7 +226,7 @@ border-bottom:none; }</string>
           <string>Драйверы</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="Information">
+        <widget class="QPushButton" name="informationButton">
          <property name="geometry">
           <rect>
            <x>10</x>
@@ -257,6 +260,18 @@ border-bottom:none; }</string>
          </property>
          <property name="text">
           <string>Информация</string>
+         </property>
+         <property name="checkable">
+          <bool>false</bool>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
+         <property name="autoExclusive">
+          <bool>false</bool>
+         </property>
+         <property name="default">
+          <bool>true</bool>
          </property>
         </widget>
        </widget>
@@ -674,10 +689,23 @@ border-bottom:none; }</string>
                 <enum>QFrame::Raised</enum>
                </property>
                <layout class="QGridLayout" name="gridLayout_14">
-                <item row="2" column="1">
+                <item row="3" column="1">
+                 <spacer name="verticalSpacer">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="4" column="1">
                  <widget class="QComboBox" name="graphicDeviceSelect"/>
                 </item>
-                <item row="2" column="2">
+                <item row="4" column="2">
                  <spacer name="horizontalSpacer">
                   <property name="orientation">
                    <enum>Qt::Horizontal</enum>
@@ -690,21 +718,21 @@ border-bottom:none; }</string>
                   </property>
                  </spacer>
                 </item>
-                <item row="3" column="1">
+                <item row="5" column="1">
                  <widget class="QPushButton" name="downloadRecomended">
                   <property name="text">
                    <string>Установить рекомендуемый драйвер</string>
                   </property>
                  </widget>
                 </item>
-                <item row="4" column="1">
+                <item row="6" column="1">
                  <widget class="QPushButton" name="additionalDriverSettings">
                   <property name="text">
                    <string>Дополнительные настройки драйвера</string>
                   </property>
                  </widget>
                 </item>
-                <item row="5" column="1">
+                <item row="7" column="1">
                  <spacer name="verticalSpacer_6">
                   <property name="orientation">
                    <enum>Qt::Vertical</enum>
@@ -717,42 +745,7 @@ border-bottom:none; }</string>
                   </property>
                  </spacer>
                 </item>
-                <item row="0" column="1" colspan="2">
-                 <widget class="QFrame" name="frame_8">
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>50</height>
-                   </size>
-                  </property>
-                  <property name="frameShape">
-                   <enum>QFrame::NoFrame</enum>
-                  </property>
-                  <property name="frameShadow">
-                   <enum>QFrame::Raised</enum>
-                  </property>
-                  <layout class="QGridLayout" name="gridLayout_13">
-                   <item row="0" column="0">
-                    <widget class="QLabel" name="label_4">
-                     <property name="font">
-                      <font>
-                       <pointsize>20</pointsize>
-                       <weight>50</weight>
-                       <bold>false</bold>
-                      </font>
-                     </property>
-                     <property name="text">
-                      <string>Видеоадаптеры</string>
-                     </property>
-                     <property name="alignment">
-                      <set>Qt::AlignCenter</set>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </widget>
-                </item>
-                <item row="4" column="0">
+                <item row="6" column="0">
                  <spacer name="horizontalSpacer_2">
                   <property name="orientation">
                    <enum>Qt::Horizontal</enum>
@@ -765,18 +758,22 @@ border-bottom:none; }</string>
                   </property>
                  </spacer>
                 </item>
-                <item row="1" column="1">
-                 <spacer name="verticalSpacer_7">
-                  <property name="orientation">
-                   <enum>Qt::Vertical</enum>
+                <item row="0" column="1">
+                 <widget class="QLabel" name="label_4">
+                  <property name="font">
+                   <font>
+                    <pointsize>20</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
                   </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>20</width>
-                    <height>40</height>
-                   </size>
+                  <property name="text">
+                   <string>Видеоадаптеры</string>
                   </property>
-                 </spacer>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </widget>
@@ -797,6 +794,15 @@ border-bottom:none; }</string>
                 <enum>QFrame::Raised</enum>
                </property>
                <layout class="QGridLayout" name="gridLayout_7">
+                <property name="topMargin">
+                 <number>6</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>6</number>
+                </property>
+                <property name="verticalSpacing">
+                 <number>12</number>
+                </property>
                 <item row="3" column="1">
                  <widget class="QLabel" name="downloadFinished">
                   <property name="enabled">
@@ -894,6 +900,9 @@ border-bottom:none; }</string>
                   </property>
                   <property name="alignment">
                    <set>Qt::AlignCenter</set>
+                  </property>
+                  <property name="margin">
+                   <number>-1</number>
                   </property>
                  </widget>
                 </item>
@@ -1217,6 +1226,15 @@ border-bottom:none; }</string>
                    <enum>QFrame::Raised</enum>
                   </property>
                   <layout class="QGridLayout" name="gridLayout_9">
+                   <property name="leftMargin">
+                    <number>9</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>6</number>
+                   </property>
+                   <property name="horizontalSpacing">
+                    <number>6</number>
+                   </property>
                    <property name="verticalSpacing">
                     <number>8</number>
                    </property>
@@ -1542,6 +1560,9 @@ border-bottom:none; }</string>
                      <property name="text">
                       <string>HZ</string>
                      </property>
+                     <property name="margin">
+                      <number>5</number>
+                     </property>
                     </widget>
                    </item>
                    <item row="4" column="0">
@@ -1592,24 +1613,6 @@ border-bottom:none; }</string>
                         </property>
                         <property name="text">
                          <string>Дополнительные настройки</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QPushButton" name="SetButton">
-                        <property name="minimumSize">
-                         <size>
-                          <width>60</width>
-                          <height>0</height>
-                         </size>
-                        </property>
-                        <property name="font">
-                         <font>
-                          <pointsize>12</pointsize>
-                         </font>
-                        </property>
-                        <property name="text">
-                         <string>Выбрать</string>
                         </property>
                        </widget>
                       </item>

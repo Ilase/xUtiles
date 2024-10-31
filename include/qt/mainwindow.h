@@ -14,6 +14,7 @@
 #include <iostream>
 #include <vector>
 #include <QTimer>
+#include <QButtonGroup>
 #include "confirm.h"
 namespace Ui {
 class MainWindow;
@@ -28,6 +29,7 @@ public:
     ~MainWindow();
 
     //xdr::xDisplay getDisplay();
+    int getPreviousIndex();
 
 signals:
     void timeoutSignal();
@@ -36,17 +38,15 @@ signals:
 private slots:
     void on_Resolution_clicked();
 
-    void on_Resolution_clicked(bool checked);
-
     void on_Backup_clicked();
 
     void on_Drivers_clicked();
 
     void on_Download_clicked();
 
-    void on_SetButton_clicked();
+    void previousIndexChange();
 
-    void on_Information_clicked();
+    void on_informationButton_clicked();
 
     void on_CreateBackupButton_clicked();
 
@@ -60,18 +60,14 @@ private slots:
 
     void on_downloadRecomended_clicked();
 
-    //int on_modalWindowClosed(bool applyed);
-
     void on_dependsScreen_clicked();
 
     void on_exitButton_clicked();
 
     void on_checkBoxTearing_clicked();
 
-    //void on_timeout();
-
-
     void on_ListResolution_currentIndexChanged(int index);
+
 
 private:
     Ui::Dialog *ui;
@@ -86,8 +82,11 @@ private:
     QTimer *timer;
     Confirm *apply;
     int previousIndex;
+    bool initializing;
+    QButtonGroup *buttonGroup;
 
-    void setNewMonitorResolution(int currentIndex);
+    void setNewMonitorResolution(int index);
+    void onCancel(bool activated);
 };
 
 #endif // MAINWINDOW_H

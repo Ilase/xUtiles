@@ -3,6 +3,9 @@
 
 #include <QWidget>
 #include <QTimer>
+#include <QRect>
+#include <QApplication>
+#include <QDesktopWidget>
 
 
 namespace Ui {
@@ -19,15 +22,15 @@ public:
 
 private:
     Ui::Confirm *ui;
-    bool applyed;
+    bool notAplly;
     QTimer *timer;
 
+
 signals:
-    //void closeWindow();
-    void closed(bool applyed);
+    void closed(bool activated);
     void open();
-    void cancelSignal();
-    void applySignal();
+    //void cancelSignal(bool applyed);
+    void applySignal(bool activated);
 
 private slots:
     void on_cancelButton_clicked();
