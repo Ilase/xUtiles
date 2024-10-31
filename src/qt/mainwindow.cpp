@@ -290,3 +290,8 @@ void MainWindow::on_debugCardSearch_clicked()
 
     ui->stackedWidget->setCurrentWidget(ui->pageInstallDrivers);
 }
+
+void MainWindow::on_pushButton_clicked()
+{
+    ui->stackedWidget->setCurrentWidget(ui->pageDrivers);
+}

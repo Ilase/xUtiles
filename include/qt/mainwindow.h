@@ -55,6 +55,8 @@ private slots:
 
     void on_debugCardSearch_clicked();
 
+    void on_pushButton_clicked();
+
 private:
     Ui::Dialog *ui;
     xdr::xDisplay display;

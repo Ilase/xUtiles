@@ -180,7 +180,7 @@
     </font>
    </property>
    <property name="currentIndex">
-    <number>2</number>
+    <number>1</number>
    </property>
    <widget class="QWidget" name="pageInformation">
     <widget class="QLabel" name="label_13">
@@ -620,6 +620,19 @@
      </property>
      <property name="text">
       <string>Загрузка завершенна </string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>71</width>
+       <height>61</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Назад</string>
      </property>
     </widget>
    </widget>
