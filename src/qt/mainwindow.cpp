@@ -311,3 +311,5 @@ void MainWindow::previousIndexChange()
 {
     previousIndex = ui->ListResolution->currentIndex();
 }
+
+

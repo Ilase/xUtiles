@@ -69,6 +69,8 @@ private slots:
     void on_ListResolution_currentIndexChanged(int index);
 
 
+    void on_pushButton_clicked();
+
 private:
     Ui::Dialog *ui;
     xdr::xDisplay display;
