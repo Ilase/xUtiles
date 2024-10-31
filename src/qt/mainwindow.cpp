@@ -221,6 +221,9 @@ void MainWindow::on_additionalDriverSettings_clicked()
         QDialog *di = new DriverDialog(this, QString("Не найдено дополнительных драйверов для видеоадаптера %1").arg(name.c_str()));
         di->show();
         return;
+    }else if (std::stoi(drivers[0].version.substr(0, drivers[0].version.find('.'))) < 470) {
+        QDialog *di = new DriverDialog(this, QString("Драйверы для видеоадаптара %1 устарели, установока драйверов будет невозможной").arg(name.c_str()));
+        di->show();
     }
     QStringList driversList;
     for (const auto& var: drivers) {
@@ -242,6 +245,17 @@ void MainWindow::on_downloadRecomended_clicked()
 {
     int i = ui->graphicDeviceSelect->currentIndex();
     auto devicename = driver.graphicCardNames[i];
+    if (devicename.toStdString().find('[') != std::string::npos) {
+        QRegularExpression r(R"(\[(\w+(?: \w+)+)\])");
+        QRegularExpressionMatch m = r.match(driver.graphicCardNames[i]);
+        devicename = m.captured(1);
+    }
+    auto drivers = driver.getDrivers(devicename.toStdString());
+    if (std::stoi(drivers[0].version.substr(0, drivers[0].version.find('.'))) < 470) {
+            QDialog *di = new DriverDialog(this, QString("Драйверы для видеоадаптара %1 устарели, установока рекомендованных драйверов невозможна").arg(devicename));
+            di->show();
+            return;
+        }
     if (devicename.contains("NVIDIA")) {
         system("systemd-run apt install nvidia-driver");
     }else if (devicename.contains("AMD")) {
