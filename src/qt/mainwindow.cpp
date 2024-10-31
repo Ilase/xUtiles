@@ -243,11 +243,22 @@ void MainWindow::on_additionalDriverSettings_clicked()
 
 void MainWindow::on_downloadRecomended_clicked()
 {
+    QString devicename;
+#ifdef DEBUG
+    if (!ui->debugCardName->toPlainText().isEmpty()) {
+        devicename = ui->debugCardName->toPlainText();
+    }else {
+        int i = ui->graphicDeviceSelect->currentIndex();
+        devicename = driver.graphicCardNames[i];
+    }
+#else
     int i = ui->graphicDeviceSelect->currentIndex();
-    auto devicename = driver.graphicCardNames[i];
+    devicename = driver.graphicCardNames[i];
+
+#endif
     if (devicename.toStdString().find('[') != std::string::npos) {
         QRegularExpression r(R"(\[(\w+(?: \w+)+)\])");
-        QRegularExpressionMatch m = r.match(driver.graphicCardNames[i]);
+        QRegularExpressionMatch m = r.match(devicename);
         devicename = m.captured(1);
     }
     auto drivers = driver.getDrivers(devicename.toStdString());
