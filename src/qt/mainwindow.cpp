@@ -262,6 +262,11 @@ void MainWindow::on_downloadRecomended_clicked()
         devicename = m.captured(1);
     }
     auto drivers = driver.getDrivers(devicename.toStdString());
+    if (drivers.size() == 0) {
+        QDialog *di = new DriverDialog(this, QString("Не найдено рекомендованных драйверов для видеоадаптера %1").arg(devicename));
+        di->show();
+        return;
+    }
     if (std::stoi(drivers[0].version.substr(0, drivers[0].version.find('.'))) < 470) {
             QDialog *di = new DriverDialog(this, QString("Драйверы для видеоадаптара %1 устарели, установока рекомендованных драйверов невозможна").arg(devicename));
             di->show();
