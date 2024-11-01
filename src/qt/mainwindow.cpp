@@ -351,11 +351,6 @@ void MainWindow::previousIndexChange()
     previousIndex = ui->ListResolution->currentIndex();
 }
 
-void MainWindow::on_pushButton_clicked()
-{
-    ui->stackedWidget->setCurrentWidget(ui->pageDrivers);
-}
-
 void MainWindow::on_debugCardSearch_clicked()
 {
     QString cardName = ui->debugCardName->toPlainText();
