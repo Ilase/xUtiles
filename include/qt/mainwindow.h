@@ -14,6 +14,11 @@
 #include "driverdialog.h"
 #include <iostream>
 #include <vector>
+#include <QTimer>
+#include <QButtonGroup>
+#include "confirm.h"
+#include "driverdialog.h"
+
 namespace Ui {
 class MainWindow;
 }
@@ -26,10 +31,15 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    //xdr::xDisplay getDisplay();
+    int getPreviousIndex();
+
+signals:
+    void timeoutSignal();
+
+
 private slots:
     void on_Resolution_clicked();
-
-    void on_Resolution_clicked(bool checked);
 
     void on_Backup_clicked();
 
@@ -37,9 +47,9 @@ private slots:
 
     void on_Download_clicked();
 
-    void on_SetButton_clicked();
+    void previousIndexChange();
 
-    void on_Information_clicked();
+    void on_informationButton_clicked();
 
     void on_CreateBackupButton_clicked();
 
@@ -53,9 +63,17 @@ private slots:
 
     void on_downloadRecomended_clicked();
 
-    void on_debugCardSearch_clicked();
+    void on_dependsScreen_clicked();
+
+    void on_exitButton_clicked();
+
+    void on_checkBoxTearing_clicked();
+
+    void on_ListResolution_currentIndexChanged(int index);
 
     void on_pushButton_clicked();
+
+    void on_debugCardSearch_clicked();
 
 private:
     Ui::Dialog *ui;
@@ -66,6 +84,15 @@ private:
 
     xdr::xDownload download;
     void updateRates();
+    //int openApplyWindow();
+    QTimer *timer;
+    Confirm *apply;
+    int previousIndex;
+    bool initializing;
+    QButtonGroup *buttonGroup;
+
+    void setNewMonitorResolution(int index);
+    void onCancel(bool activated);
 };
 
 #endif // MAINWINDOW_H
