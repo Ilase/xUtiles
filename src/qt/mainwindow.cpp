@@ -79,11 +79,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
 void MainWindow::updateRates() {
     ui->listHZ->clear();
-#if 0
-    for (const auto& v: display.screenRates) {
-        ui->listHZ->addItem(QString(std::to_string(v).c_str()));
-    }
-#else
     for (int i = 0; i < display.screenResources->nmode; ++i) {
         XRRModeInfo mode = display.screenResources->modes[i];
         auto curResolution = display.selectedScreenSize;
@@ -93,7 +88,6 @@ void MainWindow::updateRates() {
         sprintf(c, "%6.2f", refresh);
         ui->listHZ->addItem(QString(c));
     }
-#endif
 }
 
 MainWindow::~MainWindow()
@@ -103,7 +97,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_Resolution_clicked()
 {
-    //ui->stackedWidget->setCurrentIndex(1);
     ui->stackedWidget->setCurrentWidget(ui->pageResolution);
 }
 
@@ -154,7 +147,6 @@ void MainWindow::on_SetButton_clicked()
     Rotation rotation = 1 << (ui->listOrientation->currentIndex());
     display.ChangeCurrentResolutionRates(i, rate, rotation);
     std::cout << display.screenName << '\n';
-    //xdr::change_tearing(ui->checkBoxTearing->isChecked(), display.screenName);
 }
 
 void MainWindow::on_Information_clicked()
@@ -206,9 +198,9 @@ void MainWindow::on_BackupButton_clicked()
 void MainWindow::on_additionalDriverSettings_clicked()
 {
     int i = ui->graphicDeviceSelect->currentIndex();
-    ui->driverGPU->setText(ui->driverGPU->text().arg(driver.graphicCardNames[i]));
-    ui->driverCurrent->setText(ui->driverCurrent->text().arg(driver.driverNames[i]));
-    ui->driverVersion->setText(ui->driverVersion->text().arg(driver.driverVersions[i]));
+    ui->driverGPU->setText(QString("Видеокарта: %1").arg(driver.graphicCardNames[i]));
+    ui->driverCurrent->setText(QString("Драйвер: %1").arg(driver.driverNames[i]));
+    ui->driverVersion->setText(QString("Версия: %1").arg(driver.driverVersions[i]));
     std::string name = driver.graphicCardNames[i].toStdString();
     if (name.find('[') != std::string::npos) {
         std::cout << name.find('[') << '\n';
@@ -289,9 +281,9 @@ void MainWindow::on_debugCardSearch_clicked()
 {
     QString cardName = ui->debugCardName->toPlainText();
     //int i = ui->graphicDeviceSelect->currentIndex();
-    ui->driverGPU->setText(ui->driverGPU->text().arg(cardName));
-    ui->driverCurrent->setText(ui->driverCurrent->text().arg(""));
-    ui->driverVersion->setText(ui->driverVersion->text().arg(""));
+    ui->driverGPU->setText(QString("Видеокарта: %1").arg(cardName));
+    ui->driverCurrent->setText(QString("Драйвер: %1").arg(""));
+    ui->driverVersion->setText(QString("Версия: %1").arg(""));
     std::string name = cardName.toStdString();
     if (name.find('[') != std::string::npos) {
         std::cout << name.find('[') << '\n';
