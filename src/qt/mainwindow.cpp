@@ -217,49 +217,82 @@ void MainWindow::on_BackupButton_clicked()
 void MainWindow::on_additionalDriverSettings_clicked()
 {
 
-//    int i = ui->graphicDeviceSelect->currentIndex();
-//    ui->currentGpu->setText(ui->currentGpu->text() + '\t' + driver.graphicCardNames[i]);
-//    ui->currentDriver->setText(ui->currentDriver->text() + '\t' + driver.driverNames[i]);
-//    ui->currentVersion->setText(ui->currentVersion->text() + '\t' + driver.driverVersions[i]);
-//    std::string name;
-//    if (driver.graphicCardNames[i].toStdString().find('[')) {
-//        QRegularExpression r(R"(\[(\w+(?: \w+)+)\])");
-//        QRegularExpressionMatch m = r.match(driver.graphicCardNames[i]);
-//        name = m.captured(1).toStdString();
-//    }else {
-//        name = driver.graphicCardNames[i].toStdString();
-//    }
-//   // name = "GeForce GTX 1060 6GB";
-//    auto drivers = driver.getDrivers(name);
-//    QStringList driversList;
-//    for (const auto& var: drivers) {
-//        auto version = var.version;
-//        QString filepath = QString((xdr::driverFolderName() + driver.getVersionFileName(version)).c_str());
-//        if (QFile(filepath).exists()) {
-//            driversList.push_back(QString((version + "*").c_str()));
-//        }else {
-//            driversList.push_back(QString(version.c_str()));
-//        }
-//    }
-   // QStringListModel* driversModel = new QStringListModel(driversList);
-    //ui->listDrivers->setModel(driversModel);
+    int i = ui->graphicDeviceSelect->currentIndex();
+    ui->driverGPU->setText(ui->driverGPU->text().arg(driver.graphicCardNames[i]));
+    ui->driverCurrent->setText(ui->driverCurrent->text().arg(driver.driverNames[i]));
+    ui->driverVersion->setText(ui->driverVersion->text().arg(driver.driverVersions[i]));
+    std::string name = driver.graphicCardNames[i].toStdString();
+    if (name.find('[') != std::string::npos) {
+        std::cout << name.find('[') << '\n';
+        QRegularExpression r(R"(\[(\w+(?: \w+)+)\])");
+        QRegularExpressionMatch m = r.match(driver.graphicCardNames[i]);
+        name = m.captured(1).toStdString();
+    }
+    auto drivers = driver.getDrivers(name);
+    if (drivers.size() == 0) {
+        QDialog *di = new DriverDialog(this, QString("Не найдено дополнительных драйверов для видеоадаптера %1").arg(name.c_str()));
+        di->show();
+        return;
+    }else if (std::stoi(drivers[0].version.substr(0, drivers[0].version.find('.'))) < 470) {
+        QDialog *di = new DriverDialog(this, QString("Драйверы для видеоадаптара %1 устарели, установока драйверов будет невозможной").arg(name.c_str()));
+        di->show();
+    }
+    QStringList driversList;
+    for (const auto& var: drivers) {
+        auto version = var.version;
+        QString filepath = QString((xdr::driverFolderName() + driver.getVersionFileName(version)).c_str());
+        if (QFile(filepath).exists()) {
+            driversList.push_back(QString((version + "*").c_str()));
+        }else {
+            driversList.push_back(QString(version.c_str()));
+        }
+    }
+    QStringListModel* driversModel = new QStringListModel(driversList);
+    ui->listDrivers->setModel(driversModel);
     ui->stackedWidget->setCurrentWidget(ui->pageInstallDrivers);
 
 }
 
 void MainWindow::on_downloadRecomended_clicked()
 {
+    QString devicename;
+#ifdef DEBUG
+    if (!ui->debugCardName->toPlainText().isEmpty()) {
+        devicename = ui->debugCardName->toPlainText();
+    }else {
+        int i = ui->graphicDeviceSelect->currentIndex();
+        devicename = driver.graphicCardNames[i];
+    }
+#else
     int i = ui->graphicDeviceSelect->currentIndex();
-    auto devicename = driver.graphicCardNames[i];
+    devicename = driver.graphicCardNames[i];
+
+#endif
+    if (devicename.toStdString().find('[') != std::string::npos) {
+        QRegularExpression r(R"(\[(\w+(?: \w+)+)\])");
+        QRegularExpressionMatch m = r.match(devicename);
+        devicename = m.captured(1);
+    }
+    auto drivers = driver.getDrivers(devicename.toStdString());
+    if (drivers.size() == 0) {
+        QDialog *di = new DriverDialog(this, QString("Не найдено рекомендованных драйверов для видеоадаптера %1").arg(devicename));
+        di->show();
+        return;
+    }
+    if (std::stoi(drivers[0].version.substr(0, drivers[0].version.find('.'))) < 470) {
+            QDialog *di = new DriverDialog(this, QString("Драйверы для видеоадаптара %1 устарели, установока рекомендованных драйверов невозможна").arg(devicename));
+            di->show();
+            return;
+        }
     if (devicename.contains("NVIDIA")) {
-        system("systemd-run apt install ");
+        system("systemd-run apt install nvidia-driver");
     }else if (devicename.contains("AMD")) {
-        system("systemd-run apt install ");
+        system("systemd-run apt install xserver-xorg-video-amdgpu");
     }else if (devicename.contains("Intel")) {
-        QDialog *di = new QDialog(this);
+        QDialog *di = new DriverDialog(this, QString("Не найдено рекомендованных драйверов для видеоадаптера %1").arg(devicename));
         di->show();
     }else {
-        QDialog *di = new QDialog(this);
+        QDialog *di = new DriverDialog(this, QString("Не найдено рекомендованных драйверов для видеоадаптера %1").arg(devicename));
         di->show();
     }
 }
@@ -276,7 +309,7 @@ void MainWindow::on_exitButton_clicked()
 
 void MainWindow::on_checkBoxTearing_clicked()
 {
-    xdr::change_tearing(ui->checkBoxTearing->isChecked(), display.screenName);
+    //xdr::change_tearing(ui->checkBoxTearing->isChecked(), display.screenName);
 }
 
 void MainWindow::setNewMonitorResolution(int index)
@@ -307,9 +340,49 @@ void MainWindow::onCancel(bool activated)
     setNewMonitorResolution(previousIndex);
 }
 
+
+
 void MainWindow::previousIndexChange()
 {
     previousIndex = ui->ListResolution->currentIndex();
 }
 
+void MainWindow::on_pushButton_clicked()
+{
+    ui->stackedWidget->setCurrentWidget(ui->pageDrivers);
+}
 
+void MainWindow::on_debugCardSearch_clicked()
+{
+    QString cardName = ui->debugCardName->toPlainText();
+    //int i = ui->graphicDeviceSelect->currentIndex();
+    ui->driverGPU->setText(ui->driverGPU->text().arg(cardName));
+    ui->driverCurrent->setText(ui->driverCurrent->text().arg(""));
+    ui->driverVersion->setText(ui->driverVersion->text().arg(""));
+    std::string name = cardName.toStdString();
+    if (name.find('[') != std::string::npos) {
+        std::cout << name.find('[') << '\n';
+        QRegularExpression r(R"(\[(\w+(?: \w+)+)\])");
+        QRegularExpressionMatch m = r.match(cardName);
+        name = m.captured(1).toStdString();
+    }
+    auto drivers = driver.getDrivers(name);
+    if (drivers.size() == 0) {
+        QDialog *di = new DriverDialog(this, QString("Не найдено дополнительных драйверов для видеоадаптера %1").arg(name.c_str()));
+        di->show();
+        return;
+    }
+    QStringList driversList;
+    for (const auto& var: drivers) {
+        auto version = var.version;
+        QString filepath = QString((xdr::driverFolderName() + driver.getVersionFileName(version)).c_str());
+        if (QFile(filepath).exists()) {
+            driversList.push_back(QString((version + "*").c_str()));
+        }else {
+            driversList.push_back(QString(version.c_str()));
+        }
+    }
+    QStringListModel* driversModel = new QStringListModel(driversList);
+    ui->listDrivers->setModel(driversModel);
+    ui->stackedWidget->setCurrentWidget(ui->pageInstallDrivers);
+}

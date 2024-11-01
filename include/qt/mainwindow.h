@@ -16,6 +16,8 @@
 #include <QTimer>
 #include <QButtonGroup>
 #include "confirm.h"
+#include "driverdialog.h"
+
 namespace Ui {
 class MainWindow;
 }
@@ -68,8 +70,10 @@ private slots:
 
     void on_ListResolution_currentIndexChanged(int index);
 
-
     void on_pushButton_clicked();
+
+    void on_debugCardSearch_clicked();
+
 
 private:
     Ui::Dialog *ui;
