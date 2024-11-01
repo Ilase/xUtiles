@@ -30,9 +30,11 @@ namespace xdr {
          void getSelectedRates();
          void changeScreen(int);
          void changeMonitorPositions(int, int);
+
      };
 
     std::string GetGraphicDeviceName();
+
 
 }
 

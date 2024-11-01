@@ -44,9 +44,11 @@ HEADERS +=  $$files(include/lib/*) \
             $$files(include/qt/*) \
 
 
+
 FORMS +=    ui/mainwindow.ui \
             ui/monitorbutton.ui \
-    ui/driverdialog.ui
+            ui/confirm.ui \
+            ui/driverdialog.ui \
 
 LIBS += -lstdc++fs -L/usr/bin/X11 -lX11 -lXrandr
 

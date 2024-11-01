@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "confirm.h"
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
     QDialog(parent),
@@ -10,8 +12,18 @@ MainWindow::MainWindow(QWidget *parent) :
     this->backup = xdr::xBackup();
     ui->setupUi(this);
     ui->downloadFinished->hide();
+    ui->settings->setVisible(false);
     ui->ProgressBar->hide();
     ui->ListResolution->clear();
+    ui->stackedWidget->setCurrentIndex(0);
+
+    buttonGroup = new QButtonGroup(this);
+    buttonGroup->addButton(ui->informationButton);
+    buttonGroup->addButton(ui->Drivers);
+    buttonGroup->addButton(ui->Resolution);
+    buttonGroup->addButton(ui->Backup);
+    buttonGroup->setExclusive(false);
+
     for (size_t i = 0; i < display.screenSizes[0].size(); ++i) {
         auto size = display.screenSizes[0][i];
         char c[32];
@@ -49,18 +61,20 @@ MainWindow::MainWindow(QWidget *parent) :
     }
     ui->infoCore->setText(xdr::exec("uname -r").c_str());
     //INFO GRAPHICS CARD
+
     ui->infoGpu->setText(QString(xdr::GetGraphicDeviceName().c_str()));
     for (int i = 0; i < driver.graphicCardNames.size(); ++i) {
         ui->graphicDeviceSelect->addItem(driver.graphicCardNames[i]);
     }
+
     //RATES
     updateRates();
     //SCREEN INFO
     int gcd = std::gcd(display.selectedScreenSize.width, display.selectedScreenSize.height);
     char text[8];
     sprintf(text, "%d:%d", display.selectedScreenSize.width / gcd, display.selectedScreenSize.height / gcd);
-    ui->displayFormat->setText(ui->displayFormat->text() + text);
-    ui->displayName->setText(ui->displayName->text() + display.screenName.c_str());
+    ui->displayFormat->setText(ui->displayFormat->text() +" "+ text);
+    ui->displayName->setText(ui->displayName->text() + " " + display.screenName.c_str());
     char res[32];
     sprintf(res, "%dx%d", display.selectedScreenSize.width, display.selectedScreenSize.height);
     ui->displayResolution->setText(ui->displayResolution->text() + res);
@@ -75,6 +89,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->debugCardName->setVisible(false);
     ui->debugCardSearch->setVisible(false);
 #endif
+    ui->displayResolution->setText(ui->displayResolution->text() + " " + res);
+    connect(ui->ListResolution, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &MainWindow::on_ListResolution_activated);
+
+    //MODAL WINDOW
+    previousIndex = ui->ListResolution->currentIndex();
+    initializing = false;
+
 }
 
 void MainWindow::updateRates() {
@@ -103,14 +124,9 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_Resolution_clicked()
 {
-    //ui->stackedWidget->setCurrentIndex(1);
     ui->stackedWidget->setCurrentWidget(ui->pageResolution);
 }
 
-void MainWindow::on_Resolution_clicked(bool _clicked)
-{
-
-}
 
 void MainWindow::on_Backup_clicked()
 {
@@ -147,20 +163,19 @@ void MainWindow::on_Download_clicked()
     }
 }
 
-void MainWindow::on_SetButton_clicked()
-{
-    int i = ui->ListResolution->currentIndex();
-    short rate = display.screenRates[ui->listHZ->currentIndex()];
-    Rotation rotation = 1 << (ui->listOrientation->currentIndex());
-    display.ChangeCurrentResolutionRates(i, rate, rotation);
-    std::cout << display.screenName << '\n';
-    //xdr::change_tearing(ui->checkBoxTearing->isChecked(), display.screenName);
-}
+//void MainWindow::on_SetButton_clicked()
+//{
+//    int i = ui->ListResolution->currentIndex();
+//    short rate = display.screenRates[ui->listHZ->currentIndex()];
+//    Rotation rotation = 1 << (ui->listOrientation->currentIndex());
+//    display.ChangeCurrentResolutionRates(i, rate, rotation);
+//}
 
-void MainWindow::on_Information_clicked()
+void MainWindow::on_informationButton_clicked()
 {
     ui->stackedWidget->setCurrentWidget(ui->pageInformation);
 }
+
 
 void MainWindow::on_CreateBackupButton_clicked()
 {
@@ -205,6 +220,7 @@ void MainWindow::on_BackupButton_clicked()
 
 void MainWindow::on_additionalDriverSettings_clicked()
 {
+
     int i = ui->graphicDeviceSelect->currentIndex();
     ui->driverGPU->setText(ui->driverGPU->text().arg(driver.graphicCardNames[i]));
     ui->driverCurrent->setText(ui->driverCurrent->text().arg(driver.driverNames[i]));
@@ -237,8 +253,8 @@ void MainWindow::on_additionalDriverSettings_clicked()
     }
     QStringListModel* driversModel = new QStringListModel(driversList);
     ui->listDrivers->setModel(driversModel);
-
     ui->stackedWidget->setCurrentWidget(ui->pageInstallDrivers);
+
 }
 
 void MainWindow::on_downloadRecomended_clicked()
@@ -285,6 +301,61 @@ void MainWindow::on_downloadRecomended_clicked()
     }
 }
 
+void MainWindow::on_dependsScreen_clicked()
+{
+    ui->settings->setVisible(true);
+}
+
+void MainWindow::on_exitButton_clicked()
+{
+    ui->settings->setVisible(false);
+}
+
+void MainWindow::on_checkBoxTearing_clicked()
+{
+    //xdr::change_tearing(ui->checkBoxTearing->isChecked(), display.screenName);
+}
+
+void MainWindow::setNewMonitorResolution(int index)
+{
+    qDebug() << "new resolution" << ui->ListResolution->currentText();
+    short rate = display.screenRates[ui->listHZ->currentIndex()];
+    Rotation rotation = 1 << (ui->listOrientation->currentIndex());
+    display.ChangeCurrentResolutionRates(index, rate, rotation);
+    //ui->pageResolution->update();
+}
+
+void MainWindow::on_ListResolution_currentIndexChanged(int index)
+{
+    setNewMonitorResolution(index);
+    if(initializing) return;
+    if(previousIndex != index)
+    {
+        apply = new Confirm;
+        emit apply->open();
+        connect(apply, &Confirm::closed, this, &MainWindow::onCancel);
+        connect(apply, &Confirm::applySignal, this, &MainWindow::previousIndexChange);
+        apply->show();
+    }
+}
+
+void MainWindow::onCancel(bool activated)
+{
+    setNewMonitorResolution(previousIndex);
+}
+
+
+
+void MainWindow::previousIndexChange()
+{
+    previousIndex = ui->ListResolution->currentIndex();
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    ui->stackedWidget->setCurrentWidget(ui->pageDrivers);
+}
+
 void MainWindow::on_debugCardSearch_clicked()
 {
     QString cardName = ui->debugCardName->toPlainText();
@@ -323,5 +394,6 @@ void MainWindow::on_debugCardSearch_clicked()
 
 void MainWindow::on_pushButton_clicked()
 {
-    ui->stackedWidget->setCurrentWidget(ui->pageDrivers);
+    ui->stackedWidget->setCurrentWidget(ui->pageInstallDrivers);
 }
+
