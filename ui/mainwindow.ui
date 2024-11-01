@@ -320,7 +320,7 @@ border-bottom:none; }</string>
             <string notr="true"/>
            </property>
            <property name="currentIndex">
-            <number>0</number>
+            <number>1</number>
            </property>
            <widget class="QWidget" name="pageInformation">
             <property name="styleSheet">
@@ -742,6 +742,49 @@ border-bottom:none; }</string>
                   </property>
                  </widget>
                 </item>
+                <item row="9" column="0">
+                 <spacer name="horizontalSpacer_2">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="10" column="1">
+                 <spacer name="verticalSpacer_6">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="4" column="1">
+                 <widget class="QComboBox" name="graphicDeviceSelect"/>
+                </item>
+                <item row="6" column="1">
+                 <widget class="QPushButton" name="additionalDriverSettings">
+                  <property name="text">
+                   <string>Дополнительные настройки драйвера</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="5" column="1">
+                 <widget class="QPushButton" name="downloadRecomended">
+                  <property name="text">
+                   <string>Установить рекомендуемый драйвер</string>
+                  </property>
+                 </widget>
+                </item>
                 <item row="1" column="1">
                  <spacer name="verticalSpacer">
                   <property name="orientation">
@@ -755,23 +798,7 @@ border-bottom:none; }</string>
                   </property>
                  </spacer>
                 </item>
-                <item row="2" column="1">
-                 <widget class="QTextEdit" name="debugCardName">
-                  <property name="enabled">
-                   <bool>false</bool>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>35</height>
-                   </size>
-                  </property>
-                 </widget>
-                </item>
-                <item row="3" column="1">
-                 <widget class="QComboBox" name="graphicDeviceSelect"/>
-                </item>
-                <item row="3" column="2">
+                <item row="4" column="2">
                  <spacer name="horizontalSpacer">
                   <property name="orientation">
                    <enum>Qt::Horizontal</enum>
@@ -784,55 +811,28 @@ border-bottom:none; }</string>
                   </property>
                  </spacer>
                 </item>
-                <item row="4" column="1">
-                 <widget class="QPushButton" name="downloadRecomended">
-                  <property name="text">
-                   <string>Установить рекомендуемый драйвер</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="5" column="1">
-                 <widget class="QPushButton" name="additionalDriverSettings">
-                  <property name="text">
-                   <string>Дополнительные настройки драйвера</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="6" column="1">
+                <item row="8" column="1">
                  <widget class="QPushButton" name="debugCardSearch">
                   <property name="enabled">
                    <bool>true</bool>
                   </property>
                   <property name="text">
-                   <string>PushButton</string>
+                   <string>Найти драйверы</string>
                   </property>
                  </widget>
                 </item>
-                <item row="7" column="0">
-                 <spacer name="horizontalSpacer_2">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
+                <item row="7" column="1">
+                 <widget class="QTextEdit" name="debugCardName">
+                  <property name="enabled">
+                   <bool>false</bool>
                   </property>
-                  <property name="sizeHint" stdset="0">
+                  <property name="maximumSize">
                    <size>
-                    <width>40</width>
-                    <height>20</height>
+                    <width>16777215</width>
+                    <height>35</height>
                    </size>
                   </property>
-                 </spacer>
-                </item>
-                <item row="8" column="1">
-                 <spacer name="verticalSpacer_6">
-                  <property name="orientation">
-                   <enum>Qt::Vertical</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>20</width>
-                    <height>40</height>
-                   </size>
-                  </property>
-                 </spacer>
+                 </widget>
                 </item>
                </layout>
               </widget>
