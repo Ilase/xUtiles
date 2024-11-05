@@ -353,7 +353,7 @@ border-bottom:none; }</string>
             <string notr="true"/>
            </property>
            <property name="currentIndex">
-            <number>5</number>
+            <number>0</number>
            </property>
            <widget class="QWidget" name="pageInformation">
             <property name="styleSheet">
@@ -387,13 +387,34 @@ border-bottom:none; }</string>
                    <enum>QFrame::Raised</enum>
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_2">
+                   <property name="spacing">
+                    <number>0</number>
+                   </property>
+                   <property name="leftMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="topMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="bottomMargin">
+                    <number>0</number>
+                   </property>
                    <item>
                     <layout class="QVBoxLayout" name="verticalLayout">
                      <property name="spacing">
-                      <number>31</number>
+                      <number>30</number>
                      </property>
                      <item>
                       <widget class="QLabel" name="label_15">
+                       <property name="minimumSize">
+                        <size>
+                         <width>0</width>
+                         <height>35</height>
+                        </size>
+                       </property>
                        <property name="font">
                         <font>
                          <pointsize>16</pointsize>
@@ -415,6 +436,12 @@ border-bottom:none; }</string>
                      </item>
                      <item>
                       <widget class="QLabel" name="label_17">
+                       <property name="minimumSize">
+                        <size>
+                         <width>0</width>
+                         <height>35</height>
+                        </size>
+                       </property>
                        <property name="font">
                         <font>
                          <pointsize>16</pointsize>
@@ -436,6 +463,12 @@ border-bottom:none; }</string>
                      </item>
                      <item>
                       <widget class="QLabel" name="label_18">
+                       <property name="minimumSize">
+                        <size>
+                         <width>0</width>
+                         <height>35</height>
+                        </size>
+                       </property>
                        <property name="font">
                         <font>
                          <pointsize>16</pointsize>
@@ -457,6 +490,12 @@ border-bottom:none; }</string>
                      </item>
                      <item>
                       <widget class="QLabel" name="label_19">
+                       <property name="minimumSize">
+                        <size>
+                         <width>0</width>
+                         <height>35</height>
+                        </size>
+                       </property>
                        <property name="font">
                         <font>
                          <pointsize>16</pointsize>
@@ -481,6 +520,12 @@ border-bottom:none; }</string>
                      </item>
                      <item>
                       <widget class="QLabel" name="label_14">
+                       <property name="minimumSize">
+                        <size>
+                         <width>0</width>
+                         <height>35</height>
+                        </size>
+                       </property>
                        <property name="font">
                         <font>
                          <pointsize>16</pointsize>
@@ -502,6 +547,12 @@ border-bottom:none; }</string>
                      </item>
                      <item>
                       <widget class="QLabel" name="label_16">
+                       <property name="minimumSize">
+                        <size>
+                         <width>0</width>
+                         <height>35</height>
+                        </size>
+                       </property>
                        <property name="font">
                         <font>
                          <pointsize>16</pointsize>
@@ -523,6 +574,12 @@ border-bottom:none; }</string>
                      </item>
                      <item>
                       <widget class="QLabel" name="label_20">
+                       <property name="minimumSize">
+                        <size>
+                         <width>0</width>
+                         <height>35</height>
+                        </size>
+                       </property>
                        <property name="font">
                         <font>
                          <pointsize>16</pointsize>
@@ -570,15 +627,39 @@ border-bottom:none; }</string>
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_4">
                    <property name="spacing">
-                    <number>10</number>
+                    <number>0</number>
+                   </property>
+                   <property name="leftMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="topMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="bottomMargin">
+                    <number>0</number>
                    </property>
                    <item>
                     <layout class="QVBoxLayout" name="infoLayout">
                      <property name="spacing">
-                      <number>37</number>
+                      <number>30</number>
+                     </property>
+                     <property name="topMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>0</number>
                      </property>
                      <item>
                       <widget class="QLabel" name="infoProccesor">
+                       <property name="minimumSize">
+                        <size>
+                         <width>0</width>
+                         <height>35</height>
+                        </size>
+                       </property>
                        <property name="font">
                         <font>
                          <pointsize>12</pointsize>
@@ -594,51 +675,12 @@ border-bottom:none; }</string>
                      </item>
                      <item>
                       <widget class="QLabel" name="infoGpu">
-                       <property name="font">
-                        <font>
-                         <pointsize>12</pointsize>
-                        </font>
+                       <property name="minimumSize">
+                        <size>
+                         <width>0</width>
+                         <height>35</height>
+                        </size>
                        </property>
-                       <property name="text">
-                        <string/>
-                       </property>
-                       <property name="alignment">
-                        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                       </property>
-                      </widget>
-                     </item>
-                     <item>
-                      <widget class="QLabel" name="infoStorage">
-                       <property name="font">
-                        <font>
-                         <pointsize>12</pointsize>
-                        </font>
-                       </property>
-                       <property name="text">
-                        <string/>
-                       </property>
-                       <property name="alignment">
-                        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                       </property>
-                      </widget>
-                     </item>
-                     <item>
-                      <widget class="QLabel" name="infoScreen">
-                       <property name="font">
-                        <font>
-                         <pointsize>12</pointsize>
-                        </font>
-                       </property>
-                       <property name="text">
-                        <string/>
-                       </property>
-                       <property name="alignment">
-                        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                       </property>
-                      </widget>
-                     </item>
-                     <item>
-                      <widget class="QLabel" name="infoResolution">
                        <property name="font">
                         <font>
                          <pointsize>12</pointsize>
@@ -654,6 +696,75 @@ border-bottom:none; }</string>
                      </item>
                      <item>
                       <widget class="QLabel" name="infoMemory">
+                       <property name="minimumSize">
+                        <size>
+                         <width>0</width>
+                         <height>35</height>
+                        </size>
+                       </property>
+                       <property name="font">
+                        <font>
+                         <pointsize>12</pointsize>
+                        </font>
+                       </property>
+                       <property name="text">
+                        <string/>
+                       </property>
+                       <property name="alignment">
+                        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QLabel" name="infoStorage">
+                       <property name="minimumSize">
+                        <size>
+                         <width>0</width>
+                         <height>35</height>
+                        </size>
+                       </property>
+                       <property name="font">
+                        <font>
+                         <pointsize>12</pointsize>
+                        </font>
+                       </property>
+                       <property name="text">
+                        <string/>
+                       </property>
+                       <property name="alignment">
+                        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QLabel" name="infoScreen">
+                       <property name="minimumSize">
+                        <size>
+                         <width>0</width>
+                         <height>35</height>
+                        </size>
+                       </property>
+                       <property name="font">
+                        <font>
+                         <pointsize>12</pointsize>
+                        </font>
+                       </property>
+                       <property name="text">
+                        <string/>
+                       </property>
+                       <property name="alignment">
+                        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QLabel" name="infoResolution">
+                       <property name="minimumSize">
+                        <size>
+                         <width>0</width>
+                         <height>35</height>
+                        </size>
+                       </property>
                        <property name="font">
                         <font>
                          <pointsize>12</pointsize>
@@ -669,6 +780,12 @@ border-bottom:none; }</string>
                      </item>
                      <item>
                       <widget class="QLabel" name="infoCore">
+                       <property name="minimumSize">
+                        <size>
+                         <width>0</width>
+                         <height>35</height>
+                        </size>
+                       </property>
                        <property name="font">
                         <font>
                          <pointsize>12</pointsize>
