@@ -10,6 +10,7 @@ xdr::xDisplay::xDisplay()
     this->screenName = name;
     this->display = XOpenDisplay(":0");
     this->screenCount = ScreenCount(display);
+    std::cout << screenCount << "\n";
     this->selectedScreen = this->defaultScreen = XDefaultScreenOfDisplay(display);
     this->selectedScreenId = XScreenNumberOfScreen(selectedScreen);
     this->root = XDefaultRootWindow(display);
@@ -59,6 +60,28 @@ void xdr::xDisplay::ChangeResolution(int i)
 }
 
 void xdr::xDisplay::ChangeCurrentResolutionRates(int sizeInd, short rate, Rotation rotation) {
+    int ncrtc = screenResources->ncrtc;
+    std::vector<XRRCrtcInfo> crts = {};
+    std::vector<bool> enabledcrtcs= {};
+    for (int i = 0; i < ncrtc; ++i) {
+        XRRCrtcInfo* crct = XRRGetCrtcInfo(display, screenResources, screenResources->crtcs[i]);
+        crts.push_back(*crct);
+        if (crct->mode == 0) {
+            enabledcrtcs.push_back(false);
+            continue;
+        }
+        enabledcrtcs.push_back(true);
+        XRRSetCrtcConfig(display,
+                                 screenResources,
+                                 screenResources->crtcs[i],
+                                 CurrentTime,
+                                 0,
+                                 0,
+                                 0,
+                                 0,
+                                 NULL,
+                                     0);
+    }
     XRRSetScreenConfigAndRate(
                 display,
                 screenConfig,
@@ -68,6 +91,32 @@ void xdr::xDisplay::ChangeCurrentResolutionRates(int sizeInd, short rate, Rotati
                 rate,
                 CurrentTime
                 );
+    std::cout << ncrtc << '\n';
+    for (int i = 0; i < ncrtc; ++i) {
+        XRRCrtcInfo crct = crts[i];
+        std::cout << i << " " <<
+                     crct.x << " " <<
+                     crct.y << " " <<
+                     crct.mode << " " <<
+                     crct.rotation << " " <<
+                     crct.noutput << " " << '\n';
+        if (!enabledcrtcs[i]) {continue;}
+        RROutput* rr_outputs = crct.outputs;
+        auto s = XRRSetCrtcConfig(display,
+                                  screenResources,
+                                  screenResources->crtcs[i],
+                                  CurrentTime,
+                                  crct.x,
+                                  crct.y,
+                                  crct.mode,
+                                  crct.rotation,
+                                  rr_outputs,
+                                      crct.noutput);
+        if (s != Success){
+            std::cout << i << " " << screenResources->crtcs[i] << "\tERROR" << s << "\n";
+        }
+    }
+    SyncChanges();
 }
 
 void xdr::xDisplay::getSelectedRates() {
@@ -82,7 +131,7 @@ void xdr::xDisplay::getSelectedRates() {
 void xdr::xDisplay::changeScreen(int screenID) {
     this->selectedScreen = XScreenOfDisplay(display, screenID);
     this->selectedScreenId = XScreenNumberOfScreen(selectedScreen);
-    this->root = XDefaultRootWindow(display);
+    this->root = XRootWindow(display, selectedScreenId);
     this->screenConfig = XRRGetScreenInfo(display,root);
     this->screenResources = XRRGetScreenResources(display, root);
     selectedScreenSize = getCurrentResolution(selectedScreen);

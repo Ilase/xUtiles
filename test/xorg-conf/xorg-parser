@@ -5,8 +5,7 @@ then
 	sed -i 's/\(TearFree\)/#\1/g' /etc/X11/xorg.conf
 fi
 
-mkdir /etc/X11/xorg.conf.d
-touch /etc/X11/xorg.conf.d/20-$1.conf
+mkdir -p /etc/X11/xorg.conf.d
 
 for file in $X11DIR/xorg.conf.d/*.conf
 do
