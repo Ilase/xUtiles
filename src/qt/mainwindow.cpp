@@ -79,6 +79,24 @@ MainWindow::MainWindow(QWidget *parent) :
     sprintf(res, "%dx%d", display.selectedScreenSize.width, display.selectedScreenSize.height);
     ui->displayResolution->setText(ui->displayResolution->text() + res);
 
+    //MODULES TABLE
+    QStringList headers = {"Название", "Размер", "Использован", "Кем"};
+    ui->tableModules->setHorizontalHeaderLabels(headers);
+    QString modules = xdr::exec("lsmod").c_str();
+    //QRegExp devicePatern(R"((\w+) +(\d+) +(\d+) ?+([\w,]+)?)");
+    QRegularExpression modulesPatern(R"((\w+) +(\d+) +(\d+) ?+([\w,]+)?)");
+    QRegularExpressionMatchIterator mathces = modulesPatern.globalMatch(modules);
+    int i = 0;
+    while (mathces.hasNext()) {
+        QRegularExpressionMatch match = mathces.next();
+        ui->tableModules->insertRow(i);
+        if (match.hasMatch()) {
+            for (int u = 1; u < 5; ++u) {
+                ui->tableModules->setItem(i, u - 1, new QTableWidgetItem(match.captured(u)));
+            }
+        }
+        i++;
+    }
     //DEBUG
 #ifdef DEBUG
     ui->debugCardName->setEnabled(true);
@@ -100,11 +118,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
 void MainWindow::updateRates() {
     ui->listHZ->clear();
-#if 0
-    for (const auto& v: display.screenRates) {
-        ui->listHZ->addItem(QString(std::to_string(v).c_str()));
-    }
-#else
     for (int i = 0; i < display.screenResources->nmode; ++i) {
         XRRModeInfo mode = display.screenResources->modes[i];
         auto curResolution = display.selectedScreenSize;
@@ -114,7 +127,6 @@ void MainWindow::updateRates() {
         sprintf(c, "%6.2f", refresh);
         ui->listHZ->addItem(QString(c));
     }
-#endif
 }
 
 MainWindow::~MainWindow()
@@ -162,14 +174,6 @@ void MainWindow::on_Download_clicked()
         connect(&download, SIGNAL(downloaded(QString)), ui->downloadFinished, SLOT(show()));
     }
 }
-
-//void MainWindow::on_SetButton_clicked()
-//{
-//    int i = ui->ListResolution->currentIndex();
-//    short rate = display.screenRates[ui->listHZ->currentIndex()];
-//    Rotation rotation = 1 << (ui->listOrientation->currentIndex());
-//    display.ChangeCurrentResolutionRates(i, rate, rotation);
-//}
 
 void MainWindow::on_informationButton_clicked()
 {
@@ -222,9 +226,9 @@ void MainWindow::on_additionalDriverSettings_clicked()
 {
 
     int i = ui->graphicDeviceSelect->currentIndex();
-    ui->driverGPU->setText(ui->driverGPU->text().arg(driver.graphicCardNames[i]));
-    ui->driverCurrent->setText(ui->driverCurrent->text().arg(driver.driverNames[i]));
-    ui->driverVersion->setText(ui->driverVersion->text().arg(driver.driverVersions[i]));
+    ui->driverGPU->setText(QString("Видеокарта: %1").arg(driver.graphicCardNames[i]));
+    ui->driverCurrent->setText(QString("Драйвер: %1").arg(driver.driverNames[i]));
+    ui->driverVersion->setText(QString("Версия: %1").arg(driver.driverVersions[i]));
     std::string name = driver.graphicCardNames[i].toStdString();
     if (name.find('[') != std::string::npos) {
         std::cout << name.find('[') << '\n';
@@ -355,9 +359,9 @@ void MainWindow::on_debugCardSearch_clicked()
 {
     QString cardName = ui->debugCardName->toPlainText();
     //int i = ui->graphicDeviceSelect->currentIndex();
-    ui->driverGPU->setText(ui->driverGPU->text().arg(cardName));
-    ui->driverCurrent->setText(ui->driverCurrent->text().arg(""));
-    ui->driverVersion->setText(ui->driverVersion->text().arg(""));
+    ui->driverGPU->setText(QString("Видеокарта: %1").arg(cardName));
+    ui->driverCurrent->setText(QString("Драйвер: %1").arg(""));
+    ui->driverVersion->setText(QString("Версия: %1").arg(""));
     std::string name = cardName.toStdString();
     if (name.find('[') != std::string::npos) {
         std::cout << name.find('[') << '\n';
@@ -392,3 +396,7 @@ void MainWindow::on_pushButton_clicked()
     ui->stackedWidget->setCurrentWidget(ui->pageInstallDrivers);
 }
 
+void MainWindow::on_CoreModules_clicked()
+{
+    ui->stackedWidget->setCurrentWidget(ui->pageModules);
+}
