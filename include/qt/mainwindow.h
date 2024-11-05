@@ -57,6 +57,8 @@ private slots:
 
     void on_pushButton_clicked();
 
+    void on_CoreModules_clicked();
+
 private:
     Ui::Dialog *ui;
     xdr::xDisplay display;

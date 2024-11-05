@@ -65,6 +65,24 @@ MainWindow::MainWindow(QWidget *parent) :
     sprintf(res, "%dx%d", display.selectedScreenSize.width, display.selectedScreenSize.height);
     ui->displayResolution->setText(ui->displayResolution->text() + res);
 
+    //MODULES TABLE
+    QStringList headers = {"Название", "Размер", "Использован", "Кем"};
+    ui->tableModules->setHorizontalHeaderLabels(headers);
+    QString modules = xdr::exec("lsmod").c_str();
+    //QRegExp devicePatern(R"((\w+) +(\d+) +(\d+) ?+([\w,]+)?)");
+    QRegularExpression modulesPatern(R"((\w+) +(\d+) +(\d+) ?+([\w,]+)?)");
+    QRegularExpressionMatchIterator mathces = modulesPatern.globalMatch(modules);
+    int i = 0;
+    while (mathces.hasNext()) {
+        QRegularExpressionMatch match = mathces.next();
+        ui->tableModules->insertRow(i);
+        if (match.hasMatch()) {
+            for (int u = 1; u < 5; ++u) {
+                ui->tableModules->setItem(i, u - 1, new QTableWidgetItem(match.captured(u)));
+            }
+        }
+        i++;
+    }
     //DEBUG
 #ifdef DEBUG
     ui->debugCardName->setEnabled(true);
@@ -316,4 +334,9 @@ void MainWindow::on_debugCardSearch_clicked()
 void MainWindow::on_pushButton_clicked()
 {
     ui->stackedWidget->setCurrentWidget(ui->pageDrivers);
+}
+
+void MainWindow::on_CoreModules_clicked()
+{
+    ui->stackedWidget->setCurrentWidget(ui->pageModules);
 }

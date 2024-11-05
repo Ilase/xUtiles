@@ -1,0 +1,23 @@
+#!/bin/bash
+X11DIR=/etc/X11
+if [ ! -z $(grep "TearFree" /etc/X11/xorg.conf) ] && [ -z $(grep "#TearFree" /etc/X11/xorg.conf) ] 
+then 
+	sed -i 's/\(TearFree\)/#\1/g' /etc/X11/xorg.conf
+fi
+
+mkdir /etc/X11/xorg.conf.d
+touch /etc/X11/xorg.conf.d/20-$1.conf
+
+for file in $X11DIR/xorg.conf.d/*.conf
+do
+	mv "$file" "$file.bak"
+done
+
+IDENTIFIER=$2
+
+echo "Section \"Device\"
+	Identifier	\"$IDENTIFIER\"
+	Driver	\"$1\"
+	Option	\"TearFree\" \"true\"
+EndSection" > /etc/X11/xorg.conf.d/20-$1.conf
+ 
