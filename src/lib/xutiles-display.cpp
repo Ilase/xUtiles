@@ -97,6 +97,20 @@ void xdr::xDisplay::changeScreen(int screenID) {
     }
 }
 
+int xdr::xDisplay::addResolution(int width, int height, float hz) {
+    char buf[32];
+    sprintf(buf, "%dx%d_%.2f", width, height, hz);
+    if (xdr::exec("cat ~/.xprofile").find(buf) == std::string::npos){
+        return 1;
+    }
+    char arg[128];
+    sprintf(arg, "cvt %d %d %.2f | sed 's/Modeline/xrandr --newmode/'", width, height, hz);
+    std::string cvtoutput = xdr::exec(arg) + "xrandr --addmode " + this->screenName + " " + buf;
+    std::ofstream file;
+    file.open("~/.xprofile", std::ios_base::app);
+    file << cvtoutput;
+}
+
 void xdr::xDisplay::SyncChanges()
 {
     XSync(display, False);
