@@ -76,6 +76,8 @@ private slots:
     void on_debugCardSearch_clicked();
     void on_CoreModules_clicked();
 
+    void on_apply_clicked();
+
 private:
     Ui::Dialog *ui;
     xdr::xDisplay display;

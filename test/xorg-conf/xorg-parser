@@ -14,10 +14,13 @@ do
 done
 
 IDENTIFIER=$2
-
+if [ $1 == "nvidia" ]
+then
+    nvidia-settings --assign "CurrentMetaMode=$(nvidia-settings --query CurrentMetaMode | awk -F'::' '{print $2}' | sed 's/}/, ForceFullCompositionPipeline=On&/g')"
+else
 echo "Section \"Device\"
 	Identifier	\"$IDENTIFIER\"
 	Driver	\"$1\"
 	Option	\"TearFree\" \"true\"
 EndSection" > /etc/X11/xorg.conf.d/20-$1.conf
- 
+fi

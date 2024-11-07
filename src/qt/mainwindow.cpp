@@ -82,6 +82,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //MODULES TABLE
     QStringList headers = {"Название", "Размер", "Использован", "Кем"};
     ui->tableModules->setHorizontalHeaderLabels(headers);
+    ui->tableModules->setEditTriggers(QAbstractItemView::NoEditTriggers);
     QString modules = xdr::exec("lsmod").c_str();
     //QRegExp devicePatern(R"((\w+) +(\d+) +(\d+) ?+([\w,]+)?)");
     QRegularExpression modulesPatern(R"((\w+) +(\d+) +(\d+) ?+([\w,]+)?)");
@@ -98,7 +99,7 @@ MainWindow::MainWindow(QWidget *parent) :
         i++;
     }
     //DEBUG
-#ifdef DEBUG
+#ifdef QT_DEBUG
     ui->debugCardName->setEnabled(true);
     ui->debugCardSearch->setEnabled(true);
     ui->debugCardName->setVisible(true);
@@ -264,7 +265,7 @@ void MainWindow::on_additionalDriverSettings_clicked()
 void MainWindow::on_downloadRecomended_clicked()
 {
     QString devicename;
-#ifdef DEBUG
+#ifdef QT_DEBUG
     if (!ui->debugCardName->toPlainText().isEmpty()) {
         devicename = ui->debugCardName->toPlainText();
     }else {
@@ -399,4 +400,20 @@ void MainWindow::on_pushButton_clicked()
 void MainWindow::on_CoreModules_clicked()
 {
     ui->stackedWidget->setCurrentWidget(ui->pageModules);
+}
+
+void MainWindow::on_apply_clicked()
+{
+    int i = ui->graphicDeviceSelect->currentIndex();
+    QString devicename = driver.graphicCardNames[i];
+    if (devicename.contains("NVIDIA")) {
+        system("systemd-run sh /opt/xUtils/xorg-parser nvidia Card0");
+    }else if (devicename.contains("AMD")) {
+        system("systemd-run sh /opt/xUtils/xorg-parser amdgpu Card0");
+    }else if (devicename.contains("Intel")) {
+        system("systemd-run sh /opt/xUtils/xorg-parser intel Card0");
+    }else {
+        QDialog *di = new DriverDialog(this, QString("Невозможно применить настройки для видеоадаптера %1").arg(devicename));
+        di->show();
+    }
 }

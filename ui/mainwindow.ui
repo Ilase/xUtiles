@@ -151,13 +151,16 @@ border-bottom:none; }</string>
           <string notr="true">border-right: none</string>
          </property>
          <property name="text">
-          <string>xUtils</string>
+          <string>Legion Xperience</string>
          </property>
          <property name="textFormat">
           <enum>Qt::PlainText</enum>
          </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
          </property>
         </widget>
         <widget class="QPushButton" name="Backup">
@@ -353,7 +356,7 @@ border-bottom:none; }</string>
             <string notr="true"/>
            </property>
            <property name="currentIndex">
-            <number>0</number>
+            <number>5</number>
            </property>
            <widget class="QWidget" name="pageInformation">
             <property name="styleSheet">
