@@ -18,8 +18,10 @@ namespace xdr {
          XRRScreenResources* screenResources;
          XRRScreenSize selectedScreenSize;
          int selectedScreenSizeId;
+         int previousScreenSizeId;
          std::vector<std::vector<XRRScreenSize>> screenSizes;
          std::vector<short> screenRates;
+         short previousRate;
          std::string screenName;
          xDisplay();
          ~xDisplay();
@@ -30,7 +32,7 @@ namespace xdr {
          void getSelectedRates();
          void changeScreen(int);
          void changeMonitorPositions(int, int);
-
+         int addResolution(int, int, double);
      };
 
     std::string GetGraphicDeviceName();

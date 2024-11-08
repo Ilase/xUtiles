@@ -16,6 +16,7 @@ xdr::xDisplay::xDisplay()
     this->screenConfig = XRRGetScreenInfo(display,root);
     this->screenResources = XRRGetScreenResources(display, root);
     selectedScreenSize = getCurrentResolution(selectedScreen);
+    previousRate = XRRConfigCurrentRate(screenConfig);
     for (size_t i = 0; i < screenCount; i++)
     {
         int sizes;
@@ -25,7 +26,7 @@ xdr::xDisplay::xDisplay()
         {
             auto size = xrsizes[t];
             if((i == selectedScreenId) && (size.width == selectedScreenSize.width) && (size.height == selectedScreenSize.height)) {
-                selectedScreenSizeId = t;
+                previousScreenSizeId = selectedScreenSizeId = t;
             }
             sizes_l.push_back(size);
         }
@@ -92,23 +93,39 @@ void xdr::xDisplay::changeScreen(int screenID) {
     {
         auto size = xrsizes[t];
         if((size.width == selectedScreenSize.width) && (size.height == selectedScreenSize.height)) {
-            selectedScreenSizeId = t;
+            previousScreenSizeId = selectedScreenSizeId = t;
         }
     }
 }
 
-int xdr::xDisplay::addResolution(int width, int height, float hz) {
+int xdr::xDisplay::addResolution(int width, int height, double hz) {
     char buf[32];
     sprintf(buf, "%dx%d_%.2f", width, height, hz);
-    if (xdr::exec("cat ~/.xprofile").find(buf) == std::string::npos){
+    std::string sbuf = buf;
+    sbuf = sbuf.replace(sbuf.find(","),1, ".");
+    std::cout << sbuf << '\n';
+    std::string xpath = getenv("HOME") + std::string("/.xprofile");
+    std::ifstream xprofile;
+    xprofile.open(xpath);
+    std::string filecontent;
+    std::getline(xprofile, filecontent, '\0');
+    //std::string xprofile = xdr::exec("cat ~/.xprofile");
+    if (filecontent.find(sbuf) != std::string::npos){
         return 1;
     }
     char arg[128];
     sprintf(arg, "cvt %d %d %.2f | sed 's/Modeline/xrandr --newmode/'", width, height, hz);
-    std::string cvtoutput = xdr::exec(arg) + "xrandr --addmode " + this->screenName + " " + buf;
+    std::string sarg = arg;
+    sarg = sarg.replace(sarg.find(","),1, ".");
+    std::string cvtoutput = xdr::exec(sarg.c_str()) + "xrandr --addmode " + this->screenName + " " + sbuf;
     std::ofstream file;
-    file.open("~/.xprofile", std::ios_base::app);
-    file << cvtoutput;
+    file.open(xpath, std::ios_base::app);
+    if (file.fail()){
+        return 1;
+    }
+    file << cvtoutput << '\n';
+    system(xpath.c_str());
+    return 0;
 }
 
 void xdr::xDisplay::SyncChanges()

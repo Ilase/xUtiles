@@ -321,10 +321,10 @@ void MainWindow::on_checkBoxTearing_clicked()
     //xdr::change_tearing(ui->checkBoxTearing->isChecked(), display.screenName);
 }
 
-void MainWindow::setNewMonitorResolution(int index)
+void MainWindow::setNewMonitorResolution(int index, short rate)
 {
+
     qDebug() << "new resolution" << ui->ListResolution->currentText();
-    short rate = display.screenRates[ui->listHZ->currentIndex()];
     Rotation rotation = 1 << (ui->listOrientation->currentIndex());
     display.ChangeCurrentResolutionRates(index, rate, rotation);
     //ui->pageResolution->update();
@@ -332,6 +332,7 @@ void MainWindow::setNewMonitorResolution(int index)
 
 void MainWindow::on_ListResolution_currentIndexChanged(int index)
 {
+#if 0
     setNewMonitorResolution(index);
     if(initializing) return;
     if(previousIndex != index)
@@ -342,11 +343,12 @@ void MainWindow::on_ListResolution_currentIndexChanged(int index)
         connect(apply, &Confirm::applySignal, this, &MainWindow::previousIndexChange);
         apply->show();
     }
+#endif
 }
 
 void MainWindow::onCancel(bool activated)
 {
-    setNewMonitorResolution(previousIndex);
+    setNewMonitorResolution(display.previousScreenSizeId, display.previousRate);
 }
 
 
@@ -354,6 +356,9 @@ void MainWindow::onCancel(bool activated)
 void MainWindow::previousIndexChange()
 {
     previousIndex = ui->ListResolution->currentIndex();
+
+    display.previousRate =  display.screenRates[ui->listHZ->currentIndex()];
+    display.previousScreenSizeId =  ui->ListResolution->currentIndex();
 }
 
 void MainWindow::on_debugCardSearch_clicked()
@@ -416,4 +421,44 @@ void MainWindow::on_apply_clicked()
         QDialog *di = new DriverDialog(this, QString("Невозможно применить настройки для видеоадаптера %1").arg(devicename));
         di->show();
     }
+}
+
+void MainWindow::on_buttonAddResolution_clicked()
+{
+    bool read = true;
+    bool check = false;
+    int width = ui->addResolutionWidth->toPlainText().toInt(&check);
+    read &= check;
+    int height = ui->addResolutionHeight->toPlainText().toInt(&check);
+    read &= check;
+    double rate = ui->addResolutionRate->toPlainText().toDouble(&check);
+    read &= check;
+    if (!read) {
+        QDialog *error = new DriverDialog(this, "Некоректное разрешение экрана");
+        error->show();
+        return;
+    }else {
+        if (display.addResolution(width, height, rate) != 0) {
+            QDialog *error = new DriverDialog(this, "Не удалось добавить разрешение");
+            error->show();
+            return;
+        }
+}
+}
+
+void MainWindow::on_applyButton_clicked()
+{
+    short rate = display.screenRates[ui->listHZ->currentIndex()];
+    int index = ui->ListResolution->currentIndex();
+    setNewMonitorResolution(index, rate);
+    if(initializing) return;
+    if(!(previousIndex == index && display.previousRate == rate))
+    {
+        apply = new Confirm;
+        emit apply->open();
+        connect(apply, &Confirm::closed, this, &MainWindow::onCancel);
+        connect(apply, &Confirm::applySignal, this, &MainWindow::previousIndexChange);
+        apply->show();
+    }
+    //ui->pageResolution->update();
 }

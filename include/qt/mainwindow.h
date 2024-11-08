@@ -78,6 +78,10 @@ private slots:
 
     void on_apply_clicked();
 
+    void on_buttonAddResolution_clicked();
+
+    void on_applyButton_clicked();
+
 private:
     Ui::Dialog *ui;
     xdr::xDisplay display;
@@ -94,7 +98,7 @@ private:
     bool initializing;
     QButtonGroup *buttonGroup;
 
-    void setNewMonitorResolution(int index);
+    void setNewMonitorResolution(int , short);
     void onCancel(bool activated);
 };
 
