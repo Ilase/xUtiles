@@ -104,7 +104,7 @@ int xdr::xDisplay::addResolution(int width, int height, double hz) {
     std::string sbuf = buf;
     sbuf = sbuf.replace(sbuf.find(","),1, ".");
     std::cout << sbuf << '\n';
-    std::string xpath = getenv("HOME") + std::string("/.xprofile");
+    std::string xpath = getenv("HOME") + std::string("/.xsessionrc");
     std::ifstream xprofile;
     xprofile.open(xpath);
     std::string filecontent;
