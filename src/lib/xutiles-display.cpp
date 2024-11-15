@@ -156,8 +156,6 @@ int xdr::xDisplay::addResolution(int width, int height, int hz) {
     std::string cvtoutput = xdr::exec((cvt + " | sed 's/Modeline/xrandr --newmode/'").c_str());
     std::string sub = cvtoutput.substr(0, cvtoutput.find("\" ") + 1);
     sub = sub.substr(cvtoutput.find("\"") );
-    std::cout << cvtoutput.find(" \"") << ' ' << cvtoutput.find("\" ") + 1 <<'\n' ;
-    std::cout << sub << '\n';
     std::string xpath = getenv("HOME") + std::string("/.xsessionrc");
     std::ifstream ifile(xpath);
     std::ofstream ofile(xpath, std::ios_base::app);

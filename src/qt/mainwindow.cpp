@@ -67,6 +67,10 @@ MainWindow::MainWindow(QWidget *parent) :
         ui->graphicDeviceSelect->addItem(driver.graphicCardNames[i]);
     }
 
+    //INFO PCI
+    ui->testPCI->setReadOnly(true);
+    ui->testPCI->setPlainText(xdr::exec("lspci -v").c_str());
+
     //RATES
     updateRates();
     //SCREEN INFO
@@ -84,7 +88,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->tableModules->setHorizontalHeaderLabels(headers);
     ui->tableModules->setEditTriggers(QAbstractItemView::NoEditTriggers);
     QString modules = xdr::exec("lsmod").c_str();
-    //QRegExp devicePatern(R"((\w+) +(\d+) +(\d+) ?+([\w,]+)?)");
     QRegularExpression modulesPatern(R"((\w+) +(\d+) +(\d+) ?+([\w,]+)?)");
     QRegularExpressionMatchIterator mathces = modulesPatern.globalMatch(modules);
     int i = 0;
@@ -115,6 +118,13 @@ MainWindow::MainWindow(QWidget *parent) :
     previousIndex = ui->ListResolution->currentIndex();
     initializing = false;
 
+    //REMOVE RESOLUTION
+    auto addedResolution = xdr::exec(" cat ~/.xsessionrc | grep '# ' |sed 's/# //' | sed 's/ Hz.*//'");
+    std::string line;
+    auto stream = std::istringstream(addedResolution);
+    while (getline(stream, line)) {
+        ui->addedResolutionList->addItem(line.c_str());
+    }
 }
 
 void MainWindow::updateRates() {
@@ -457,6 +467,13 @@ void MainWindow::on_buttonAddResolution_clicked()
         }else{
             updateResolutions();
             updateRates();
+            auto addedResolution = xdr::exec(" cat ~/.xsessionrc | grep '# ' |sed 's/# //' | sed 's/ Hz.*//'");
+            std::string line;
+            auto stream = std::istringstream(addedResolution);
+            ui->addedResolutionList->clear();
+            while (getline(stream, line)) {
+                ui->addedResolutionList->addItem(line.c_str());
+            }
         }
     }
 }
@@ -476,4 +493,27 @@ void MainWindow::on_applyButton_clicked()
         apply->show();
     }
     //ui->pageResolution->update();
+}
+
+void MainWindow::on_PCI_clicked()
+{
+    ui->stackedWidget->setCurrentWidget(ui->pagePCI);
+}
+
+void MainWindow::on_buttonRemoveResolution_clicked()
+{
+    QString resolution = ui->addedResolutionList->currentText();
+    if (resolution.size() < 1) {
+        return;
+    }
+    std::string del = resolution.toStdString();
+    std::string delcommand = xdr::exec(("sed -n '/" + del + "/{n;n;p;}' ~/.xsessionrc | sed 's/addmode/delmode/'").c_str());
+    std::string del1command = xdr::exec(("sed -n '/" + del + "/{n;p;}' ~/.xsessionrc | grep -E -o 'xrandr --newmode \".*\"' | sed 's/newmode/rmmode/'").c_str());
+    std::string command = "sed -i -e '/# " + resolution.toStdString() + "/,+2d' ~/.xsessionrc";
+    system(command.c_str());
+    ui->addedResolutionList->removeItem(ui->addedResolutionList->currentIndex());
+    system(delcommand.c_str());
+    system(del1command.c_str());
+    updateResolutions();
+    updateRates();
 }

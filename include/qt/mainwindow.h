@@ -82,6 +82,10 @@ private slots:
 
     void on_applyButton_clicked();
 
+    void on_PCI_clicked();
+
+    void on_buttonRemoveResolution_clicked();
+
 private:
     Ui::Dialog *ui;
     xdr::xDisplay display;
