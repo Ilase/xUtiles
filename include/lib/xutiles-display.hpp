@@ -1,5 +1,6 @@
 #ifndef _XUTILES_DISPLAY_HPP
 #define _XUTILES_DISPLAY_HPP
+
 #include "xutiles-include.hpp"
 
 namespace xdr {
@@ -32,7 +33,8 @@ namespace xdr {
          void getSelectedRates();
          void changeScreen(int);
          void changeMonitorPositions(int, int);
-         int addResolution(int, int, double);
+         void getResolutions();
+         int addResolution(int, int, int);
      };
 
     std::string GetGraphicDeviceName();

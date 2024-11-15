@@ -23,6 +23,6 @@ namespace xdr{
     };
     int change_tearing(bool, std::string, graphic_type);
     std::vector<std::string> get_adapt();
-
+    
     int apply_changes();
 };

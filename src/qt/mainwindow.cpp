@@ -397,6 +397,18 @@ void MainWindow::on_debugCardSearch_clicked()
     ui->stackedWidget->setCurrentWidget(ui->pageInstallDrivers);
 }
 
+void MainWindow::updateResolutions() {
+    display.getResolutions();
+    ui->ListResolution->clear();
+    for (size_t i = 0; i < display.screenSizes[0].size(); ++i) {
+        auto size = display.screenSizes[0][i];
+        char c[32];
+        sprintf(c, "%dx%d", size.width, size.height);
+        QString text = QString(c);
+        ui->ListResolution->addItem(text);
+    }
+}
+
 void MainWindow::on_pushButton_clicked()
 {
     ui->stackedWidget->setCurrentWidget(ui->pageInstallDrivers);
@@ -431,7 +443,7 @@ void MainWindow::on_buttonAddResolution_clicked()
     read &= check;
     int height = ui->addResolutionHeight->toPlainText().toInt(&check);
     read &= check;
-    double rate = ui->addResolutionRate->toPlainText().toDouble(&check);
+    int rate = ui->addResolutionRate->toPlainText().toInt(&check);
     read &= check;
     if (!read) {
         QDialog *error = new DriverDialog(this, "Некоректное разрешение экрана");
@@ -442,8 +454,11 @@ void MainWindow::on_buttonAddResolution_clicked()
             QDialog *error = new DriverDialog(this, "Не удалось добавить разрешение");
             error->show();
             return;
+        }else{
+            updateResolutions();
+            updateRates();
         }
-}
+    }
 }
 
 void MainWindow::on_applyButton_clicked()

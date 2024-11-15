@@ -100,6 +100,7 @@ private:
 
     void setNewMonitorResolution(int , short);
     void onCancel(bool activated);
+    void updateResolutions();
 };
 
 #endif // MAINWINDOW_H
