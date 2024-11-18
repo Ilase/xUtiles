@@ -125,6 +125,22 @@ MainWindow::MainWindow(QWidget *parent) :
     while (getline(stream, line)) {
         ui->addedResolutionList->addItem(line.c_str());
     }
+
+    //MODPROBE FILES
+    char* buffer;
+    for (const auto & entry : fs::directory_iterator("/etc/modprobe.d")) {
+        ui->modprobeFileList->addItem(QString(entry.path().c_str()));
+        std::ifstream file(entry.path());
+        int length;
+        file.seekg(0, std::ios::end);
+        length = file.tellg();
+        buffer = new char[length];
+        file.seekg(0, std::ios::beg);
+        file.read(buffer, length);
+        file.close();
+        modprobeFilesBuffer.push_back(buffer);
+        delete[] buffer;
+    }
 }
 
 void MainWindow::updateRates() {
@@ -426,7 +442,7 @@ void MainWindow::on_pushButton_clicked()
 
 void MainWindow::on_CoreModules_clicked()
 {
-    ui->stackedWidget->setCurrentWidget(ui->pageModules);
+    ui->stackedWidget->setCurrentWidget(ui->pageModprobe);
 }
 
 void MainWindow::on_apply_clicked()
@@ -516,4 +532,76 @@ void MainWindow::on_buttonRemoveResolution_clicked()
     system(del1command.c_str());
     updateResolutions();
     updateRates();
+}
+
+int MainWindow::writeToProtectedFile(const QString &path, const QString &content) {
+    QDBusConnection bus = QDBusConnection::systemBus();
+   if (!bus.isConnected())
+   {
+       QMessageBox(QMessageBox::Critical, tr("D-Bus error"), tr("Cannot connect to the D-Bus session bus."), QMessageBox::Close, this).exec();
+       return 1;
+   }
+
+   // this is our Special Action that after allowed will call the helper
+   QDBusMessage message = QDBusMessage::createMethodCall("org.qt.policykit.rootwrite", "/", "org.qt.policykit.rootwrite", QLatin1String("write"));
+
+   // If a method in a helper file has arguments, enter the arguments.
+   QList<QVariant> ArgsToHelper;
+   ArgsToHelper << QVariant::fromValue(path) << QVariant::fromValue(content);
+   message.setArguments(ArgsToHelper);
+
+   // Send a message to DBus. (Execute the helper file.)
+   QDBusMessage reply = QDBusConnection::systemBus().call(message);
+
+   // Receive the return value (including arguments) from the helper file.
+   // The methods in the helper file have two arguments, so check them.
+
+   if (reply.type() == QDBusMessage::ReplyMessage && reply.arguments().size() == 2)
+   {
+       // the reply can be anything, here we receive a bool
+       if (reply.arguments().at(0).toInt() == 0)
+       {   // If the helper file method completes successfully after successful authentication
+           QMessageBox(QMessageBox::NoIcon, tr("Successed"), tr("The file was written successfully."), QMessageBox::Close, this).exec();
+           return 0;
+       }
+       else if (reply.arguments().at(0).toInt() == -1)
+       {   // If the helper file method fails after successful authentication
+           QString strErrMsg = reply.arguments().at(1).toString();
+           QMessageBox(QMessageBox::Critical, tr("Failed"), tr("Failed to write file.\n") + strErrMsg, QMessageBox::Close, this).exec();
+           return 1;
+       }
+       else
+       {   // If the authentication is canceled
+           QMessageBox(QMessageBox::NoIcon, tr("Cancelled"), tr("Writing of the file was canceled."), QMessageBox::Close, this).exec();
+           return 1;
+       }
+   }
+   else if (reply.type() == QDBusMessage::MethodCallMessage)
+   {
+       QMessageBox(QMessageBox::Warning, tr("Time out"), tr("Message did not receive a reply (timeout by message bus)."), QMessageBox::Close, this).exec();
+       return 1;
+   }
+   else if (reply.type() == QDBusMessage::ErrorMessage)
+   {
+       std::cout << reply.errorMessage().toStdString();
+       QMessageBox(QMessageBox::Critical, tr("D-Bus error"), tr(("Could not send message to D-Bus.\n" + reply.errorMessage().toStdString()).c_str()), QMessageBox::Close, this).exec();
+       return 1;
+   }
+
+}
+
+void MainWindow::on_modprobeFileList_activated(const QString &arg1)
+{
+
+}
+
+void MainWindow::on_modprobeFileList_activated(int index)
+{
+    ui->textEditModprobe->setText(modprobeFilesBuffer[index]);
+}
+
+void MainWindow::on_textEditModprobe_textChanged()
+{
+    int index = ui->modprobeFileList->currentIndex();
+    modprobeFilesBuffer[index] = ui->textEditModprobe->toPlainText();
 }

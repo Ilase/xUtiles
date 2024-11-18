@@ -3,6 +3,7 @@
 
 int main(int argc, char *argv[])
 {
+
     for (int i = 0; i < argc; ++i) {
         if (strcmp(argv[i], "--discard") == 0){
             system("bash /opt/xUtils/discard_changes.sh");

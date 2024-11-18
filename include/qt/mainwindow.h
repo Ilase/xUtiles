@@ -4,6 +4,9 @@
 #include <QMainWindow>
 #include <QDialog>
 #include <QStringListModel>
+#include <QDBusConnection>
+#include <QDBusMessage>
+#include <QMessageBox>
 #include "xutiles-backup.hpp"
 #include "xutiles-drivers.hpp"
 #include "xutiles-display.hpp"
@@ -33,6 +36,7 @@ public:
 
     //xdr::xDisplay getDisplay();
     int getPreviousIndex();
+    int writeToProtectedFile(const QString&,const QString&);
 
 signals:
     void timeoutSignal();
@@ -86,13 +90,21 @@ private slots:
 
     void on_buttonRemoveResolution_clicked();
 
+    void on_pushButtonTest_clicked();
+
+    void on_modprobeFileList_activated(const QString &arg1);
+
+    void on_modprobeFileList_activated(int index);
+
+    void on_textEditModprobe_textChanged();
+
 private:
     Ui::Dialog *ui;
     xdr::xDisplay display;
     xdr::xBackup backup;
     xdr::xDriver driver;
     std::vector<QLabel> backupsName;
-
+    std::vector<QString> modprobeFilesBuffer;
     xdr::xDownload download;
     void updateRates();
     //int openApplyWindow();
