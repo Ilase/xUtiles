@@ -638,3 +638,27 @@ void MainWindow::on_saveModprobeFile_clicked()
     std::cout<< filename.toStdString() << '\n';
     writeToProtectedFile(filename, content);
 }
+
+void MainWindow::on_createModprobeFile_clicked()
+{
+    bool ok;
+    QString filename = QInputDialog::getText(this, "Назвние файла","Введите название файла:", QLineEdit::Normal, "", &ok);
+    if (!ok) {
+        return;
+    }
+    if (filename.isEmpty()) {
+        QMessageBox(QMessageBox::Critical, tr("Ошибка"), tr("Не указанно имя файла"), QMessageBox::Close, this).exec();
+        return;
+    }
+    if (!filename.isEmpty()) {
+        QRegularExpression reg(R"(^[\w\.]*\.conf$)");
+        if (!reg.match(filename).hasMatch()) {
+            QMessageBox(QMessageBox::Critical, tr("Ошибка"), tr("Указано неверное имя файла"), QMessageBox::Close, this).exec();
+            return;
+        }
+        ui->modprobeFileList->addItem("/etc/modprobe.d/" + filename);
+        modprobeFilesBuffer.push_back("");
+        ui->modprobeFileList->setCurrentIndex(ui->modprobeFileList->count() - 1);
+        ui->textEditModprobe->setText(modprobeFilesBuffer[ui->modprobeFileList->count() - 1]);
+    }
+}

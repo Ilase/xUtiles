@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QDialog>
+#include <QInputDialog>
 #include <QStringListModel>
 #include <QDBusConnection>
 #include <QDBusMessage>
@@ -99,6 +100,8 @@ private slots:
     void on_textEditModprobe_textChanged();
 
     void on_saveModprobeFile_clicked();
+
+    void on_createModprobeFile_clicked();
 
 private:
     Ui::Dialog *ui;
