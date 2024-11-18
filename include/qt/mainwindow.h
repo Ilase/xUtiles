@@ -98,6 +98,8 @@ private slots:
 
     void on_textEditModprobe_textChanged();
 
+    void on_saveModprobeFile_clicked();
+
 private:
     Ui::Dialog *ui;
     xdr::xDisplay display;

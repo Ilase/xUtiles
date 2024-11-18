@@ -2204,7 +2204,7 @@ border-bottom:none; }</string>
              <item row="2" column="2">
               <widget class="QPushButton" name="saveModprobeFile">
                <property name="text">
-                <string>PushButton</string>
+                <string>Сохранить</string>
                </property>
               </widget>
              </item>

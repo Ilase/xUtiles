@@ -127,20 +127,45 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 
     //MODPROBE FILES
+
+    for (const auto & entry : fs::directory_iterator("/etc/modprobe.d")) {
+        ui->modprobeFileList->addItem(QString(entry.path().c_str()));
+        QFile inputFile(entry.path().c_str());
+        if (inputFile.open(QIODevice::ReadOnly))
+        {
+           QTextStream in(&inputFile);
+           QString text;
+           while (!in.atEnd())
+           {
+              QString line = in.readLine();
+              text += line + '\n';
+           }
+           inputFile.close();
+           modprobeFilesBuffer.push_back(text);
+        }
+    }
+    ui->textEditModprobe->setText(modprobeFilesBuffer[0]);
+#if 0
     char* buffer;
     for (const auto & entry : fs::directory_iterator("/etc/modprobe.d")) {
         ui->modprobeFileList->addItem(QString(entry.path().c_str()));
         std::ifstream file(entry.path());
         int length;
         file.seekg(0, std::ios::end);
-        length = file.tellg();
+        length = (int)file.tellg() - 1;
         buffer = new char[length];
         file.seekg(0, std::ios::beg);
         file.read(buffer, length);
+        std::cout << entry.path() << '\t' << length  << '\n' << buffer << '\n';
         file.close();
         modprobeFilesBuffer.push_back(buffer);
         delete[] buffer;
     }
+#endif
+}
+
+void MainWindow::on_pushButtonTest_clicked() {
+
 }
 
 void MainWindow::updateRates() {
@@ -604,4 +629,12 @@ void MainWindow::on_textEditModprobe_textChanged()
 {
     int index = ui->modprobeFileList->currentIndex();
     modprobeFilesBuffer[index] = ui->textEditModprobe->toPlainText();
+}
+
+void MainWindow::on_saveModprobeFile_clicked()
+{
+    QString filename = ui->modprobeFileList->currentText();
+    QString content = ui->textEditModprobe->toPlainText();
+    std::cout<< filename.toStdString() << '\n';
+    writeToProtectedFile(filename, content);
 }
