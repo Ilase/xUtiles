@@ -475,11 +475,11 @@ void MainWindow::on_apply_clicked()
     int i = ui->graphicDeviceSelect->currentIndex();
     QString devicename = driver.graphicCardNames[i];
     if (devicename.contains("NVIDIA")) {
-        system("systemd-run sh /opt/xUtils/xorg-parser nvidia Card0");
+        system("systemd-run sh /opt/xUtils/bin/xorg-parser nvidia Card0");
     }else if (devicename.contains("AMD")) {
-        system("systemd-run sh /opt/xUtils/xorg-parser amdgpu Card0");
+        system("systemd-run sh /opt/xUtils/bin/xorg-parser amdgpu Card0");
     }else if (devicename.contains("Intel")) {
-        system("systemd-run sh /opt/xUtils/xorg-parser intel Card0");
+        system("systemd-run sh /opt/xUtils/bin/xorg-parser intel Card0");
     }else {
         QDialog *di = new DriverDialog(this, QString("Невозможно применить настройки для видеоадаптера %1").arg(devicename));
         di->show();

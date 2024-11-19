@@ -14,7 +14,7 @@ xdr::xDriver::xDriver() {
         }
     }
 
-    std::string parserOutput = xdr::exec("/opt/xUtils/parser");
+    std::string parserOutput = xdr::exec("/opt/xUtils/bin/parser");
     std::string line;
     auto stream = std::istringstream(parserOutput);
     while (getline(stream, line)) {
@@ -37,7 +37,7 @@ std::vector<xdr::Driver>& xdr::xDriver::getDrivers() {
 
 std::vector<xdr::Driver>& xdr::xDriver::getDrivers(std::string name) {
     this->drivers.clear();
-    std::string parserOutput = xdr::exec(("/opt/xUtils/parser_driver --name '" + name + "'").c_str());
+    std::string parserOutput = xdr::exec(("/opt/xUtils/bin/parser_driver --name '" + name + "'").c_str());
     if (parserOutput == "404 Not Found"){
         return this->drivers;
     }
