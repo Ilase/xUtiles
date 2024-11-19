@@ -328,26 +328,36 @@ void MainWindow::on_downloadRecomended_clicked()
     devicename = driver.graphicCardNames[i];
 
 #endif
-    if (devicename.toStdString().find('[') != std::string::npos) {
-        QRegularExpression r(R"(\[(\w+(?: \w+)+)\])");
-        QRegularExpressionMatch m = r.match(devicename);
-        devicename = m.captured(1);
-    }
-    auto drivers = driver.getDrivers(devicename.toStdString());
-    if (drivers.size() == 0) {
-        QDialog *di = new DriverDialog(this, QString("Не найдено рекомендованных драйверов для видеоадаптера %1").arg(devicename));
-        di->show();
-        return;
-    }
-    if (std::stoi(drivers[0].version.substr(0, drivers[0].version.find('.'))) < 470) {
-            QDialog *di = new DriverDialog(this, QString("Драйверы для видеоадаптара %1 устарели, установока рекомендованных драйверов невозможна").arg(devicename));
-            di->show();
-            return;
-        }
     if (devicename.contains("NVIDIA")) {
-        system("systemd-run apt install nvidia-driver");
+        QFile supported_gpus;
+        supported_gpus.setFileName("/opt/xUtils/supported-gpus.json");
+        supported_gpus.open(QIODevice::ReadOnly | QIODevice::Text);
+        QJsonDocument doc = QJsonDocument::fromJson(supported_gpus.readAll());
+        auto cards = doc.object()["chips"].toArray();
+#ifdef QT_DEBUG
+        auto cardPCI = "128B";
+#else
+        auto cardPCI = QString(xdr::exec(R"(lspci -nn | grep -E "VGA|3D" | sed -n 's/.*\[.*:\(.*\)\].*/\1/p')").c_str()).trimmed();
+#endif
+        for (const auto& card: cards) {
+            QJsonObject cardobj = card.toObject();
+            qDebug() << cardobj["devid"].toString().toUpper() << '\t' << cardPCI.toUpper();
+            if (cardobj["devid"].toString().toUpper().contains(cardPCI.toUpper())) {
+                auto legacybranch = cardobj["legacybranch"];
+                if(legacybranch != QJsonValue::Null){
+                    if (legacybranch.toString() == "470.xx"){
+                        system("systemd-run apt install -y nvidia-tesla-470-driver");
+                    }else {
+                        QMessageBox(QMessageBox::Critical, tr("Ошибка установки драйвера"), tr("Видеокарта не подерживается"), QMessageBox::Close, this).exec();
+                    }
+                }else {
+                    system("systemd-run apt install -y nvidia-driver");
+                }
+                break;
+            }
+        }
     }else if (devicename.contains("AMD")) {
-        system("systemd-run apt install xserver-xorg-video-amdgpu");
+        system("systemd-run apt install -y xserver-xorg-video-amdgpu");
     }else if (devicename.contains("Intel")) {
         QDialog *di = new DriverDialog(this, QString("Не найдено рекомендованных драйверов для видеоадаптера %1").arg(devicename));
         di->show();

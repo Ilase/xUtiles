@@ -8,6 +8,9 @@
 #include <QDBusConnection>
 #include <QDBusMessage>
 #include <QMessageBox>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
 #include "xutiles-backup.hpp"
 #include "xutiles-drivers.hpp"
 #include "xutiles-display.hpp"
