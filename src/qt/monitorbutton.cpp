@@ -6,7 +6,7 @@ MonitorButton::MonitorButton(QWidget *parent, int id, QString name) :
     QWidget(parent),
     ui(new Ui::MonitorButton),
     m_id(id),
-    m_name(QString::number(id))
+    m_name(name)
 {
 
     ui->setupUi(this);

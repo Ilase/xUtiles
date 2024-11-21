@@ -67,9 +67,6 @@ MainWindow::MainWindow(QWidget *parent) :
         ui->graphicDeviceSelect->addItem(driver.graphicCardNames[i]);
     }
 
-    //INFO PCI
-    ui->testPCI->setReadOnly(true);
-    ui->testPCI->setPlainText(xdr::exec("lspci -v").c_str());
 
     //RATES
     updateRates();
@@ -84,16 +81,17 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->displayResolution->setText(ui->displayResolution->text() + res);
 
     //MONITOR BUTTONS
-    for (int i = 0; i < display.screenResources->ncrtc; i++){
-        auto crt = XRRGetCrtcInfo(display.display, display.screenResources, display.screenResources->crtcs[i]);
-        if (crt->mode == 0) {
+    for (int i = 0; i < display.screenResources->noutput; i++){
+        auto output = XRRGetOutputInfo(display.display, display.screenResources, display.screenResources->outputs[i]);
+        if (output->connection !=0 ){
             continue;
         }
-        auto button = new MonitorButton(this, i, "");
+        for (int j = 0; j < output->nmode; ++j) {
+        }
+        auto button = new MonitorButton(this, i, output->name);
         ui->monitorList->addWidget(button);
         connect(button, SIGNAL(changedScreen(int)),this, SLOT(changeScreen(int)));
     }
-    std::cout << display.screenResources->ncrtc << '\n';
     //MODULES TABLE
     QStringList headers = {"Название", "Размер", "Использован", "Кем"};
     ui->tableModules->setHorizontalHeaderLabels(headers);
@@ -187,8 +185,18 @@ void MainWindow::changeScreen(int id){
 
 void MainWindow::updateRates() {
     ui->listHZ->clear();
+    auto output = XRRGetOutputInfo(display.display, display.screenResources, display.screenResources->outputs[display.selectedScreenId]);
     for (int i = 0; i < display.screenResources->nmode; ++i) {
         XRRModeInfo mode = display.screenResources->modes[i];
+        bool contains = false;
+        for (int j = 0; j < output->nmode; ++j) {
+            if(output->modes[j] == mode.id){
+                contains = true;
+            }
+        }
+        if (!contains) {
+            continue;
+        }
         auto curResolution = display.selectedScreenSize;
         if((curResolution.width != mode.width) || (curResolution.height != mode.height)) continue;
         double refresh = (double)mode.dotClock / ((double) mode.vTotal * (double) mode.hTotal);
