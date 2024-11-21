@@ -25,6 +25,7 @@
 #include <QButtonGroup>
 #include "confirm.h"
 #include "driverdialog.h"
+#include "monitorbutton.h"
 
 namespace Ui {
 class MainWindow;
@@ -106,6 +107,8 @@ private slots:
 
     void on_createModprobeFile_clicked();
 
+private slots:
+    void changeScreen(int);
 private:
     Ui::Dialog *ui;
     xdr::xDisplay display;

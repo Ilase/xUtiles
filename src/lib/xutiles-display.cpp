@@ -93,6 +93,7 @@ void xdr::xDisplay::ChangeCurrentResolutionRates(int sizeInd, short rate, Rotati
                 rate,
                 CurrentTime
                 );
+
 }
 
 void xdr::xDisplay::getSelectedRates() {

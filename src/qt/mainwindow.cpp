@@ -83,6 +83,17 @@ MainWindow::MainWindow(QWidget *parent) :
     sprintf(res, "%dx%d", display.selectedScreenSize.width, display.selectedScreenSize.height);
     ui->displayResolution->setText(ui->displayResolution->text() + res);
 
+    //MONITOR BUTTONS
+    for (int i = 0; i < display.screenResources->ncrtc; i++){
+        auto crt = XRRGetCrtcInfo(display.display, display.screenResources, display.screenResources->crtcs[i]);
+        if (crt->mode == 0) {
+            continue;
+        }
+        auto button = new MonitorButton(this, i, "");
+        ui->monitorList->addWidget(button);
+        connect(button, SIGNAL(changedScreen(int)),this, SLOT(changeScreen(int)));
+    }
+    std::cout << display.screenResources->ncrtc << '\n';
     //MODULES TABLE
     QStringList headers = {"Название", "Размер", "Использован", "Кем"};
     ui->tableModules->setHorizontalHeaderLabels(headers);
@@ -166,6 +177,12 @@ MainWindow::MainWindow(QWidget *parent) :
 
 void MainWindow::on_pushButtonTest_clicked() {
 
+}
+
+void MainWindow::changeScreen(int id){
+    display.changeScreen(id);
+    updateResolutions();
+    updateRates();
 }
 
 void MainWindow::updateRates() {

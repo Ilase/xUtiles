@@ -2,6 +2,12 @@
 #define _XUTILES_DISPLAY_HPP
 
 #include "xutiles-include.hpp"
+#include <QDBusConnection>
+#include <QDBusInterface>
+#include <QDBusArgument>
+#include <QSize>
+#include <KF5/KScreen/kscreen/config.h>
+#include <KF5/KScreen/kscreen/backendmanager_p.h>
 
 namespace xdr {
 
