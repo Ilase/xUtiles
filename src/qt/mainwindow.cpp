@@ -86,8 +86,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->displayResolution->setText(ui->displayResolution->text() + res);
     std::cout << "Set resolution succesfully!";
     //MONITOR BUTTONS
-    for (int i = 0; i < display.screenResources->noutput; i++){
-        auto output = XRRGetOutputInfo(display.display, display.screenResources, display.screenResources->outputs[i]);
+    for (int i = 0; i < display.screenCount; i++){
+        auto output = XRRGetOutputInfo(display.display, display.screenResources, display.monitors[i].outputs[0]);
         if (output->connection !=0 ){
             continue;
         }
