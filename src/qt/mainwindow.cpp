@@ -88,11 +88,6 @@ MainWindow::MainWindow(QWidget *parent) :
     //MONITOR BUTTONS
     for (int i = 0; i < display.screenCount; i++){
         auto output = XRRGetOutputInfo(display.display, display.screenResources, display.monitors[i].outputs[0]);
-        if (output->connection !=0 ){
-            continue;
-        }
-        for (int j = 0; j < output->nmode; ++j) {
-        }
         auto button = new MonitorButton(this, i, output->name);
         ui->monitorList->addWidget(button);
         connect(button, SIGNAL(changedScreen(int)),this, SLOT(changeScreen(int)));
