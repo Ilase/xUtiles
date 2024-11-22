@@ -23,14 +23,16 @@ MainWindow::MainWindow(QWidget *parent) :
     buttonGroup->addButton(ui->Resolution);
     buttonGroup->addButton(ui->Backup);
     buttonGroup->setExclusive(false);
-
-    for (size_t i = 0; i < display.screenSizes[0].size(); ++i) {
+    for (const auto& mode: display.screenModes[display.selectedScreenId]) {
+        ui->ListResolution->addItem(mode.first.c_str());
+    }
+    /*for (size_t i = 0; i < display.screenSizes[0].size(); ++i) {
         auto size = display.screenSizes[0][i];
         char c[32];
         sprintf(c, "%dx%d", size.width, size.height);
         QString text = QString(c);
         ui->ListResolution->addItem(text);
-    }
+    }*/
     auto backups = backup.get_backup_list();
     QStringList list;
     for(size_t i = 0; i < backups.size(); ++i) {
@@ -43,7 +45,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->listDrivers->setEditTriggers(QAbstractItemView::NoEditTriggers);
     //INFO
     ui->infoScreen->setText(QString(display.screenName.c_str()));
-    XRRScreenSize size = display.getCurrentResolution(display.defaultScreen);
+    XRRScreenSize size = display.getCurrentResolution();
+    std::cout << "Got current size\n";
     std::string resolution = std::to_string(size.width) + 'x' + std::to_string(size.height);
     ui->infoResolution->setText(QString(resolution.c_str()));
     QString output = xdr::exec("inxi").c_str();
@@ -70,16 +73,18 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //RATES
     updateRates();
+    std::cout << "Set rates succesfully!\n";
+    std::cout << display.selectedScreenSize.width << ':' << display.selectedScreenSize.height << '\n';
     //SCREEN INFO
     int gcd = std::gcd(display.selectedScreenSize.width, display.selectedScreenSize.height);
-    char text[8];
+    char text[256];
     sprintf(text, "%d:%d", display.selectedScreenSize.width / gcd, display.selectedScreenSize.height / gcd);
     ui->displayFormat->setText(ui->displayFormat->text() +" "+ text);
     ui->displayName->setText(ui->displayName->text() + " " + display.screenName.c_str());
-    char res[32];
+    char res[256];
     sprintf(res, "%dx%d", display.selectedScreenSize.width, display.selectedScreenSize.height);
     ui->displayResolution->setText(ui->displayResolution->text() + res);
-
+    std::cout << "Set resolution succesfully!";
     //MONITOR BUTTONS
     for (int i = 0; i < display.screenResources->noutput; i++){
         auto output = XRRGetOutputInfo(display.display, display.screenResources, display.screenResources->outputs[i]);
@@ -92,6 +97,7 @@ MainWindow::MainWindow(QWidget *parent) :
         ui->monitorList->addWidget(button);
         connect(button, SIGNAL(changedScreen(int)),this, SLOT(changeScreen(int)));
     }
+    std::cout << "Add buttons succesfully!";
     //MODULES TABLE
     QStringList headers = {"Название", "Размер", "Использован", "Кем"};
     ui->tableModules->setHorizontalHeaderLabels(headers);
@@ -184,8 +190,14 @@ void MainWindow::changeScreen(int id){
 }
 
 void MainWindow::updateRates() {
+    ui->ListResolution->currentIndex();
     ui->listHZ->clear();
-    auto output = XRRGetOutputInfo(display.display, display.screenResources, display.screenResources->outputs[display.selectedScreenId]);
+
+    auto rates = display.screenModes[display.selectedScreenId][ui->ListResolution->currentText().toStdString()];
+    for (const auto& mode: rates) {
+        ui->listHZ->addItem(QString::number(mode.second));
+    }
+    /*auto output = XRRGetOutputInfo(display.display, display.screenResources, display.screenResources->outputs[display.selectedScreenId]);
     for (int i = 0; i < display.screenResources->nmode; ++i) {
         XRRModeInfo mode = display.screenResources->modes[i];
         bool contains = false;
@@ -203,7 +215,7 @@ void MainWindow::updateRates() {
         char c[16];
         sprintf(c, "%6.2f", refresh);
         ui->listHZ->addItem(QString(c));
-    }
+    }*/
 }
 
 MainWindow::~MainWindow()
@@ -273,9 +285,6 @@ void MainWindow::on_CreateBackupButton_clicked()
 
 void MainWindow::on_ListResolution_activated(int index)
 {
-    display.selectedScreenSizeId = index;
-    display.selectedScreenSize = display.screenSizes[display.selectedScreenId][index];
-    display.getSelectedRates();
     updateRates();
 }
 
@@ -407,12 +416,12 @@ void MainWindow::on_checkBoxTearing_clicked()
     //xdr::change_tearing(ui->checkBoxTearing->isChecked(), display.screenName);
 }
 
-void MainWindow::setNewMonitorResolution(int index, short rate)
+void MainWindow::setNewMonitorResolution(RRMode mode)
 {
 
     qDebug() << "new resolution" << ui->ListResolution->currentText();
     Rotation rotation = 1 << (ui->listOrientation->currentIndex());
-    display.ChangeCurrentResolutionRates(index, rate, rotation);
+    display.ChangeCurrentResolutionRates(mode, rotation);
     //ui->pageResolution->update();
 }
 
@@ -434,7 +443,7 @@ void MainWindow::on_ListResolution_currentIndexChanged(int index)
 
 void MainWindow::onCancel(bool activated)
 {
-    setNewMonitorResolution(display.previousScreenSizeId, display.previousRate);
+    setNewMonitorResolution(display.previousMode);
 }
 
 
@@ -442,9 +451,7 @@ void MainWindow::onCancel(bool activated)
 void MainWindow::previousIndexChange()
 {
     previousIndex = ui->ListResolution->currentIndex();
-
-    display.previousRate =  display.screenRates[ui->listHZ->currentIndex()];
-    display.previousScreenSizeId =  ui->ListResolution->currentIndex();
+    display.updatePreviousMode();
 }
 
 void MainWindow::on_debugCardSearch_clicked()
@@ -486,12 +493,8 @@ void MainWindow::on_debugCardSearch_clicked()
 void MainWindow::updateResolutions() {
     display.getResolutions();
     ui->ListResolution->clear();
-    for (size_t i = 0; i < display.screenSizes[0].size(); ++i) {
-        auto size = display.screenSizes[0][i];
-        char c[32];
-        sprintf(c, "%dx%d", size.width, size.height);
-        QString text = QString(c);
-        ui->ListResolution->addItem(text);
+    for (const auto& mode: display.screenModes[display.selectedScreenId]) {
+        ui->ListResolution->addItem(mode.first.c_str());
     }
 }
 
@@ -556,11 +559,12 @@ void MainWindow::on_buttonAddResolution_clicked()
 
 void MainWindow::on_applyButton_clicked()
 {
-    short rate = display.screenRates[ui->listHZ->currentIndex()];
-    int index = ui->ListResolution->currentIndex();
-    setNewMonitorResolution(index, rate);
+    RRMode mode;
+    auto modes = display.screenModes[display.selectedScreenId][ui->ListResolution->currentText().toStdString()];
+    mode = modes[ui->listHZ->currentIndex()].first;
+    setNewMonitorResolution(mode);
     if(initializing) return;
-    if(!(previousIndex == index && display.previousRate == rate))
+    if(display.previousMode != mode)
     {
         apply = new Confirm;
         emit apply->open();

@@ -6,6 +6,7 @@
 #include <QDBusInterface>
 #include <QDBusArgument>
 #include <QSize>
+#include <unordered_map>
 #include <KF5/KScreen/kscreen/config.h>
 #include <KF5/KScreen/kscreen/backendmanager_p.h>
 
@@ -14,33 +15,36 @@ namespace xdr {
     class xDisplay
      {
      private:
+        struct Mode{
+            unsigned int width, height;
+            std::vector<std::pair<RRMode, float>> rates;
+        };
      public:
          Display* display;
          Window root;
          int screenCount;
-         Screen* defaultScreen;
          int selectedScreenId;
-         Screen* selectedScreen;
+         RROutput selectedScreenRROutput;
+         XRROutputInfo* selectedScreenInfo;
+         XRRCrtcInfo* selectedScreenCrtc;
          XRRScreenConfiguration* screenConfig;
          XRRScreenResources* screenResources;
          XRRScreenSize selectedScreenSize;
-         int selectedScreenSizeId;
-         int previousScreenSizeId;
-         std::vector<std::vector<XRRScreenSize>> screenSizes;
-         std::vector<short> screenRates;
-         short previousRate;
+         RRMode previousMode;
+         std::vector<XRRMonitorInfo> monitors;
+         std::vector<std::unordered_map<std::string, std::vector<std::pair<RRMode, float>>>> screenModes;
          std::string screenName;
          xDisplay();
          ~xDisplay();
          void ChangeResolution(int);
-         void ChangeCurrentResolutionRates(int,short,Rotation);
+         void ChangeCurrentResolutionRates(RRMode,Rotation);
          void SyncChanges();
-         XRRScreenSize getCurrentResolution(Screen*);
-         void getSelectedRates();
+         XRRScreenSize getCurrentResolution();
          void changeScreen(int);
          void changeMonitorPositions(int, int);
          void getResolutions();
          int addResolution(int, int, int);
+         void updatePreviousMode();
      };
 
     std::string GetGraphicDeviceName();

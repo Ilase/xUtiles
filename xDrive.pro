@@ -28,6 +28,7 @@ QMAKE_CXXFLAGS += -std=c++17 -lstdc++fs -lX11 -lXrandr -L/usr/bin/X11
 
 
 
+
 SOURCES =  $$files(src/lib/*.cpp) \
              $$files(src/qt/*.cpp) \
 

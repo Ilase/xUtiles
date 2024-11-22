@@ -125,7 +125,7 @@ private:
     bool initializing;
     QButtonGroup *buttonGroup;
 
-    void setNewMonitorResolution(int , short);
+    void setNewMonitorResolution(RRMode);
     void onCancel(bool activated);
     void updateResolutions();
 };
