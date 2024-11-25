@@ -207,21 +207,12 @@ int xdr::make_backup(fs::path &_bp, fs::path &x11_path, fs::path &mod_path)
     fs::create_directory(dp / "modprobe.d/");
     //
     // Try to copy files
-    try
-    {
-        fs::copy(x11_path / "xorg.conf", dp / "X11/");        //, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
-        fs::copy(x11_path / "xorg.conf.d", dp / "X11/");        //, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+    if(xdr::check_existing(x11_path / "xorg.conf"))
+        fs::copy(x11_path / "xorg.conf", dp / "X11/");
+    if(xdr::check_existing(x11_path / "xorg.conf.d"))        //, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+        fs::copy(x11_path / "xorg.conf.d", dp / "X11/");
+    if(xdr::check_existing(mod_path))        //, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
         fs::copy(mod_path, dp / "modprobe.d/"); //, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
-    }
-    catch (fs::filesystem_error &e)
-    {
-        std::cerr << e.what() << std::endl;
-        return XDR_ERR;
-    }
-    catch (const std::exception &e)
-    {
-        return XDR_ERR;
-    }
     return XDR_OK;
 }
 
