@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QDialog>
+#include <QGraphicsProxyWidget>
 #include <QInputDialog>
 #include <QStringListModel>
 #include <QDBusConnection>

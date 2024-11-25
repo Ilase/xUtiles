@@ -181,27 +181,27 @@ void xdr::xDisplay::ChangeCurrentResolutionRates(RRMode mode, Rotation rotation)
 
             if(m == selectedScreenId){
                 s = XRRSetCrtcConfig(display,
-                                          screenResources,
-                                          crtc_id,
-                                          CurrentTime,
-                                          crtc.x,
-                                          crtc.y,
-                                          mode,
-                                          rotation,
-                                          crtc.outputs,
-                                          crtc.noutput);
+                                     screenResources,
+                                     crtc_id,
+                                     CurrentTime,
+                                     crtc.x,
+                                     crtc.y,
+                                     mode,
+                                     rotation,
+                                     crtc.outputs,
+                                     crtc.noutput);
             }else {
 
                 XRRSetCrtcConfig(display,
-                                                  screenResources,
-                                                  crtc_id,
-                                                  CurrentTime,
-                                                  crtc.x,
-                                                  crtc.y,
-                                                  crtc.mode,
-                                                  crtc.rotation,
-                                                  crtc.outputs,
-                                                  crtc.noutput);
+                                 screenResources,
+                                 crtc_id,
+                                 CurrentTime,
+                                 crtc.x,
+                                 crtc.y,
+                                 crtc.mode,
+                                 crtc.rotation,
+                                 crtc.outputs,
+                                 crtc.noutput);
             }
             if (s != Success){
                 std::cout << " " << this->selectedScreenInfo->crtc << "\tERROR" << s << "\n";

@@ -1896,7 +1896,7 @@ border-bottom:none; }</string>
                     <number>0</number>
                    </property>
                    <item>
-                    <layout class="QHBoxLayout" name="monitorList"/>
+                    <widget class="QGraphicsView" name="monitorList"/>
                    </item>
                   </layout>
                  </widget>

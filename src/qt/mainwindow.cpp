@@ -86,10 +86,24 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->displayResolution->setText(ui->displayResolution->text() + res);
     std::cout << "Set resolution succesfully!";
     //MONITOR BUTTONS
+    ui->monitorList->setScene(new QGraphicsScene(this));
     for (int i = 0; i < display.screenCount; i++){
         auto output = XRRGetOutputInfo(display.display, display.screenResources, display.monitors[i].outputs[0]);
+        std::cout << i << output->name << '\n';
         auto button = new MonitorButton(this, i, output->name);
-        ui->monitorList->addWidget(button);
+        std::cout << "Created button\n";
+        std::cout << ui->monitorList->scene() << '\n';
+        QGraphicsRectItem* rect = ui->monitorList->scene()->addRect(0, 0, button->width(), button->height(), QPen(Qt::black), QBrush(Qt::darkRed));
+        std::cout << "Created rect\n";
+        rect->setFlag(QGraphicsItem::ItemIsMovable, true);
+        rect->setFlag(QGraphicsItem::ItemIsSelectable, true);
+        std::cout << "Set Flags\n";
+        QGraphicsProxyWidget* proxy = ui->monitorList->scene()->addWidget(button);
+        std::cout << "Created proxy\n";
+        proxy->setPos(0, proxy->rect().height());
+        proxy->setParentItem(rect);
+        std::cout << "Set proxy\n";
+        //ui->monitorList->addWidget(button);
         connect(button, SIGNAL(changedScreen(int)),this, SLOT(changeScreen(int)));
     }
     std::cout << "Add buttons succesfully!";
