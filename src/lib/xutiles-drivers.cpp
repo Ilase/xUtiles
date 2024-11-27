@@ -3,7 +3,7 @@
 xdr::xDriver::xDriver() {
     QString graphicDeviceOutput = xdr::exec("inxi -G").c_str();
     //QRegExp devicePatern(R"(Device-\d+: (\w+(?: [\w\[\]_-]+)+) \w+:)");
-    QRegularExpression devicePatern(R"(Device-\d+: (\w+(?: [\w\[\]_-]+)+) driver: (\w+) v: ([a-zA-Z]+|\d+(?:\.\d+)+))");
+    QRegularExpression devicePatern(R"(Device-\d+:\s+(\w+(?: [\d\w\/\[\]_-]+)+)\s+driver:\s+(\w+)\s+v:\s+([a-zA-Z]+|\d+(?:\.\d+)+))");
     QRegularExpressionMatchIterator mathces = devicePatern.globalMatch(graphicDeviceOutput);
     while (mathces.hasNext()) {
         QRegularExpressionMatch match = mathces.next();

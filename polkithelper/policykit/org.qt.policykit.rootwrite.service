@@ -1,0 +1,4 @@
+[D-BUS Service]
+Name=org.qt.policykit.rootwrite
+Exec=/opt/xUtils/bin/polkithelper
+User=root

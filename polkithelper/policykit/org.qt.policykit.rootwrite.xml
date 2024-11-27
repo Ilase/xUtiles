@@ -1,0 +1,12 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+   <interface name="org.qt.policykit.rootwrite">
+       <method name="write" >
+           <!-- OUT: whether the user gained the authorization -->
+           <arg direction="out" type="i" name="code" />
+           <arg direction="out" type="s" name="msg" />
+           <arg direction="in" type="s" name="path" />
+           <arg direction="in" type="s" name="content" />
+       </method>
+   </interface>
+</node>
